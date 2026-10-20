@@ -66,12 +66,15 @@
     "actualTrayLiftAndRemountPassed": true,
     "steamReservoirRetained": true
   },
-  "releaseDownloadVerified": false,
+  "releaseDownloadVerified": true,
   "testScopeNotes": [
     "Vanilla regression workflows passed in the first full run; the first staple attempt stopped because buns were only 82% cooked at the bread finish time.",
     "A second vanilla staple run passed after normal separate oven shutdown and longer steaming; it also verified corrected noodle geometry and cooked naming.",
     "The full Iris gameplay run passed. Afterwards, material-only fixes replace a missing native sandstone texture identifier and correct furnace firebox UVs. Final native and Iris asset runs validate actual rolling/cutting and an actually burning oven with the same simulation code.",
     "Asset close-ups disable optional world text temporarily; complete cooking workflows retain the default configuration.",
     "Ingredients are fixtures; complete uncheated survival acquisition remains in the finite project backlog."
-  ]
+  ],
+  "codeCommit": "db69a6b6a269dd438e9828cd981659c1ba5e6d15",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.5",
+  "downloadedBytes": 652721
 }

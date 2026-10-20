@@ -45,3 +45,11 @@
 ## 后续范围
 
 继续完成其余菜谱的前置加工和关键步骤，逐项改善原料、菜肴与生物美术，再推进独立建筑、生态、职业订单、宴席收藏与双客户端并发。完整无作弊获取路线和长期平衡验收仍未完成，不能用本次材料测试代替。
+
+## 发布文件核对
+
+[下载 smoke-kitchen-0.1.3.jar](https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.3/smoke-kitchen-0.1.3.jar)，640243字节。实际下载后确认本地、GitHub资产摘要与下载文件SHA256一致：
+
+```text
+531109b8f6640a106a5b26fd88a967cf0d62c01f5a9d1648d58e48221108d126
+```

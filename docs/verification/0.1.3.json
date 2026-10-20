@@ -2,7 +2,7 @@
   "jarContainsTestCode": false,
   "minecraft": "26.1.2",
   "version": "0.1.3",
-  "releaseDownloadVerified": false,
+  "releaseDownloadVerified": true,
   "sha256": "531109b8f6640a106a5b26fd88a967cf0d62c01f5a9d1648d58e48221108d126",
   "unitTests": {
     "passed": 21,
@@ -49,5 +49,8 @@
     "failed": 0,
     "customPassed": 23
   },
-  "date": "2026-10-20"
+  "date": "2026-10-20",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.3",
+  "codeCommit": "83b505379354dc5131026b2688c39e7aa7b25ab9",
+  "downloadedBytes": 640243
 }

@@ -13,6 +13,40 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest(maxTicks=40) public void sneakingToolsReachTheirVanillaItemUseEntry(GameTestHelper test) {
+        var boardPos=new BlockPos(1,1,1);var stovePos=new BlockPos(2,1,1);test.setBlock(boardPos,KitchenContent.BLOCKS.get("cutting_board"));test.setBlock(stovePos,KitchenContent.BLOCKS.get("gas_stove"));
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);use(test,stovePos,player,new ItemStack(KitchenContent.item("soup_pot")),net.minecraft.core.Direction.UP);
+        player.setShiftKeyDown(true);var knife=new ItemStack(KitchenContent.item("stone_knife"));player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,knife);
+        knife.useOn(new net.minecraft.world.item.context.UseOnContext(player,net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(test.absolutePos(boardPos)),net.minecraft.core.Direction.UP,test.absolutePos(boardPos),false)));
+        test.assertTrue(test.getBlockEntity(boardPos,KitchenBlockEntity.class).cut==CookingBatch.Cut.SHRED,"The knife's real Item.useOn path must cycle the board cut while sneaking");
+        test.runAfterDelay(5,()->{var cloth=new ItemStack(KitchenContent.item("heat_cloth"));player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,cloth);cloth.useOn(new net.minecraft.world.item.context.UseOnContext(player,net.minecraft.world.InteractionHand.MAIN_HAND,new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(test.absolutePos(stovePos)),net.minecraft.core.Direction.UP,test.absolutePos(stovePos),false)));test.assertTrue(test.getBlockEntity(stovePos,KitchenBlockEntity.class).mountedCookware.isEmpty(),"The heat cloth's real Item.useOn path must lift cookware while sneaking");test.succeed();});
+    }
+    @GameTest public void pumpkinBlockIsInsertedInsteadOfBeingPlacedOnThePot(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("soup_pot"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,p,player,new ItemStack(Items.PUMPKIN),net.minecraft.core.Direction.UP);
+        test.assertTrue(test.getBlockEntity(p,KitchenBlockEntity.class).batch.count("pumpkin")==1&&test.getBlockState(p.above()).isAir(),"An edible block item must enter the pot instead of becoming a block above it");test.succeed();
+    }
+    @GameTest public void aCoalBlockCanActuallyBeInsertedThroughNormalBlockUse(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("brick_stove"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,p,player,new ItemStack(Items.COAL_BLOCK),net.minecraft.core.Direction.NORTH);
+        var stove=test.getBlockEntity(p,KitchenBlockEntity.class);test.assertTrue(stove.fuelSeconds==1440&&stove.heat==2,"The vanilla coal-block item must load as fuel rather than place a coal block");test.succeed();
+    }
+    @GameTest public void waterBucketCoolsThePotAndReturnsOneBucket(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("soup_pot"));var pot=test.getBlockEntity(p,KitchenBlockEntity.class);pot.batch.temperature=200;
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);use(test,p,player,new ItemStack(Items.WATER_BUCKET),net.minecraft.core.Direction.UP);
+        test.assertTrue(pot.batch.water==6&&pot.batch.temperature<50&&player.getInventory().countItem(Items.BUCKET)==1,"Adding a real water bucket must cool the pot and return the container once");test.succeed();
+    }
+    @GameTest public void emptyHandCanOpenAndReturnTheExistingLid(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("gas_stove"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,p,player,new ItemStack(KitchenContent.item("steamer")),net.minecraft.core.Direction.UP);use(test,p,player,new ItemStack(KitchenContent.item("pot_lid")),net.minecraft.core.Direction.UP);
+        use(test,p,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);var stove=test.getBlockEntity(p,KitchenBlockEntity.class);
+        test.assertTrue(stove.attachedLid.isEmpty()&&!stove.getBlockState().getValue(dev.smokekitchen.world.KitchenBlock.LID)&&player.getInventory().countItem(KitchenContent.item("pot_lid"))==1,"The existing lid must open by hand without requiring a spare lid");test.succeed();
+    }
+    @GameTest public void waterAtAdditionAndCoveredCookingSurviveSaving(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("steamer"));var pot=test.getBlockEntity(p,KitchenBlockEntity.class);pot.batch.addWater(6);pot.batch.add("fish",CookingBatch.Cut.WHOLE,1.6,false,false);pot.batch.ingredients.getFirst().coveredCookingSeconds=17;
+        var restored=(KitchenBlockEntity)BlockEntity.loadStatic(p,pot.getBlockState(),pot.saveWithFullMetadata(test.getLevel().registryAccess()),test.getLevel().registryAccess());
+        test.assertTrue(restored!=null&&restored.batch.ingredients.getFirst().waterOnAdd==6&&restored.batch.ingredients.getFirst().coveredCookingSeconds==17,"Water and covered-heat evidence must remain after saving");test.succeed();
+    }
     @GameTest public void decantingCookedRiceReturnsExactlyOneBowl(GameTestHelper test) {
         var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("wok"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
         use(test,p,player,new ItemStack(KitchenContent.item("cooked_rice")),net.minecraft.core.Direction.UP);

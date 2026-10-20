@@ -6,12 +6,17 @@ import java.util.*;
 public record DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,Integer> ingredients,
                          int servings,boolean oil,boolean salt,boolean soy,boolean vinegar,
                          Map<String,Set<CookingBatch.Cut>> cuts,List<AdditionRule> steps,
-                         Map<String,Double> finishSeasonings,int minimumStirs) {
-    public record AdditionRule(String ingredient,String after,double cooked,double temperature,boolean hotOil) {}
+                         Map<String,Double> finishSeasonings,int minimumStirs,double minimumWater,int minimumCoveredSeconds) {
+    public record AdditionRule(String ingredient,String after,double cooked,double temperature,boolean hotOil,boolean boilingWater) {
+        public AdditionRule(String ingredient,String after,double cooked,double temperature,boolean hotOil){this(ingredient,after,cooked,temperature,hotOil,false);}
+    }
     public record Problem(String key,String ingredient,String related) {}
     public DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,Integer> ingredients,
                       int servings,boolean oil,boolean salt,boolean soy,boolean vinegar) {
-        this(id,methods,ingredients,servings,oil,salt,soy,vinegar,Map.of(),List.of(),Map.of(),0);
+        this(id,methods,ingredients,servings,oil,salt,soy,vinegar,Map.of(),List.of(),Map.of(),0,0,0);
+    }
+    public DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,Integer> ingredients,int servings,boolean oil,boolean salt,boolean soy,boolean vinegar,Map<String,Set<CookingBatch.Cut>> cuts,List<AdditionRule> steps,Map<String,Double> finishSeasonings,int minimumStirs) {
+        this(id,methods,ingredients,servings,oil,salt,soy,vinegar,cuts,steps,finishSeasonings,minimumStirs,0,0);
     }
     public boolean matches(CookingBatch batch){return problem(batch).isEmpty();}
     public int distance(CookingBatch batch) {
@@ -20,12 +25,14 @@ public record DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,I
     }
     public Optional<Problem> problem(CookingBatch batch) {
         if(!methods.contains(batch.method))return issue("method","","");
+        if(batch.water<minimumWater)return issue("water","",Double.toString(minimumWater));
         for(var portion:batch.ingredients) {
             var required=cuts.get(portion.id);
             if(required!=null&&!required.contains(portion.cut))return issue("cut",portion.id,required.iterator().next().name());
             for(var step:steps)if(step.ingredient.equals(portion.id)) {
                 if(!portion.additionRecorded)return issue("history",portion.id,"");
-                if(portion.temperatureOnAdd<step.temperature || step.hotOil&&portion.oilOnAdd<1)return issue("preheat",portion.id,Integer.toString((int)step.temperature));
+                if(step.boilingWater&&(portion.waterOnAdd<1||Math.round(portion.temperatureOnAdd)<step.temperature))return issue("boiling",portion.id,Integer.toString((int)step.temperature));
+                if(Math.round(portion.temperatureOnAdd)<step.temperature || step.hotOil&&portion.oilOnAdd<1)return issue("preheat",portion.id,Integer.toString((int)step.temperature));
                 if(!step.after.isEmpty()) {
                     if(portion.priorCounts.getOrDefault(step.after,0)<ingredients.getOrDefault(step.after,1))return issue("order",portion.id,step.after);
                     if(portion.priorCooked.getOrDefault(step.after,-1d)<step.cooked)return issue("stage",portion.id,step.after);
@@ -38,7 +45,8 @@ public record DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,I
         if(salt&&batch.salt<1)return issue("seasoning","salt","");
         if(soy&&batch.soy<1)return issue("seasoning","soy","");
         if(vinegar&&batch.vinegar<1)return issue("seasoning","vinegar","");
-        for(var entry:finishSeasonings.entrySet())if(batch.seasoningCounts.getOrDefault(entry.getKey(),0)<batch.ingredients.size() || batch.seasoningProgress.getOrDefault(entry.getKey(),-1d)<entry.getValue())return issue("finish",entry.getKey(),"");
+        for(var entry:finishSeasonings.entrySet())if(batch.seasoningCounts.getOrDefault(entry.getKey(),0)<batch.ingredients.size() || batch.seasoningProgress.getOrDefault(entry.getKey(),-1d)<entry.getValue())return issue("finish",entry.getKey(),Integer.toString((int)Math.round(entry.getValue()*100)));
+        if(batch.ingredients.stream().anyMatch(p->p.coveredCookingSeconds<minimumCoveredSeconds))return issue("cover","",Integer.toString(minimumCoveredSeconds));
         if(batch.stirs-batch.stirsAtLastAddition<minimumStirs)return issue("stir","",Integer.toString(minimumStirs));
         return Optional.empty();
     }

@@ -1,0 +1,64 @@
+{
+  "version": "0.1.4",
+  "date": "2026-10-20",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "itemDefinitions": 304,
+  "jarContainsTestCode": false,
+  "sha256": "0fd6be3988dc80596deab95eaea2ecf658a8e8583df6e1b9338c5e48134d836d",
+  "unitTests": {
+    "passed": 33,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 29,
+    "failed": 0,
+    "builtinPassed": 1
+  },
+  "clientChecks": {
+    "iris": "1.11.4+mc26.1.2",
+    "irisPassed": true,
+    "shader": "MakeUp-UltraFast-9.6",
+    "knownShaderWarning": "Nonfatal fixedTaaCorrection parsing warning in shader pack",
+    "vanillaPassed": true,
+    "missingModAssets": 0,
+    "workflow": [
+      "creative tab, crafting and coal/gas chicken regression",
+      "cook raw rice then prepare, serve and eat fried rice regression",
+      "place gas stoves, soup pot, steamer and board with normal client interaction",
+      "fill water and inspect native animated water surface",
+      "actually sneak with knife to switch cut mode and cut sliced ginger",
+      "cut scallion and tomato then add actual prepared ingredients",
+      "cover steamer and steam cod with ginger and scallion",
+      "cook tomato at least halfway before adding raw egg",
+      "wait normal game ticks until each portion is fully cooked",
+      "add soy only after all fish portions are fully cooked",
+      "open existing lid with empty hand, serve fish and soup, then eat fish",
+      "shut both burners off, close world and reopen the same save",
+      "verify remaining dish names, portions, water, covered history and exact gas",
+      "actually sneak with heat cloth to lift soup pot and remount with two servings intact"
+    ],
+    "sodium": "0.9.2+mc26.1.2",
+    "shaderActuallyActive": true
+  },
+  "saveChecks": {
+    "coveredCookingPreserved": true,
+    "actualPotLiftAndRemountPassed": true,
+    "preparationEvidencePreserved": true,
+    "waterPreserved": true,
+    "actualWorldReopenPassed": true,
+    "remainingDishes": [
+      {
+        "dish": "steamed_fish",
+        "servings": 1
+      },
+      {
+        "dish": "tomato_egg_soup",
+        "servings": 2
+      }
+    ],
+    "exactGasPreserved": true
+  },
+  "releaseDownloadVerified": false
+}

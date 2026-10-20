@@ -2464,9 +2464,23 @@
         "STEAM"
       ],
       "servings": 2,
-      "guide": "鱼×2、姜×1、葱×1；蒸熟后淋酱油。",
+      "guide": "鱼×2、姜片×1、切块或切丝的葱×1。蒸笼加水，放食材后加盖，保持蒸汽加热至少15秒并蒸至全部熟透，再淋酱油、加盐装盘。提前淋酱油不计出锅调味。",
       "salt": true,
       "soy": true,
+      "cuts": {
+        "ginger": [
+          "SLICE"
+        ],
+        "scallion": [
+          "DICE",
+          "SHRED"
+        ]
+      },
+      "minimum_water": 0.1,
+      "covered_seconds": 15,
+      "finish_seasonings": {
+        "soy": 1
+      },
       "stirs": 0
     },
     {
@@ -2480,8 +2494,22 @@
         "BOIL"
       ],
       "servings": 2,
-      "guide": "河虾×3、姜×1；水沸后下虾。",
+      "guide": "河虾×3、姜片×1。锅中加满水，先下姜，等显示沸腾且至少95°C后下虾，加盐，熟透盛出。冷水先下虾不会成为白灼虾。",
       "salt": true,
+      "cuts": {
+        "ginger": [
+          "SLICE"
+        ]
+      },
+      "minimum_water": 0.1,
+      "steps": [
+        {
+          "ingredient": "shrimp",
+          "after": "ginger",
+          "temperature": 95,
+          "boiling_water": true
+        }
+      ],
       "stirs": 0
     },
     {
@@ -2495,8 +2523,15 @@
         "STEAM"
       ],
       "servings": 2,
-      "guide": "河蟹×2、姜×1；加水蒸制，配醋。",
+      "guide": "河蟹×2、姜片×1。蒸笼加水、放食材、加盖；有蒸汽后至少保持15秒并蒸至全部熟透，用醋调味装盘。未盖锅不会蒸熟。",
       "vinegar": true,
+      "cuts": {
+        "ginger": [
+          "SLICE"
+        ]
+      },
+      "minimum_water": 0.1,
+      "covered_seconds": 15,
       "stirs": 0
     },
     {
@@ -2510,8 +2545,15 @@
         "STEW"
       ],
       "servings": 3,
-      "guide": "可食菌菇×3；水、盐，小火煮。",
+      "guide": "切片或切块菌菇×3。汤锅加水、放菌菇和盐，煮至全部熟透盛出；完整菌菇不计此菜的处理步骤。",
       "salt": true,
+      "cuts": {
+        "mushroom": [
+          "SLICE",
+          "DICE"
+        ]
+      },
+      "minimum_water": 0.1,
       "stirs": 0
     },
     {
@@ -2525,8 +2567,22 @@
         "BOIL"
       ],
       "servings": 3,
-      "guide": "番茄×2、蛋×1；先煮番茄再下蛋。",
+      "guide": "番茄块或片×2、蛋×1。先加水煮番茄至至少五成熟，再下蛋、加盐，所有食材熟透后盛汤。",
       "salt": true,
+      "cuts": {
+        "tomato": [
+          "DICE",
+          "SLICE"
+        ]
+      },
+      "minimum_water": 0.1,
+      "steps": [
+        {
+          "ingredient": "egg",
+          "after": "tomato",
+          "cooked": 0.5
+        }
+      ],
       "stirs": 0
     },
     {
@@ -2541,8 +2597,28 @@
         "STEW"
       ],
       "servings": 3,
-      "guide": "胡萝卜×2、肉×2、姜×1；加水小火炖。",
+      "guide": "肉块×2、姜片×1、胡萝卜块×2。加水先炖肉和姜，肉至少三成半熟后下胡萝卜，加盐、加盖微沸至少15秒，继续炖到每份熟透。",
       "salt": true,
+      "cuts": {
+        "carrot": [
+          "DICE"
+        ],
+        "pork": [
+          "DICE"
+        ],
+        "ginger": [
+          "SLICE"
+        ]
+      },
+      "minimum_water": 0.1,
+      "covered_seconds": 15,
+      "steps": [
+        {
+          "ingredient": "carrot",
+          "after": "pork",
+          "cooked": 0.35
+        }
+      ],
       "stirs": 0
     },
     {
@@ -2557,8 +2633,29 @@
         "STEW"
       ],
       "servings": 3,
-      "guide": "土豆×2、牛肉×2、洋葱×1；先炖牛肉。",
+      "guide": "牛肉块×2、土豆块×2、洋葱片或块×1。加水先炖牛肉，至少三成半熟后下土豆与洋葱，加盐，加盖微沸至少15秒，全部熟透后盛出。",
       "salt": true,
+      "cuts": {
+        "potato": [
+          "DICE"
+        ],
+        "beef": [
+          "DICE"
+        ],
+        "onion": [
+          "DICE",
+          "SLICE"
+        ]
+      },
+      "minimum_water": 0.1,
+      "covered_seconds": 15,
+      "steps": [
+        {
+          "ingredient": "potato",
+          "after": "beef",
+          "cooked": 0.35
+        }
+      ],
       "stirs": 0
     },
     {
@@ -2573,8 +2670,21 @@
         "STEW"
       ],
       "servings": 3,
-      "guide": "南瓜×2、牛奶×1；煮软后混合。",
+      "guide": "南瓜块×2、牛奶×1。汤锅先加水煮南瓜到至少八成熟，再倒牛奶，加盐，继续加热至全部熟透。奶桶返还，南瓜块可以直接从砧板投入锅内。",
       "salt": true,
+      "cuts": {
+        "pumpkin": [
+          "DICE"
+        ]
+      },
+      "minimum_water": 0.1,
+      "steps": [
+        {
+          "ingredient": "milk",
+          "after": "pumpkin",
+          "cooked": 0.8
+        }
+      ],
       "stirs": 0
     },
     {

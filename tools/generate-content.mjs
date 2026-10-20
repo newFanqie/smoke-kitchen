@@ -101,13 +101,31 @@ const preparation={
  fried_rice:{cuts:{scallion:['DICE','SHRED','MINCE']},steps:[{ingredient:'egg',temperature:110,hot_oil:true},{ingredient:'rice_cooked',after:'egg',cooked:.4},{ingredient:'scallion',after:'rice_cooked',cooked:0}]},
  tomato_eggs:{steps:[{ingredient:'egg',temperature:110,hot_oil:true},{ingredient:'tomato',after:'egg',cooked:.4}]},
  sour_spicy_potato:{cuts:{potato:['SHRED'],garlic:['MINCE']},steps:[{ingredient:'potato',after:'garlic',temperature:100,hot_oil:true}],finish_seasonings:{vinegar:.7}},
- mapo_tofu:{cuts:{pork:['MINCE'],tofu:['DICE']},steps:[{ingredient:'pork',temperature:100,hot_oil:true},{ingredient:'tofu',after:'pork',cooked:.6}]}
+ mapo_tofu:{cuts:{pork:['MINCE'],tofu:['DICE']},steps:[{ingredient:'pork',temperature:100,hot_oil:true},{ingredient:'tofu',after:'pork',cooked:.6}]},
+ steamed_fish:{cuts:{ginger:['SLICE'],scallion:['DICE','SHRED']},minimum_water:.1,covered_seconds:15,finish_seasonings:{soy:1}},
+ boiled_shrimp:{cuts:{ginger:['SLICE']},minimum_water:.1,steps:[{ingredient:'shrimp',after:'ginger',temperature:95,boiling_water:true}]},
+ steamed_crab:{cuts:{ginger:['SLICE']},minimum_water:.1,covered_seconds:15},
+ mushroom_soup:{cuts:{mushroom:['SLICE','DICE']},minimum_water:.1},
+ tomato_egg_soup:{cuts:{tomato:['DICE','SLICE']},minimum_water:.1,steps:[{ingredient:'egg',after:'tomato',cooked:.5}]},
+ carrot_meat_stew:{cuts:{carrot:['DICE'],pork:['DICE'],ginger:['SLICE']},minimum_water:.1,covered_seconds:15,steps:[{ingredient:'carrot',after:'pork',cooked:.35}]},
+ beef_potato_stew:{cuts:{potato:['DICE'],beef:['DICE'],onion:['DICE','SLICE']},minimum_water:.1,covered_seconds:15,steps:[{ingredient:'potato',after:'beef',cooked:.35}]},
+ pumpkin_soup:{cuts:{pumpkin:['DICE']},minimum_water:.1,steps:[{ingredient:'milk',after:'pumpkin',cooked:.8}]}
 };
 for(const recipe of dishes){Object.assign(recipe,preparation[recipe.id]||{});recipe.stirs=recipe.methods.includes('STIR_FRY')?3:recipe.methods.includes('FRY')||recipe.methods.includes('MIX')?1:0;}
 dishes.find(r=>r.id==='fried_rice').guide='米饭×2、蛋×1、切碎的葱×1。先放油，把锅预热到110°C，再下蛋炒至至少四成熟；再加两份米饭，最后下葱。全部加完后翻炒至少3次，加盐，熟透后装盘。生米须先加水煮成米饭。';
 dishes.find(r=>r.id==='sour_spicy_potato').guide='土豆丝×2、辣椒×1、蒜末×1。砧板切法：土豆切丝、蒜剁碎。先下蒜，油锅至少100°C再下土豆丝和辣椒；翻炒至少3次，七成熟后淋醋，加盐，熟透装盘。';
 dishes.find(r=>r.id==='mapo_tofu').guide='豆腐块×2、猪肉末×1、辣椒×1。砧板将猪肉剁碎、豆腐切块。油锅至少100°C下肉末，炒至至少六成熟再下豆腐；加辣椒、酱油，全部加完后轻推至少3次，熟透装盘。';
 dishes.find(r=>r.id==='tomato_eggs').guide='番茄×2、蛋×2。放油，锅温至少110°C再下两份蛋；蛋至少四成熟再下番茄，油盐适量，全部加完后翻炒至少3次，熟透装盘。';
+for(const [id,guide]of Object.entries({
+ steamed_fish:'鱼×2、姜片×1、切块或切丝的葱×1。蒸笼加水，放食材后加盖，保持蒸汽加热至少15秒并蒸至全部熟透，再淋酱油、加盐装盘。提前淋酱油不计出锅调味。',
+ boiled_shrimp:'河虾×3、姜片×1。锅中加满水，先下姜，等显示沸腾且至少95°C后下虾，加盐，熟透盛出。冷水先下虾不会成为白灼虾。',
+ steamed_crab:'河蟹×2、姜片×1。蒸笼加水、放食材、加盖；有蒸汽后至少保持15秒并蒸至全部熟透，用醋调味装盘。未盖锅不会蒸熟。',
+ mushroom_soup:'切片或切块菌菇×3。汤锅加水、放菌菇和盐，煮至全部熟透盛出；完整菌菇不计此菜的处理步骤。',
+ tomato_egg_soup:'番茄块或片×2、蛋×1。先加水煮番茄至至少五成熟，再下蛋、加盐，所有食材熟透后盛汤。',
+ carrot_meat_stew:'肉块×2、姜片×1、胡萝卜块×2。加水先炖肉和姜，肉至少三成半熟后下胡萝卜，加盐、加盖微沸至少15秒，继续炖到每份熟透。',
+ beef_potato_stew:'牛肉块×2、土豆块×2、洋葱片或块×1。加水先炖牛肉，至少三成半熟后下土豆与洋葱，加盐，加盖微沸至少15秒，全部熟透后盛出。',
+ pumpkin_soup:'南瓜块×2、牛奶×1。汤锅先加水煮南瓜到至少八成熟，再倒牛奶，加盐，继续加热至全部熟透。奶桶返还，南瓜块可以直接从砧板投入锅内。'
+}))dishes.find(r=>r.id===id).guide=guide;
 item('mixed_stir_fry','家常杂炒','bowl',{nutrition:5,meal:true});item('mixed_stew','家常炖汤','bowl',{nutrition:5,meal:true});item('burnt_food','焦黑食物','charcoal',{nutrition:1,meal:true});
 
 const q=id=>id.includes(':')?id:`${ns}:${id}`;
@@ -142,6 +160,8 @@ for(const original of [...items]) {
 }
 write(`data/${ns}/catalog.json`,{items,stations,crops,dishes,processes});
 const vanillaTools={stone_knife:'stone_sword',iron_knife:'iron_sword',refined_knife:'netherite_sword',wooden_spatula:'wooden_shovel',iron_spatula:'iron_hoe',ladle:'iron_shovel',tongs:'shears',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',sieve:'cobweb',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle'};
+write(`assets/${ns}/models/item/pot_water.json`,{parent:'minecraft:block/block',textures:{water:'minecraft:block/water_still'},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#water',tintindex:0,uv:[0,0,16,16]}}}]});
+write(`assets/${ns}/items/pot_water.json`,{model:{type:'minecraft:model',model:`${ns}:item/pot_water`,tints:[{type:'minecraft:constant',value:-12618012}]}});
 for(const it of items){
  write(`assets/${ns}/items/${it.id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${it.id}`}});
  const vanilla=(it.variant_of||it.id)==='thermometer'?'clock_00':vanillaTools[it.variant_of||it.id];
@@ -270,13 +290,14 @@ for(const [raw,cooked]of Object.entries({duck_meat:'cooked_duck',goose_meat:'coo
 const messages={full:'容器已满或不能再加入。',fuel:'请加入煤、木炭、煤块、木棍或谷壳。',ingredient:'这里需要可处理的食材。',cut:'切配方式：%s',cut_done:'切配完成，食材已取回。',serving_started:'已开始分餐，请先盛完这一锅。',not_ready:'食材还没完全熟，请观察火候。',empty:'已经空了。',cook_status:'锅温 %s°C｜食材 %s份｜水 %s｜盐 %s｜油 %s｜%s',stove_status:'火力 %s｜燃料剩余 %s秒',station_status:'物品 %s件｜加工进度 %s｜密封 %s'};
 messages.board_status='切配：%s｜进度 %s/4';
 messages.stove_help='火力 %s｜燃料 %s。锅具右键嵌入灶面，也可直接烤食物；空手点侧面调火。';
-messages.burner_status='%s｜%s°C｜熟度 %s%%｜燃料 %s';
+messages.burner_status='%s｜%s°C｜熟度 %s%%｜燃料 %s%s';messages.water_status='｜水%s（%s）';
 messages.mounted='锅具已嵌入灶面；侧面调火，顶部投料，潜行持隔热布取锅。';
 messages.spent='此物品已用完、损坏或变质，请更换或修复。';messages.gas_remove='已有气罐；潜行空手点击侧面取出。';
 messages.gas_amount='实际储气：%s / %s 单位';messages.uses_left='剩余用量 / 耐久：%s / %s';
 messages.gas_status='储气 %s 单位｜火力 %s。开采机贴含气岩层，管道接储气罐与气灶；空手调火。';
 messages.recipe_fallback='本锅盛为%s；未成为%s：%s';messages.recipe_hint='%s：%s';messages.quality='菜肴品质：%s / 3';messages.recipe_generic='这组熟食没有对应固定菜谱，已按%s装盘，可以正常食用。';
-const problems={method:'请使用食谱要求的锅具和做法。',cut:'%s需要%s处理，可取出后重新切配。',history:'%s来自旧版未记录的下料过程，无法确认投料顺序。',preheat:'放入%s前需先加油并将锅预热至%s°C。',order:'%s下得太早，应先加入全部%s。',stage:'加入%s时，前面的%s尚未达到食谱要求的熟度。',missing:'还缺%s ×%s。',extra:'原料比例不符或加入了额外食材。',seasoning:'还需要%s。',finish:'%s需要在原料齐全且七成熟后再加；可在上限内补一份。',stir:'全部投料后还需翻动，至少%s次。'};
+const problems={method:'请使用食谱要求的锅具和做法。',cut:'%s需要%s处理，可取出后重新切配。',history:'%s来自旧版未记录的下料过程，无法确认投料顺序。',preheat:'放入%s前需先加油并将锅预热至%s°C。',order:'%s下得太早，应先加入全部%s。',stage:'加入%s时，前面的%s尚未达到食谱要求的熟度。',missing:'还缺%s ×%s。',extra:'原料比例不符或加入了额外食材。',seasoning:'还需要%s。',finish:'%s应在原料齐全、最低熟度达到%s%%后加入；可在用量上限内补一份。',stir:'全部投料后还需翻动，至少%s次。',water:'需要锅内保留至少%s份水。',boiling:'%s需要在有足够水且达到%s°C沸腾时下锅。',cover:'请加盖并保持有水微沸至少%s秒；蒸菜需保持盖好。'};
+for(const[key,value]of Object.entries({dry:'无水',warming:'加热中',simmering:'微沸',boiling:'沸腾'}))lang[`water.${ns}.${key}`]=value;
 for(const [key,value]of Object.entries(problems))lang[`recipe_problem.${ns}.${key}`]=value;
 for(const[key,value]of Object.entries({WHOLE:'完整',SLICE:'切片',DICE:'切块',SHRED:'切丝',MINCE:'剁碎'}))lang[`cut.${ns}.${key}`]=value;
 for(const[key,value]of Object.entries({egg:'蛋',rice:'生米',rice_cooked:'米饭',scallion:'葱',tomato:'番茄',potato:'土豆',garlic:'蒜',pork:'猪肉',tofu:'豆腐',chili:'辣椒',oil:'食用油',salt:'盐',soy:'酱油',vinegar:'醋'}))lang[`ingredient.${ns}.${key}`]=value;

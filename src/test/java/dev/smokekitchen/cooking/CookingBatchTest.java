@@ -10,7 +10,8 @@ class CookingBatchTest {
         for(var method:new CookingBatch.Method[]{CookingBatch.Method.BOIL,CookingBatch.Method.STEAM}) {
             var b=new CookingBatch();b.method=method;b.add("chicken",CookingBatch.Cut.WHOLE,1.6,false,false);
             for(int i=0;i<150;i++)b.tick(2,true);
-            assertFalse(b.ready());b.water=6;
+            assertFalse(b.ready());
+            b=new CookingBatch();b.method=method;b.add("chicken",CookingBatch.Cut.WHOLE,1.6,false,false);b.addWater(6);
             for(int i=0;i<150;i++)b.tick(2,true);
             assertTrue(b.ready());assertFalse(b.burnt());
         }

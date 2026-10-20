@@ -19,6 +19,8 @@ public final class CookingBatch {
         public boolean additionRecorded;
         public double temperatureOnAdd;
         public int oilOnAdd;
+        public double waterOnAdd;
+        public int coveredCookingSeconds;
         public Map<String,Integer> priorCounts = new HashMap<>();
         public Map<String,Double> priorCooked = new HashMap<>();
         public Portion(String id, Cut cut, double resistance, boolean needsWater, boolean ready) {
@@ -53,10 +55,10 @@ public final class CookingBatch {
     public boolean add(String id, Cut cut, double resistance, boolean needsWater, boolean ready) {
         if (ingredients.size() >= capacity || remainingServings >= 0) return false;
         var portion=new Portion(id,cut,Math.max(.25,resistance),needsWater,ready);
-        portion.additionRecorded=true;portion.temperatureOnAdd=temperature;portion.oilOnAdd=oil;
+        portion.additionRecorded=true;portion.temperatureOnAdd=temperature;portion.oilOnAdd=oil;portion.waterOnAdd=water;
         for(var previous:ingredients){portion.priorCounts.merge(previous.id,1,Integer::sum);portion.priorCooked.merge(previous.id,previous.cooked,Math::min);}
         ingredients.add(portion);stirsAtLastAddition=stirs;
-        temperature=Math.max(20,temperature-8);
+        temperature=Math.max(20,temperature-8/(1+water));
         return true;
     }
 
@@ -64,6 +66,15 @@ public final class CookingBatch {
         seasoningProgress.put(seasoning,ingredients.stream().mapToDouble(p->p.cooked).min().orElse(-1));
         seasoningCounts.put(seasoning,ingredients.size());
     }
+
+    /** Mix room-temperature water with the existing water and the pot's thermal mass. */
+    public double addWater(double requested) {
+        double added=Math.clamp(requested,0,Math.max(0,Math.max(6,capacity)-water));
+        if(added>0){temperature=(temperature*(1+water)+20*added)/(1+water+added);water+=added;}
+        return added;
+    }
+    public int displayedTemperature(){return (int)Math.round(temperature);}
+    public String waterStatus(){return water<=0?"dry":displayedTemperature()>=95?"boiling":displayedTemperature()>=80?"simmering":"warming";}
 
     public void stir() {
         lastStir = seconds;
@@ -76,7 +87,7 @@ public final class CookingBatch {
         heat = Math.clamp(heat, 0, 3);
         double target = heat == 0 ? 20 : 70 + heat * 65;
         temperature += (target - temperature) * (lid ? .09 : .14);
-        if (water > 0 && method != Method.BAKE && method != Method.FRY && method != Method.STIR_FRY) {
+        if (water > 0) {
             temperature = Math.min(temperature, 100);
             if (temperature > 90) water = Math.max(0, water - (lid ? .004 : .012));
         }
@@ -91,7 +102,12 @@ public final class CookingBatch {
                 case MINCE -> 1.5;
             };
             if (method == Method.MIX) continue;
-            if ((p.needsWater || wetMethod) && water <= 0) continue;
+            if((p.needsWater||wetMethod)&&water<=0) {
+                if(temperature>165)p.charred+=(temperature-165)/4200;
+                continue;
+            }
+            if(wetMethod&&water>0&&lid&&displayedTemperature()>=90)p.coveredCookingSeconds++;
+            if(method==Method.STEAM&&(!lid||displayedTemperature()<90))continue;
             if (method == Method.FERMENT) continue;
             double effective = Math.max(0, temperature - 40);
             p.cooked += effective * cutFactor / (2800 * p.resistance);
@@ -148,6 +164,8 @@ public final class CookingBatch {
             if (p.cut == null) p.cut = Cut.WHOLE;
             if(p.priorCounts==null)p.priorCounts=new HashMap<>();
             if(p.priorCooked==null)p.priorCooked=new HashMap<>();
+            p.waterOnAdd=Math.clamp(Double.isFinite(p.waterOnAdd)?p.waterOnAdd:0,0,12);
+            p.coveredCookingSeconds=Math.clamp(p.coveredCookingSeconds,0,100000);
             p.resistance = Math.clamp(Double.isFinite(p.resistance) ? p.resistance : 1, .25, 5);
             p.cooked = Math.clamp(Double.isFinite(p.cooked) ? p.cooked : 0, 0, 100);
             p.charred = Math.clamp(Double.isFinite(p.charred) ? p.charred : 0, 0, 100);

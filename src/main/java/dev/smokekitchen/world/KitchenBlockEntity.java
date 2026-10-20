@@ -220,6 +220,10 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if(held.equals("heat_cloth") && p.isShiftKeyDown()) { movePot(p);return InteractionResult.SUCCESS; }
         if(station().id.equals("oven") && (stack.isEmpty() && !p.isShiftKeyDown() || stack.is(Items.COAL) || stack.is(Items.CHARCOAL) || stack.is(Items.COAL_BLOCK)))return stove(p,stack);
         if (stack.isEmpty()) {
+            if(!p.isShiftKeyDown()&&!attachedLid.isEmpty()) {
+                give(p,new ItemStack(KitchenContent.item(attachedLid)));attachedLid="";
+                level.setBlock(worldPosition,getBlockState().setValue(KitchenBlock.LID,false),Block.UPDATE_ALL);changed();return InteractionResult.SUCCESS;
+            }
             if (p.isShiftKeyDown()) {
                 if (batch.remainingServings >= 0) { say(p,"serving_started"); return InteractionResult.SUCCESS; }
                 retrieveCooked(p);
@@ -242,7 +246,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if (batch.remainingServings >= 0) { say(p,"serving_started"); return InteractionResult.SUCCESS; }
         if (stack.is(Items.WATER_BUCKET) || held.equals("water_jug")) {
             if (batch.water >= 6) { say(p,"full"); return InteractionResult.SUCCESS; }
-            batch.water = Math.min(6,batch.water+(held.equals("water_jug")?1:6));
+            batch.addWater(held.equals("water_jug")?1:6);
             if (stack.is(Items.WATER_BUCKET)) replaceContainer(p,stack,Items.BUCKET); else wear(p,stack,KitchenContent.item("empty_water_jug"));
             changed(); return InteractionResult.SUCCESS;
         }
@@ -368,8 +372,8 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     private Component recipeProblem(dev.smokekitchen.cooking.DishRecipe.Problem problem) {
         Component ingredient=Component.translatable("ingredient.smoke_kitchen."+problem.ingredient());
         Component related=problem.key().equals("cut")?Component.translatable("cut.smoke_kitchen."+problem.related()):Component.translatable("ingredient.smoke_kitchen."+problem.related());
-        if(problem.key().equals("preheat")||problem.key().equals("missing"))return Component.translatable("recipe_problem.smoke_kitchen."+problem.key(),ingredient,problem.related());
-        if(problem.key().equals("stir"))return Component.translatable("recipe_problem.smoke_kitchen.stir",problem.related());
+        if(Set.of("preheat","missing","boiling","finish").contains(problem.key()))return Component.translatable("recipe_problem.smoke_kitchen."+problem.key(),ingredient,problem.related());
+        if(Set.of("stir","water","cover").contains(problem.key()))return Component.translatable("recipe_problem.smoke_kitchen."+problem.key(),problem.related());
         return Component.translatable("recipe_problem.smoke_kitchen."+problem.key(),ingredient,related);
     }
     private void showRecipeHint(Player player) {
@@ -427,13 +431,14 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     public void showStatus(Player p) {
         if(isBurner()) {
             int progress=(int)(batch.ingredients.stream().mapToDouble(x->Math.min(1,x.cooked)).min().orElse(0)*100);
-            say(p,"burner_status",Component.translatable(getFuelUnits()>0&&heat>0?"state.smoke_kitchen.heating":"state.smoke_kitchen.no_heat"),Math.round(batch.temperature),progress,getFuelUnits());
+            var water=Set.of(CookingBatch.Method.BOIL,CookingBatch.Method.STEW,CookingBatch.Method.STEAM).contains(batch.method)?Component.translatable("message.smoke_kitchen.water_status",String.format(Locale.ROOT,"%.1f",batch.water),Component.translatable("water.smoke_kitchen."+batch.waterStatus())):Component.empty();
+            say(p,"burner_status",Component.translatable(getFuelUnits()>0&&heat>0?"state.smoke_kitchen.heating":"state.smoke_kitchen.no_heat"),batch.displayedTemperature(),progress,getFuelUnits(),water);
         }
         else if (kind().equals("cook")) say(p,"cook_status",Math.round(batch.temperature),batch.ingredients.size(),batch.water > 0 ? String.format(java.util.Locale.ROOT,"%.1f",batch.water) : "0",batch.salt,batch.oil,
                 Component.translatable("state.smoke_kitchen."+batch.status()));
         else if(kind().startsWith("gas_")) say(p,"gas_status",fuelSeconds,heat);
         else if(kind().equals("stove")) say(p,"stove_status",heat,fuelSeconds/Math.max(1,heat));
-        else if(kind().equals("board")) say(p,"board_status",cut.name(),cutProgress);
+        else if(kind().equals("board")) say(p,"board_status",Component.translatable("cut.smoke_kitchen."+cut.name()),cutProgress);
         else say(p,"station_status",items.stream().filter(s->!s.isEmpty()).mapToInt(ItemStack::getCount).sum(),work,getBlockState().getValue(KitchenBlock.LID)?"✓":"×");
     }
     public void serverTick() {
@@ -466,9 +471,10 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     public int getFuelUnits(){return fuelSeconds+(kind().equals("gas_stove")?ResourceStates.gasUnits(items.get(26)):0);}
     private void tickCooking(int sourceHeat) {
         batch.tick(sourceHeat,getBlockState().getValue(KitchenBlock.LID));
-        if(batch.temperature>90&&!batch.ingredients.isEmpty() && level instanceof net.minecraft.server.level.ServerLevel server) {
-            boolean wet=batch.water>0;server.sendParticles(wet?net.minecraft.core.particles.ParticleTypes.CLOUD:net.minecraft.core.particles.ParticleTypes.SMOKE,
-                worldPosition.getX()+.5,worldPosition.getY()+(isBurner()?1.05:.4),worldPosition.getZ()+.5,wet?2:1,.1,.02,.1,.005);
+        if(batch.temperature>90&&(!batch.ingredients.isEmpty()||batch.water>0) && level instanceof net.minecraft.server.level.ServerLevel server) {
+            boolean wet=batch.water>0;server.sendParticles(wet?net.minecraft.core.particles.ParticleTypes.WHITE_SMOKE:net.minecraft.core.particles.ParticleTypes.SMOKE,
+                worldPosition.getX()+.5,worldPosition.getY()+(isBurner()?1.05:.4),worldPosition.getZ()+.5,1,.07,.015,.07,.005);
+            if(wet&&batch.waterStatus().equals("boiling"))server.sendParticles(net.minecraft.core.particles.ParticleTypes.BUBBLE_POP,worldPosition.getX()+.5,worldPosition.getY()+(isBurner()?1.06:.28),worldPosition.getZ()+.5,2,.12,.01,.12,0);
         }
         syncState();setChanged();broadcast();
     }

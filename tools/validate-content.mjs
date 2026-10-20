@@ -23,6 +23,8 @@ for(const r of catalog.dishes){
  if([...edges.keys()].some(id=>!visit(id)))errors.push(`Impossible circular preparation order in ${r.id}`);
  for(const [id,progress]of Object.entries(r.finish_seasonings||{}))if(!r[id]||progress<0||progress>1)errors.push(`Invalid finishing seasoning in ${r.id}`);
  if((r.stirs||0)<0||(r.stirs||0)>10)errors.push(`Invalid stirring count in ${r.id}`);
+ if((r.minimum_water||0)<0||(r.minimum_water||0)>6||(r.covered_seconds||0)<0||(r.covered_seconds||0)>300)errors.push(`Invalid wet cooking requirement in ${r.id}`);
+ if((r.steps||[]).some(s=>s.boiling_water&&(!r.minimum_water||s.temperature<90)))errors.push(`Boiling step without water or valid temperature in ${r.id}`);
 }
 function* files(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())yield*files(p);else if(e.name.endsWith('.json'))yield p;}}
 const shapeless=new Map();

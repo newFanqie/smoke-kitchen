@@ -15,3 +15,5 @@ In 0.1.2, kitchen tools reuse Minecraft item model parents (swords, shovels, hoe
 Iris 1.11.4, Sodium 0.9.2 and MakeUp Ultra Fast 9.6 were downloaded from their official Modrinth releases solely into ignored local test directories. They are not vendored, bundled or redistributed by this repository or its JAR. The gameplay screenshots show the actual client renderer. No third-party mod artwork was copied.
 
 In 0.1.3, the existing vanilla references and original assets are retained. No new AI images or third-party assets were added. New recipe-flow screenshots are captured from the actual Minecraft client, including its ordinary world save and reopen flow.
+
+In 0.1.4, the pot liquid surface is a small native Minecraft JSON model referencing the game's animated water_still texture, with a standard constant water tint. It uses the normal item model and submit pipeline; there is no custom shader or copied texture. Small native white-smoke and bubble particles display boiling and steaming. The pot-water item-model definition is a rendering resource, not another registered inventory item. No AI raster assets were generated in this iteration.

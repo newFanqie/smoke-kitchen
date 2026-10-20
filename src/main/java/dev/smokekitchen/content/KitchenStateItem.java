@@ -9,6 +9,17 @@ import java.util.function.Consumer;
 /** Vanilla item behavior with exact container quantities in its ordinary tooltip. */
 public final class KitchenStateItem extends Item {
     public KitchenStateItem(Properties properties){super(properties);}
+    @Override public net.minecraft.world.InteractionResult useOn(net.minecraft.world.item.context.UseOnContext context) {
+        var player=context.getPlayer();
+        if(player!=null&&player.isShiftKeyDown()&&context.getHand()==net.minecraft.world.InteractionHand.MAIN_HAND&&context.getLevel().getBlockEntity(context.getClickedPos()) instanceof dev.smokekitchen.world.KitchenBlockEntity station) {
+            String held=ResourceStates.baseId(context.getItemInHand());
+            if(held.contains("knife")&&station.kind().equals("board")||held.equals("heat_cloth")&&(station.kind().equals("cook")||station.isBurner())) {
+                if(context.getLevel().isClientSide())return net.minecraft.world.InteractionResult.SUCCESS;
+                return station.interact(player,context.getItemInHand(),new net.minecraft.world.phys.BlockHitResult(context.getClickLocation(),context.getClickedFace(),context.getClickedPos(),context.isInside()));
+            }
+        }
+        return super.useOn(context);
+    }
     @Override public void appendHoverText(ItemStack stack,TooltipContext context,TooltipDisplay display,Consumer<Component> lines,TooltipFlag flag) {
         super.appendHoverText(stack,context,display,lines,flag);
         String id=KitchenContent.name(stack.getItem());

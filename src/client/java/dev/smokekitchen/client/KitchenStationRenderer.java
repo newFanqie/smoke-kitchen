@@ -29,6 +29,8 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         float waterHeight;
         float vesselY;
         boolean oven;
+        boolean cookingSurface;
+        float flipDegrees;
     }
     private final Font font;
     private final ItemModelResolver resolver;
@@ -37,6 +39,9 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
     @Override public void extractRenderState(KitchenBlockEntity entity,State state,float partialTick,Vec3 camera,ModelFeatureRenderer.CrumblingOverlay overlay) {
         BlockEntityRenderer.super.extractRenderState(entity,state,partialTick,camera,overlay);
         state.oven=entity.isOven();state.vesselY=state.oven?.6875f:1.1875f;
+        state.cookingSurface=entity.isBurner()||java.util.Set.of("cook","board","plate").contains(entity.kind());
+        float phase=Math.clamp((entity.getLevel().getGameTime()-entity.lastFlipTime+partialTick)/12f,0,1);
+        state.flipDegrees=entity.batch.turns>0?180*((entity.batch.turns-1)%2)+(entity.batch.turns%2==1?180:-180)*phase:0;
         int visible=entity.batch.remainingServings>=0&&entity.batch.totalServings>0?(int)Math.ceil((double)entity.batch.ingredients.size()*entity.batch.remainingServings/entity.batch.totalServings):26;
         var names=new ArrayList<Component>();
         for(int i=0;i<visible;i++)if(!entity.items.get(i).isEmpty() && names.size()<4)names.add(entity.displayedFood(i).getHoverName());
@@ -53,10 +58,11 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         state.height=entity.isBurner()?(entity.mountedCookware.isEmpty()?.89f:switch(entity.mountedCookware){case "frying_pan","baking_tray"->.965f;case "wok"->.99f;default->1.07f;}):switch(entity.kind()) { case "board" -> .13f; case "cook","plate" -> .23f; default -> 1.015f; };
         if(state.oven)state.height=.47f;
         state.vessel=null;state.lid=null;state.gas=null;state.water=null;
-        if(entity.batch.water>0 && (entity.isBurner()&&!entity.mountedCookware.isEmpty() || entity.kind().equals("cook"))) {
+        if(!entity.isOven()&&(entity.batch.water>0||entity.batch.oil>0) && (entity.isBurner()&&!entity.mountedCookware.isEmpty() || entity.kind().equals("cook"))) {
             var stack=new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.PAPER);
-            stack.set(net.minecraft.core.component.DataComponents.ITEM_MODEL,dev.smokekitchen.SmokeKitchen.id("pot_water"));state.water=resolve(stack,entity);
-            float fill=(float)Math.min(1,entity.batch.water/6);
+            String liquid=entity.batch.water>0?"pot_water":entity.batch.burntSugarSeconds>=5?"pot_burnt_sugar":entity.batch.caramelSeconds>=3?"pot_caramel":"pot_oil";
+            stack.set(net.minecraft.core.component.DataComponents.ITEM_MODEL,dev.smokekitchen.SmokeKitchen.id(liquid));state.water=resolve(stack,entity);
+            float fill=entity.batch.water>0?(float)Math.min(1,entity.batch.water/6):.1f;
             state.waterHeight=entity.isBurner()?switch(entity.mountedCookware){case "steamer"->.92f;case "frying_pan","wok","baking_tray"->.92f+.03f*fill;default->.92f+.12f*fill;}:entity.cookingId().equals("steamer")?.07f:.06f+.13f*fill;
         }
         if(!entity.mountedCookware.isEmpty())state.vessel=resolve(new net.minecraft.world.item.ItemStack(dev.smokekitchen.content.KitchenContent.item(entity.mountedCookware)),entity);
@@ -75,11 +81,12 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
             poses.translate(.28+(i%3)*.22,state.height+.015,.36+(i/3)*.27);
             poses.mulPose(Axis.YP.rotationDegrees(state.stirAngle));
             poses.mulPose(Axis.XP.rotationDegrees(90+state.stirAngle));
+            poses.mulPose(Axis.XP.rotationDegrees(state.flipDegrees));
             poses.scale(.28f,.28f,.28f);
             state.items.get(i).submit(poses,queue,state.lightCoords,OverlayTexture.NO_OVERLAY,0);
             poses.popPose();
         }
-        if(!dev.smokekitchen.KitchenConfig.INSTANCE.showWorldLabels||state.oven)return;
+        if(!dev.smokekitchen.KitchenConfig.INSTANCE.showWorldLabels||state.oven||state.cookingSurface)return;
         poses.pushPose();poses.translate(.5,state.height,.5);poses.mulPose(Axis.XP.rotationDegrees(90));poses.scale(.009f,.009f,.009f);
         for(int i=0;i<state.names.size();i++) {
             Component name=state.names.get(i);

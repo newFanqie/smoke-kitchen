@@ -26,12 +26,16 @@ for(const r of catalog.dishes){
  }
  const visit=(id,trail=new Set())=>{if(trail.has(id))return false;return(edges.get(id)||[]).every(next=>visit(next,new Set([...trail,id])));};
  if([...edges.keys()].some(id=>!visit(id)))errors.push(`Impossible circular preparation order in ${r.id}`);
- for(const [id,progress]of Object.entries(r.finish_seasonings||{}))if(!r[id]||progress<0||progress>1)errors.push(`Invalid finishing seasoning in ${r.id}`);
+ for(const [id,progress]of Object.entries(r.finish_seasonings||{}))if((!r[id]&&!(id==='sugar'&&r.staple?.sugar)&&!(r.finishing?.condiments||[]).includes(id))||progress<0||progress>1)errors.push(`Invalid finishing seasoning in ${r.id}`);
  if((r.stirs||0)<0||(r.stirs||0)>10)errors.push(`Invalid stirring count in ${r.id}`);
  if((r.minimum_water||0)<0||(r.minimum_water||0)>6||(r.covered_seconds||0)<0||(r.covered_seconds||0)>300)errors.push(`Invalid wet cooking requirement in ${r.id}`);
  if((r.steps||[]).some(s=>s.boiling_water&&(!r.minimum_water||s.temperature<90)))errors.push(`Boiling step without water or valid temperature in ${r.id}`);
  const s=r.staple||{};
  if((s.water_min||0)<0||(s.water_max||12)>12||(s.water_min||0)>(s.water_max||12)||(s.cooked||0)<0||(s.cooked||0)>3||(s.low_heat_seconds||0)<0||(s.low_heat_seconds||0)>300||(s.oven_seconds||0)<0||(s.oven_seconds||0)>300||(s.sugar||0)<0||(s.sugar||0)>16)errors.push(`Invalid staple cooking rule in ${r.id}`);
+ const f=r.finishing||{};
+ for(const key of ['cold_mixes','marinated_seconds','roast_seconds','ferment_seconds'])if((f[key]||0)<0||(f[key]||0)>2400)errors.push(`Invalid finishing requirement ${r.id}: ${key}`);
+ for(const id of f.condiments||[])if(id!=='honey')checkItem(ns+':'+id,'typed condiment');
+ if((r.steps||[]).some(step=>step.caramel&&(!step.hot_oil||step.temperature<140)))errors.push(`Caramel step without hot oil in ${r.id}`);
 }
 function* files(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())yield*files(p);else if(e.name.endsWith('.json'))yield p;}}
 const shapeless=new Map();

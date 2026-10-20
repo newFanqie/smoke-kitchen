@@ -1,0 +1,78 @@
+{
+  "version": "0.1.6",
+  "date": "2026-10-21",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "itemDefinitions": 304,
+  "jarContainsTestCode": false,
+  "sha256": "e640dd8c51d3f00a0caef0398127148b079f118b6880cfbf3addcf7c94b4a863",
+  "unitTests": {
+    "passed": 60,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 43,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "finalAssetVanillaPassed": true,
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "irisPassed": true,
+    "shaderActuallyActive": true,
+    "finalAssetIrisPassed": true,
+    "finalNativeTextureReferences": 37,
+    "knownShaderWarning": "Nonfatal fixedTaaCorrection parsing warning in shader pack",
+    "workflow": [
+      "normal client cutting of pork, ginger, cucumber and garlic",
+      "sesame oil, vinegar, salt and actual mixing yield cucumber salad",
+      "oil preheat, raw cod, observed setting, actual tongs turn and further heating yield pan-fried fish",
+      "dry oil and sugar actually form caramel before diced pork insertion",
+      "add water and soy, cover and use actual side controls for low-heat braising",
+      "porridge reaches ordinary cookedness, attempted serving keeps bowl and does not lock yield",
+      "continue actual heating to porridge softening target, serve real porridge and braised pork",
+      "eat pan-fried fish and close then reopen the actual world",
+      "sneak targeted contents show remaining named food, without text covering the pot surface",
+      "actual oil heating yields visible yellow oil, brown caramel then burnt-sugar surfaces",
+      "creative tab, workbench crafting, coal chicken and gas pipeline regressions",
+      "fried rice, steamed fish, egg soup, noodles, sealed dough fermentation, bread, buns and tray-lifting regressions"
+    ],
+    "missingModAssets": 0
+  },
+  "saveChecks": {
+    "actualWorldReopenPassed": true,
+    "exactGasPreserved": true,
+    "reducedSoupWaterPreserved": true,
+    "turnAndCaramelHistoryPreserved": true,
+    "remainingDishes": [
+      {
+        "dish": "pan_fried_fish",
+        "servings": 1
+      },
+      {
+        "dish": "braised_pork",
+        "servings": 2
+      },
+      {
+        "dish": "rice_porridge",
+        "servings": 2
+      },
+      {
+        "dish": "cucumber_salad",
+        "servings": 1
+      }
+    ]
+  },
+  "testScopeNotes": [
+    "All ten new dish-specific rules have unit positive and negative cases; the client physically cooks the four selected dishes listed above, not all 29 dishes.",
+    "Pickled cabbage uses a real sealed crock through 24100 server game ticks in a headless game test, not a client 20-minute recording or injected cookedness.",
+    "The vanilla full gameplay run passed before render-only oil/caramel surface resources were added. A separate final vanilla asset run validates actual oil heating and material changes; cooking logic is unchanged.",
+    "Asset close-ups temporarily disable optional storage world labels; full gameplay retains default settings. Cooking-surface labels are removed in production, with targeted sneak contents replacing them.",
+    "Initial raw ingredients and platform are fixtures. Complete uncheated survival acquisition, all-dish client coverage and multiplayer concurrency remain in the finite backlog."
+  ],
+  "releaseDownloadVerified": false
+}

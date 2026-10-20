@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "surface": "minecraft:block/brown_concrete",
+    "particle": "minecraft:block/brown_concrete"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        0.01,
+        13
+      ],
+      "faces": {
+        "up": {
+          "texture": "#surface",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

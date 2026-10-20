@@ -2303,7 +2303,7 @@
         "STEW"
       ],
       "servings": 3,
-      "guide": "米×1。先加至少4份水再下米（可用一水桶6份），汤锅空手点顶部切到炖煮；煮至软化140%，全部投料后用勺搅拌至少2次，保留至少1份水，盛3碗。",
+      "guide": "米×1。先加至少4份水再下米（可用一水桶6份），汤锅空手点顶部切到炖煮；煮至准星软烂进度100%，全部投料后用勺搅拌至少2次，保留至少1份水，盛3碗。普通熟度达到100%仍需继续煮软，提前盛出会提示继续加热且不消耗碗。",
       "minimum_water": 1,
       "staple": {
         "water_min": 4,
@@ -2428,9 +2428,30 @@
         "STIR_FRY"
       ],
       "servings": 2,
-      "guide": "白菜×2、蒜×1；少油爆香再下菜。",
+      "guide": "白菜块或丝×2、蒜末×1。油锅至少100°C先下蒜末，稍炒至一成熟再下白菜，油盐适量，全部投料后翻炒3次，熟透装盘。",
       "oil": true,
       "salt": true,
+      "cuts": {
+        "garlic": [
+          "MINCE"
+        ],
+        "cabbage": [
+          "DICE",
+          "SHRED"
+        ]
+      },
+      "steps": [
+        {
+          "ingredient": "garlic",
+          "temperature": 100,
+          "hot_oil": true
+        },
+        {
+          "ingredient": "cabbage",
+          "after": "garlic",
+          "cooked": 0.1
+        }
+      ],
       "stirs": 3
     },
     {
@@ -2444,9 +2465,19 @@
         "FRY"
       ],
       "servings": 2,
-      "guide": "蛋×2、葱×1；平底锅煎制并翻面。",
+      "guide": "蛋×2、葱花（切块或剁碎）×1。冷平底锅放油、蛋、葱和盐，点火前用筷子或铲搅匀2次；加热成形至至少三成半熟后用铲或夹子翻面，另一面继续加热至少三成，全部熟透盛出。冷锅乱翻不算有效翻面。",
       "oil": true,
       "salt": true,
+      "cuts": {
+        "scallion": [
+          "DICE",
+          "MINCE"
+        ]
+      },
+      "finishing": {
+        "turn": true,
+        "cold_mixes": 2
+      },
       "stirs": 1
     },
     {
@@ -2459,9 +2490,22 @@
         "FRY"
       ],
       "servings": 2,
-      "guide": "鱼×2；热油下锅，盐与胡椒调味，及时翻面。",
+      "guide": "鱼×2，油、盐和胡椒粉。先把油锅预热到110°C，再下两份鱼；鱼至少三成半熟成形后用铲或夹子翻面，再继续煎另一面至少三成，熟透盛出。辣椒粉不能代替胡椒。",
       "oil": true,
       "salt": true,
+      "steps": [
+        {
+          "ingredient": "fish",
+          "temperature": 110,
+          "hot_oil": true
+        }
+      ],
+      "finishing": {
+        "turn": true,
+        "condiments": [
+          "pepper_powder"
+        ]
+      },
       "stirs": 1
     },
     {
@@ -2710,9 +2754,33 @@
         "STEW"
       ],
       "servings": 3,
-      "guide": "猪肉×3、姜×1；糖色、酱油、加水炖。",
+      "guide": "猪肉块×3、姜片×1，少量油、糖和酱油。空汤锅切到炖煮，先放油糖，中火升到145–185°C炒糖色3秒（准星有进度，过热会焦）；先依次下3块肉，再下姜，随后用水壶补2份水、加酱油。加盖转小火至少10秒、盖锅微沸15秒，继续炖到软烂进度100%盛出。糖水炖肉不算炒糖色。",
       "soy": true,
-      "stirs": 0
+      "cuts": {
+        "pork": [
+          "DICE"
+        ],
+        "ginger": [
+          "SLICE"
+        ]
+      },
+      "minimum_water": 0.1,
+      "covered_seconds": 15,
+      "staple": {
+        "sugar": 1,
+        "cooked": 1.2,
+        "low_heat_seconds": 10
+      },
+      "steps": [
+        {
+          "ingredient": "pork",
+          "temperature": 140,
+          "hot_oil": true,
+          "caramel": true
+        }
+      ],
+      "stirs": 0,
+      "oil": true
     },
     {
       "id": "braised_eggplant",
@@ -2725,9 +2793,32 @@
         "STIR_FRY"
       ],
       "servings": 2,
-      "guide": "茄子×3、蒜×1；油、酱油与少量糖。",
+      "guide": "茄子块×3、蒜末×1。油锅至少100°C先下蒜、再下茄子；茄子至少七成熟软化后再加酱油和糖，全部投料后翻炒3次，熟透装盘。",
       "oil": true,
       "soy": true,
+      "cuts": {
+        "eggplant": [
+          "DICE"
+        ],
+        "garlic": [
+          "MINCE"
+        ]
+      },
+      "steps": [
+        {
+          "ingredient": "eggplant",
+          "after": "garlic",
+          "temperature": 100,
+          "hot_oil": true
+        }
+      ],
+      "staple": {
+        "sugar": 1
+      },
+      "finish_seasonings": {
+        "soy": 0.7,
+        "sugar": 0.7
+      },
       "stirs": 3
     },
     {
@@ -2778,11 +2869,26 @@
         "MIX"
       ],
       "servings": 2,
-      "guide": "黄瓜×2、蒜×1；盐、醋、芝麻油拌匀。",
+      "guide": "黄瓜块或片×2、蒜末×1。调理碗冷拌，放盐、醋和芝麻油，搅拌3次即可装盘；菜籽油不能代替芝麻香油，全程不要把食材加热超过60°C。",
       "oil": true,
       "salt": true,
       "vinegar": true,
-      "stirs": 1
+      "cuts": {
+        "cucumber": [
+          "DICE",
+          "SLICE"
+        ],
+        "garlic": [
+          "MINCE"
+        ]
+      },
+      "finishing": {
+        "condiments": [
+          "sesame_oil"
+        ],
+        "maximum_temperature": 60
+      },
+      "stirs": 3
     },
     {
       "id": "pickled_cabbage",
@@ -2796,8 +2902,25 @@
         "FERMENT"
       ],
       "servings": 4,
-      "guide": "白菜×3、辣椒×1、蒜×1；盐水密封等待。",
+      "guide": "白菜丝×3、辣椒片或块×1、蒜末×1、盐2份。腌菜缸加一水桶水，放入处理过的食材与盐，空手密封后等待1200秒；未密封暂停，重新放料从头计时，不能先空缸等待再瞬间腌好。产4份泡菜，打开后潜行空手取出。",
       "salt": true,
+      "cuts": {
+        "cabbage": [
+          "SHRED"
+        ],
+        "chili": [
+          "DICE",
+          "SLICE"
+        ],
+        "garlic": [
+          "MINCE"
+        ]
+      },
+      "minimum_water": 1,
+      "finishing": {
+        "ferment_seconds": 1200,
+        "maximum_temperature": 60
+      },
       "stirs": 0
     },
     {
@@ -2810,9 +2933,17 @@
         "BAKE"
       ],
       "servings": 3,
-      "guide": "调理台用肉×3、洋葱×1制成生肉串×3；盐、孜然，烤制翻面。",
+      "guide": "调理台放肉块×3、洋葱片或块×1、木棍×3，持长筷加工2次得到生肉串×3。烤盘装料，加油盐和孜然粉；至少140°C烤15秒，肉成形后用夹子翻面并继续加热另一面至少三成，全部熟透盛出。",
       "salt": true,
-      "stirs": 0
+      "finishing": {
+        "condiments": [
+          "cumin_powder"
+        ],
+        "turn": true,
+        "roast_seconds": 15
+      },
+      "stirs": 0,
+      "oil": true
     },
     {
       "id": "honey_roast_duck",
@@ -2824,9 +2955,22 @@
         "BAKE"
       ],
       "servings": 3,
-      "guide": "鸭肉×3；蜂蜜、盐、酱油，刷料烤制。",
+      "guide": "鸭肉×3先放烤炉里的烤盘，加酱油与蜂蜜，在点火前冷腌10秒；加盐、加煤烤。至少五成熟后再刷一份蜂蜜，继续至少140°C烤15秒且熟透，盛3份。提前刷蜜不能代替后半程刷料，蜂蜜瓶保留。",
       "salt": true,
       "soy": true,
+      "finishing": {
+        "condiments": [
+          "honey"
+        ],
+        "marinated_seconds": 10,
+        "roast_seconds": 15
+      },
+      "staple": {
+        "oven_seconds": 15
+      },
+      "finish_seasonings": {
+        "honey": 0.5
+      },
       "stirs": 0
     },
     {
@@ -2839,9 +2983,22 @@
         "BAKE"
       ],
       "servings": 3,
-      "guide": "土豆×3；少量油盐，烤至松软。",
+      "guide": "土豆块或片×3，油盐适量。烤盘装入烤炉，加煤升到至少140°C烤15秒，并继续烤到软烂进度100%盛3份。整块生土豆不能跳过切配。",
       "oil": true,
       "salt": true,
+      "cuts": {
+        "potato": [
+          "DICE",
+          "SLICE"
+        ]
+      },
+      "staple": {
+        "oven_seconds": 15,
+        "cooked": 1.2
+      },
+      "finishing": {
+        "roast_seconds": 15
+      },
       "stirs": 0
     },
     {
@@ -3106,13 +3263,24 @@
       "station": "mix",
       "inputs": {
         "minecraft:porkchop": 3,
-        "smoke_kitchen:onion": 1
+        "smoke_kitchen:onion": 1,
+        "minecraft:stick": 3
       },
       "outputs": {
         "smoke_kitchen:raw_skewers": 3
       },
       "seconds": 10,
-      "water": 0
+      "water": 0,
+      "tool": "chopsticks",
+      "cuts": {
+        "minecraft:porkchop": [
+          "DICE"
+        ],
+        "smoke_kitchen:onion": [
+          "DICE",
+          "SLICE"
+        ]
+      }
     },
     {
       "station": "mix",
@@ -3250,7 +3418,19 @@
         "smoke_kitchen:pickled_cabbage": 4
       },
       "seconds": 1200,
-      "water": 1
+      "water": 1,
+      "cuts": {
+        "smoke_kitchen:cabbage": [
+          "SHRED"
+        ],
+        "smoke_kitchen:chili": [
+          "SLICE",
+          "DICE"
+        ],
+        "smoke_kitchen:garlic": [
+          "MINCE"
+        ]
+      }
     },
     {
       "station": "evaporate",

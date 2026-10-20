@@ -23,6 +23,10 @@ public final class CookingBatch {
         public int coveredCookingSeconds;
         public int lowHeatSeconds;
         public boolean rolled;
+        public boolean caramelOnAdd;
+        public boolean turnedAfterSetting;
+        public double cookedAtTurn;
+        public int marinatedSeconds;
         public Map<String,Integer> priorCounts = new HashMap<>();
         public Map<String,Double> priorCooked = new HashMap<>();
         public Portion(String id, Cut cut, double resistance, boolean needsWater, boolean ready) {
@@ -53,6 +57,13 @@ public final class CookingBatch {
     public int remainingServings = -1;
     public int totalServings;
     public int ovenSeconds;
+    public int roastSeconds;
+    public int fermentationSeconds;
+    public int coldMixes;
+    public int turns;
+    public int caramelSeconds;
+    public int burntSugarSeconds;
+    public double maximumFoodTemperature;
     public String lockedDish = "";
     public int capacity = 6;
 
@@ -60,8 +71,10 @@ public final class CookingBatch {
         if (ingredients.size() >= capacity || remainingServings >= 0) return false;
         var portion=new Portion(id,cut,Math.max(.25,resistance),needsWater,ready);
         portion.additionRecorded=true;portion.temperatureOnAdd=temperature;portion.oilOnAdd=oil;portion.waterOnAdd=water;
+        portion.caramelOnAdd=caramelSeconds>=3&&burntSugarSeconds<5;
         for(var previous:ingredients){portion.priorCounts.merge(previous.id,1,Integer::sum);portion.priorCooked.merge(previous.id,previous.cooked,Math::min);}
-        ingredients.add(portion);stirsAtLastAddition=stirs;
+        ingredients.add(portion);stirsAtLastAddition=stirs;coldMixes=0;fermentationSeconds=0;
+        maximumFoodTemperature=Math.max(maximumFoodTemperature,temperature);
         temperature=Math.max(20,temperature-8/(1+water));
         return true;
     }
@@ -83,7 +96,14 @@ public final class CookingBatch {
     public void stir() {
         lastStir = seconds;
         stirs++;
+        if(temperature<60&&!ingredients.isEmpty()&&ingredients.stream().allMatch(p->p.cooked<.1))coldMixes++;
     }
+    /** Cold spam cannot substitute for turning food after its first side has set. */
+    public void turn() {
+        stir();turns++;
+        for(var p:ingredients)if(!p.turnedAfterSetting&&p.cooked>=.35){p.turnedAfterSetting=true;p.cookedAtTurn=p.cooked;}
+    }
+    public int progress(double target){return (int)Math.floor(100*Math.min(1,ingredients.stream().mapToDouble(p->p.cooked/Math.max(1,target)).min().orElse(0)));}
 
     /** Called once per simulated second; heat is supplied by the adjacent stove. */
     public void tick(int heat, boolean lid) {
@@ -95,9 +115,18 @@ public final class CookingBatch {
             temperature = Math.min(temperature, 100);
             if (temperature > 90) water = Math.max(0, water - (lid ? .004 : .012));
         }
-        if (ingredients.isEmpty()) return;
+        if(ingredients.isEmpty()) {
+            if(water<=0&&oil>0&&sugar>0){if(temperature>=145&&temperature<=185)caramelSeconds++;else if(temperature>185)burntSugarSeconds++;}
+            return;
+        }
+        maximumFoodTemperature=Math.max(maximumFoodTemperature,temperature);
+        if(method==Method.BAKE&&heat>0&&temperature>=140&&water<=0)roastSeconds++;
+        boolean fermenting=method==Method.FERMENT&&lid&&water>=1&&salt>=2&&temperature<60;
+        if(fermenting)fermentationSeconds++;
+        boolean marinating=temperature<60&&seasoningCounts.getOrDefault("honey",-1)>=ingredients.size()&&seasoningCounts.getOrDefault("soy",-1)>=ingredients.size();
         boolean wetMethod = method == Method.BOIL || method == Method.STEAM || method == Method.STEW;
         for (Portion p : ingredients) {
+            if(marinating&&p.cooked<.1)p.marinatedSeconds++;
             double cutFactor = switch (p.cut) {
                 case WHOLE -> .75;
                 case DICE -> 1.0;
@@ -113,7 +142,7 @@ public final class CookingBatch {
             if(wetMethod&&water>0&&lid&&displayedTemperature()>=90)p.coveredCookingSeconds++;
             if(wetMethod&&water>0&&lid&&heat==1&&displayedTemperature()>=90)p.lowHeatSeconds++;
             if(method==Method.STEAM&&(!lid||displayedTemperature()<90))continue;
-            if (method == Method.FERMENT) continue;
+            if (method == Method.FERMENT) {if(fermenting)p.cooked=Math.max(p.cooked,fermentationSeconds/1200d);continue;}
             double effective = Math.max(0, temperature - 40);
             p.cooked += effective * cutFactor / (2800 * p.resistance);
             if (temperature > 165 && (!wetMethod || water <= 0)) {
@@ -174,6 +203,8 @@ public final class CookingBatch {
             p.waterOnAdd=Math.clamp(Double.isFinite(p.waterOnAdd)?p.waterOnAdd:0,0,12);
             p.coveredCookingSeconds=Math.clamp(p.coveredCookingSeconds,0,100000);
             p.lowHeatSeconds=Math.clamp(p.lowHeatSeconds,0,100000);
+            p.cookedAtTurn=Math.clamp(Double.isFinite(p.cookedAtTurn)?p.cookedAtTurn:0,0,100);
+            p.marinatedSeconds=Math.clamp(p.marinatedSeconds,0,100000);
             p.resistance = Math.clamp(Double.isFinite(p.resistance) ? p.resistance : 1, .25, 5);
             p.cooked = Math.clamp(Double.isFinite(p.cooked) ? p.cooked : 0, 0, 100);
             p.charred = Math.clamp(Double.isFinite(p.charred) ? p.charred : 0, 0, 100);
@@ -190,5 +221,8 @@ public final class CookingBatch {
         remainingServings = Math.clamp(remainingServings, -1, 24);
         totalServings=Math.clamp(Math.max(totalServings,remainingServings),0,24);
         ovenSeconds=Math.clamp(ovenSeconds,0,100000);
+        roastSeconds=Math.clamp(roastSeconds,0,100000);fermentationSeconds=Math.clamp(fermentationSeconds,0,100000);
+        coldMixes=Math.clamp(coldMixes,0,10000);turns=Math.clamp(turns,0,10000);caramelSeconds=Math.clamp(caramelSeconds,0,10000);burntSugarSeconds=Math.clamp(burntSugarSeconds,0,10000);
+        maximumFoodTemperature=Math.clamp(Double.isFinite(maximumFoodTemperature)?maximumFoodTemperature:0,0,500);
     }
 }

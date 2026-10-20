@@ -98,6 +98,16 @@ dish('steamed_buns','馒头',{dough_fermented:2},'STEAM',2,'面团×2与引子�
 dish('homestyle_bread','家常面包',{dough_fermented:2},'BAKE',2,'发酵面团×2、少量糖，在烤盘上烘烤。');
 dish('apple_pie','苹果派',{pie:1},'BAKE',3,'调理台用面团×2、苹果×2、糖装馅，生苹果派放烤盘烤熟。');
 const preparation={
+ garlic_greens:{cuts:{garlic:['MINCE'],cabbage:['DICE','SHRED']},steps:[{ingredient:'garlic',temperature:100,hot_oil:true},{ingredient:'cabbage',after:'garlic',cooked:.1}]},
+ scallion_omelette:{cuts:{scallion:['DICE','MINCE']},finishing:{turn:true,cold_mixes:2}},
+ pan_fried_fish:{steps:[{ingredient:'fish',temperature:110,hot_oil:true}],finishing:{turn:true,condiments:['pepper_powder']}},
+ braised_pork:{cuts:{pork:['DICE'],ginger:['SLICE']},minimum_water:.1,covered_seconds:15,staple:{sugar:1,cooked:1.2,low_heat_seconds:10},steps:[{ingredient:'pork',temperature:140,hot_oil:true,caramel:true}]},
+ braised_eggplant:{cuts:{eggplant:['DICE'],garlic:['MINCE']},steps:[{ingredient:'eggplant',after:'garlic',temperature:100,hot_oil:true}],staple:{sugar:1},finish_seasonings:{soy:.7,sugar:.7}},
+ cucumber_salad:{cuts:{cucumber:['DICE','SLICE'],garlic:['MINCE']},finishing:{condiments:['sesame_oil'],maximum_temperature:60}},
+ pickled_cabbage:{cuts:{cabbage:['SHRED'],chili:['DICE','SLICE'],garlic:['MINCE']},minimum_water:1,finishing:{ferment_seconds:1200,maximum_temperature:60}},
+ meat_skewers:{finishing:{condiments:['cumin_powder'],turn:true,roast_seconds:15}},
+ honey_roast_duck:{finishing:{condiments:['honey'],marinated_seconds:10,roast_seconds:15},staple:{oven_seconds:15},finish_seasonings:{honey:.5}},
+ roast_potatoes:{cuts:{potato:['DICE','SLICE']},staple:{oven_seconds:15,cooked:1.2},finishing:{roast_seconds:15}},
  cooked_rice:{minimum_water:.1,staple:{water_min:1,water_max:3,cooked:1,low_heat_seconds:10}},
  rice_porridge:{minimum_water:1,staple:{water_min:4,cooked:1.4}},
  noodle_soup:{cuts:{dough:['SHRED'],cabbage:['SHRED','DICE']},minimum_water:.1,staple:{rolled:true}},
@@ -120,9 +130,24 @@ const preparation={
 };
 for(const recipe of dishes){Object.assign(recipe,preparation[recipe.id]||{});recipe.stirs=recipe.methods.includes('STIR_FRY')?3:recipe.methods.includes('FRY')||recipe.methods.includes('MIX')?1:0;}
 dishes.find(r=>r.id==='rice_porridge').stirs=2;
+dishes.find(r=>r.id==='cucumber_salad').stirs=3;
+dishes.find(r=>r.id==='braised_pork').oil=true;
+dishes.find(r=>r.id==='meat_skewers').oil=true;
+for(const[id,guide]of Object.entries({
+ garlic_greens:'白菜块或丝×2、蒜末×1。油锅至少100°C先下蒜末，稍炒至一成熟再下白菜，油盐适量，全部投料后翻炒3次，熟透装盘。',
+ scallion_omelette:'蛋×2、葱花（切块或剁碎）×1。冷平底锅放油、蛋、葱和盐，点火前用筷子或铲搅匀2次；加热成形至至少三成半熟后用铲或夹子翻面，另一面继续加热至少三成，全部熟透盛出。冷锅乱翻不算有效翻面。',
+ pan_fried_fish:'鱼×2，油、盐和胡椒粉。先把油锅预热到110°C，再下两份鱼；鱼至少三成半熟成形后用铲或夹子翻面，再继续煎另一面至少三成，熟透盛出。辣椒粉不能代替胡椒。',
+ braised_pork:'猪肉块×3、姜片×1，少量油、糖和酱油。空汤锅切到炖煮，先放油糖，中火升到145–185°C炒糖色3秒（准星有进度，过热会焦）；先依次下3块肉，再下姜，随后用水壶补2份水、加酱油。加盖转小火至少10秒、盖锅微沸15秒，继续炖到软烂进度100%盛出。糖水炖肉不算炒糖色。',
+ braised_eggplant:'茄子块×3、蒜末×1。油锅至少100°C先下蒜、再下茄子；茄子至少七成熟软化后再加酱油和糖，全部投料后翻炒3次，熟透装盘。',
+ cucumber_salad:'黄瓜块或片×2、蒜末×1。调理碗冷拌，放盐、醋和芝麻油，搅拌3次即可装盘；菜籽油不能代替芝麻香油，全程不要把食材加热超过60°C。',
+ pickled_cabbage:'白菜丝×3、辣椒片或块×1、蒜末×1、盐2份。腌菜缸加一水桶水，放入处理过的食材与盐，空手密封后等待1200秒；未密封暂停，重新放料从头计时，不能先空缸等待再瞬间腌好。产4份泡菜，打开后潜行空手取出。',
+ meat_skewers:'调理台放肉块×3、洋葱片或块×1、木棍×3，持长筷加工2次得到生肉串×3。烤盘装料，加油盐和孜然粉；至少140°C烤15秒，肉成形后用夹子翻面并继续加热另一面至少三成，全部熟透盛出。',
+ honey_roast_duck:'鸭肉×3先放烤炉里的烤盘，加酱油与蜂蜜，在点火前冷腌10秒；加盐、加煤烤。至少五成熟后再刷一份蜂蜜，继续至少140°C烤15秒且熟透，盛3份。提前刷蜜不能代替后半程刷料，蜂蜜瓶保留。',
+ roast_potatoes:'土豆块或片×3，油盐适量。烤盘装入烤炉，加煤升到至少140°C烤15秒，并继续烤到软烂进度100%盛3份。整块生土豆不能跳过切配。'
+}))dishes.find(r=>r.id===id).guide=guide;
 for(const[id,guide]of Object.entries({
  cooked_rice:'米×1。用水壶加1–3份水后下米，煮沸后转小火，加盖至少焖10秒并煮到熟透；盛出2碗。桶装满6份水更适合煮粥，米饭不要加太多水。',
- rice_porridge:'米×1。先加至少4份水再下米（可用一水桶6份），汤锅空手点顶部切到炖煮；煮至软化140%，全部投料后用勺搅拌至少2次，保留至少1份水，盛3碗。',
+ rice_porridge:'米×1。先加至少4份水再下米（可用一水桶6份），汤锅空手点顶部切到炖煮；煮至准星软烂进度100%，全部投料后用勺搅拌至少2次，保留至少1份水，盛3碗。普通熟度达到100%仍需继续煮软，提前盛出会提示继续加热且不消耗碗。',
  noodle_soup:'面团×2。在砧板用擀面杖擀开，再潜行持刀切换至切丝，切4次得到生面条。两份面条、切丝或切块白菜×1，加水、盐煮熟装碗；整块面团不能成为手擀面。',
  pork_dumplings:'面团×2先在砧板擀开（不用切），猪肉×1剁碎，白菜×1切丝或剁碎。投入调理台，持擀面杖右键包制2次得到生饺子×2；下锅加水盐煮熟，或蒸笼加盖蒸熟。',
  steamed_buns:'面团×2、引子×1放入发酵缸，空手盖好，等待120秒后潜行空手取出两份发酵面团（引子返还）。蒸笼有水、盖锅至少15秒并蒸至熟透，盛2份。',
@@ -154,7 +179,8 @@ process('press',{rapeseed:8,'minecraft:glass_bottle':1},{rapeseed_oil:1,oil_cake
 process('mix',{flour:2},{dough:2},5,1);process('mix',{'minecraft:book':1},{recipe_book:1});
 process('mix',{dough:2,'minecraft:porkchop':1,cabbage:1},{raw_dumplings:2},10);
 Object.assign(processes[processes.length-1],{tool:'rolling_pin',rolled:[q('dough')],cuts:{'minecraft:porkchop':['MINCE'],[q('cabbage')]:['SHRED','MINCE']}});
-process('mix',{'minecraft:porkchop':3,onion:1},{raw_skewers:3},10);
+process('mix',{'minecraft:porkchop':3,onion:1,'minecraft:stick':3},{raw_skewers:3},10);
+Object.assign(processes[processes.length-1],{tool:'chopsticks',cuts:{'minecraft:porkchop':['DICE'],[q('onion')]:['DICE','SLICE']}});
 process('mix',{dough:2,'minecraft:apple':2,'minecraft:sugar':1},{raw_apple_pie:1},10);
 Object.assign(processes[processes.length-1],{tool:'rolling_pin',rolled:[q('dough')],cuts:{'minecraft:apple':['SLICE']}});
 process('ferment',{dough:2,starter:1},{fermented_dough:2,starter:1},120);
@@ -165,6 +191,7 @@ process('ferment',{soybean:4,flour:2,salt:2,starter:1,'minecraft:glass_bottle':1
 process('ferment',{cooked_rice:4,vinegar_starter:1,'minecraft:glass_bottle':1},{rice_vinegar:1,vinegar_starter:1},2400,1);
 process('mix',{soybean:4,rice_vinegar:1},{tofu:2},20,1);
 process('pickle',{cabbage:3,chili:1,garlic:1,salt:2},{pickled_cabbage:4},1200,1);
+Object.assign(processes[processes.length-1],{cuts:{[q('cabbage')]:['SHRED'],[q('chili')]:['SLICE','DICE'],[q('garlic')]:['MINCE']}});
 process('evaporate',{}, {salt_crystals:4},120,6);processes[processes.length-1].saltwater=true;
 
 for(const original of [...items]) {
@@ -178,9 +205,13 @@ for(const original of [...items]) {
  }
 }
 write(`data/${ns}/catalog.json`,{items,stations,crops,dishes,processes});
-const vanillaTools={stone_knife:'stone_sword',iron_knife:'iron_sword',refined_knife:'netherite_sword',wooden_spatula:'wooden_shovel',iron_spatula:'iron_hoe',ladle:'iron_shovel',tongs:'shears',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',sieve:'cobweb',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle'};
+const vanillaTools={stone_knife:'stone_sword',iron_knife:'iron_sword',refined_knife:'netherite_sword',wooden_spatula:'wooden_shovel',iron_spatula:'iron_hoe',ladle:'iron_shovel',tongs:'shears',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',sieve:'cobweb',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle',pan_fried_fish:'cooked_cod',roast_potatoes:'baked_potato'};
 write(`assets/${ns}/models/item/pot_water.json`,{parent:'minecraft:block/block',textures:{water:'minecraft:block/water_still'},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#water',tintindex:0,uv:[0,0,16,16]}}}]});
 write(`assets/${ns}/items/pot_water.json`,{model:{type:'minecraft:model',model:`${ns}:item/pot_water`,tints:[{type:'minecraft:constant',value:-12618012}]}});
+for(const[id,texture]of Object.entries({pot_oil:'honey_block_top',pot_caramel:'brown_concrete',pot_burnt_sugar:'black_concrete'})){
+ write(`assets/${ns}/models/item/${id}.json`,{parent:'minecraft:block/block',textures:{surface:`minecraft:block/${texture}`},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#surface',uv:[0,0,16,16]}}}]});
+ write(`assets/${ns}/items/${id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${id}`}});
+}
 for(const id of ['dough_sheet','raw_noodles']){
  const cuboid=(from,to)=>({from,to,faces:Object.fromEntries(['up','down','north','south','east','west'].map(f=>[f,{texture:'#dough'}]))});
  const elements=id==='dough_sheet'?[cuboid([2,2,7],[14,14,8])]:[2,5,8,11].map(x=>cuboid([x,2,7],[x+1.5,14,8]));
@@ -329,6 +360,11 @@ Object.assign(problems,{water_ratio:'加入%s时水量需要为%s份；下锅前
 Object.assign(messages,{roll_dough:'请先把面团放到砧板上，再用擀面杖。',rolled:'面团已经擀开。',roll_then_shred:'请先用擀面杖擀开，再切换刀具至切丝；包饺子和派只需擀开。',dough_sheet:'擀开的面团',raw_noodles:'生面条',cooked_noodles:'熟面条',tray_needed:'请先手持烤盘右键装入烤炉。',tray_mounted:'烤盘已装入烤炉；放入食材后加煤烘烤。',water_vessel:'请先在灶台装能盛水的锅；烤盘和烤炉不能装水。',steam_lid:'蒸笼尚未加盖，食物不会继续蒸熟。'});
 lang[`ingredient.${ns}.sugar`]='糖';
 for(const [key,value]of Object.entries(problems))lang[`recipe_problem.${ns}.${key}`]=value;
+Object.assign(problems,{turn:'%s需要成形后三成半熟再翻面，并继续加热另一面至少三成。',cold_mix:'蛋和葱应在点火前、保持生料时搅匀至少%s次。',caramel:'%s下锅前需在无水热油中把糖炒出糖色3秒；温度145–185°C，焦糖不能补救。',marinate:'%s需在点火前用蜂蜜和酱油冷腌至少%s秒。',cold:'冷拌食材不能超过%s°C。',roast:'需要在无水、至少140°C下烤制%s秒。',ferment:'需要有盐水、密封且低于60°C发酵%s秒。',soften:'%s还未软烂，请继续加热到软烂进度100%。'});
+Object.assign(messages,{softening:'软烂',softening_progress:'软烂进度 %s%%',caramel_progress:'糖色 %s/3秒（未焦%s）',contents:'食材：',open_first:'请先空手打开缸盖，再加入材料；重新加料会重计时间。'});
+messages.burner_status='%s｜%s°C｜进度 %s%%｜燃料 %s%s';
+for(const[key,value]of Object.entries(problems))lang[`recipe_problem.${ns}.${key}`]=value;
+for(const[key,value]of Object.entries({pepper_powder:'胡椒粉',cumin_powder:'孜然粉',sesame_oil:'芝麻油',honey:'蜂蜜'}))lang[`ingredient.${ns}.${key}`]=value;
 for(const[key,value]of Object.entries({WHOLE:'完整',SLICE:'切片',DICE:'切块',SHRED:'切丝',MINCE:'剁碎'}))lang[`cut.${ns}.${key}`]=value;
 for(const[key,value]of Object.entries({egg:'蛋',rice:'生米',rice_cooked:'米饭',scallion:'葱',tomato:'番茄',potato:'土豆',garlic:'蒜',pork:'猪肉',tofu:'豆腐',chili:'辣椒',oil:'食用油',salt:'盐',soy:'酱油',vinegar:'醋'}))lang[`ingredient.${ns}.${key}`]=value;
 for(const definition of items)if(definition.ingredient&&!definition.variant_of&&!lang[`ingredient.${ns}.${definition.ingredient}`])lang[`ingredient.${ns}.${definition.ingredient}`]=definition.name;

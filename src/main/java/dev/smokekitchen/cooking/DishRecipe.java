@@ -6,14 +6,21 @@ import java.util.*;
 public record DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,Integer> ingredients,
                          int servings,boolean oil,boolean salt,boolean soy,boolean vinegar,
                          Map<String,Set<CookingBatch.Cut>> cuts,List<AdditionRule> steps,
-                         Map<String,Double> finishSeasonings,int minimumStirs,double minimumWater,int minimumCoveredSeconds,StapleRule staple) {
+                         Map<String,Double> finishSeasonings,int minimumStirs,double minimumWater,int minimumCoveredSeconds,StapleRule staple,FinishingRule finishing) {
+    public record FinishingRule(Set<String> condiments,boolean turn,int coldMixes,int marinatedSeconds,int roastSeconds,int fermentationSeconds,double maximumTemperature) {
+        public static final FinishingRule NONE=new FinishingRule(Set.of(),false,0,0,0,0,500);
+    }
+    public DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,Integer> ingredients,int servings,boolean oil,boolean salt,boolean soy,boolean vinegar,Map<String,Set<CookingBatch.Cut>> cuts,List<AdditionRule> steps,Map<String,Double> finishSeasonings,int minimumStirs,double minimumWater,int minimumCoveredSeconds,StapleRule staple) {
+        this(id,methods,ingredients,servings,oil,salt,soy,vinegar,cuts,steps,finishSeasonings,minimumStirs,minimumWater,minimumCoveredSeconds,staple,FinishingRule.NONE);
+    }
     public record StapleRule(double waterOnAddMin,double waterOnAddMax,double cooked,int lowHeatSeconds,int sugar,boolean rolled,int ovenSeconds) {
         public static final StapleRule NONE=new StapleRule(0,12,0,0,0,false,0);
     }
     public DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,Integer> ingredients,int servings,boolean oil,boolean salt,boolean soy,boolean vinegar,Map<String,Set<CookingBatch.Cut>> cuts,List<AdditionRule> steps,Map<String,Double> finishSeasonings,int minimumStirs,double minimumWater,int minimumCoveredSeconds) {
         this(id,methods,ingredients,servings,oil,salt,soy,vinegar,cuts,steps,finishSeasonings,minimumStirs,minimumWater,minimumCoveredSeconds,StapleRule.NONE);
     }
-    public record AdditionRule(String ingredient,String after,double cooked,double temperature,boolean hotOil,boolean boilingWater) {
+    public record AdditionRule(String ingredient,String after,double cooked,double temperature,boolean hotOil,boolean boilingWater,boolean caramel) {
+        public AdditionRule(String ingredient,String after,double cooked,double temperature,boolean hotOil,boolean boilingWater){this(ingredient,after,cooked,temperature,hotOil,boilingWater,false);}
         public AdditionRule(String ingredient,String after,double cooked,double temperature,boolean hotOil){this(ingredient,after,cooked,temperature,hotOil,false);}
     }
     public record Problem(String key,String ingredient,String related) {}
@@ -37,6 +44,7 @@ public record DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,I
             if(required!=null&&!required.contains(portion.cut))return issue("cut",portion.id,required.iterator().next().name());
             for(var step:steps)if(step.ingredient.equals(portion.id)) {
                 if(!portion.additionRecorded)return issue("history",portion.id,"");
+                if(step.caramel&&(!portion.caramelOnAdd||portion.waterOnAdd>0))return issue("caramel",portion.id,"");
                 if(step.boilingWater&&(portion.waterOnAdd<1||Math.round(portion.temperatureOnAdd)<step.temperature))return issue("boiling",portion.id,Integer.toString((int)step.temperature));
                 if(Math.round(portion.temperatureOnAdd)<step.temperature || step.hotOil&&portion.oilOnAdd<1)return issue("preheat",portion.id,Integer.toString((int)step.temperature));
                 if(!step.after.isEmpty()) {
@@ -52,13 +60,20 @@ public record DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,I
         if(soy&&batch.soy<1)return issue("seasoning","soy","");
         if(vinegar&&batch.vinegar<1)return issue("seasoning","vinegar","");
         if(batch.sugar<staple.sugar)return issue("seasoning","sugar","");
+        for(var condiment:finishing.condiments)if(!batch.seasoningCounts.containsKey(condiment))return issue("seasoning",condiment,"");
+        if(batch.maximumFoodTemperature>finishing.maximumTemperature)return issue("cold","",Integer.toString((int)finishing.maximumTemperature));
+        if(batch.coldMixes<finishing.coldMixes)return issue("cold_mix","",Integer.toString(finishing.coldMixes));
         for(var p:batch.ingredients) {
+            if(finishing.turn&&(!p.turnedAfterSetting||p.cooked-p.cookedAtTurn<.3))return issue("turn",p.id,"");
+            if(p.marinatedSeconds<finishing.marinatedSeconds)return issue("marinate",p.id,Integer.toString(finishing.marinatedSeconds));
             if(p.waterOnAdd<staple.waterOnAddMin||p.waterOnAdd>staple.waterOnAddMax)return issue("water_ratio",p.id,staple.waterOnAddMin+"–"+staple.waterOnAddMax);
             if(p.cooked<staple.cooked)return issue("soften",p.id,Integer.toString((int)Math.round(staple.cooked*100)));
             if(p.lowHeatSeconds<staple.lowHeatSeconds)return issue("low_heat","",Integer.toString(staple.lowHeatSeconds));
             if(staple.rolled&&p.id.equals("dough")&&!p.rolled)return issue("roll",p.id,"");
         }
         if(batch.ovenSeconds<staple.ovenSeconds)return issue("oven","",Integer.toString(staple.ovenSeconds));
+        if(batch.roastSeconds<finishing.roastSeconds)return issue("roast","",Integer.toString(finishing.roastSeconds));
+        if(batch.fermentationSeconds<finishing.fermentationSeconds)return issue("ferment","",Integer.toString(finishing.fermentationSeconds));
         for(var entry:finishSeasonings.entrySet())if(batch.seasoningCounts.getOrDefault(entry.getKey(),0)<batch.ingredients.size() || batch.seasoningProgress.getOrDefault(entry.getKey(),-1d)<entry.getValue())return issue("finish",entry.getKey(),Integer.toString((int)Math.round(entry.getValue()*100)));
         if(batch.ingredients.stream().anyMatch(p->p.coveredCookingSeconds<minimumCoveredSeconds))return issue("cover","",Integer.toString(minimumCoveredSeconds));
         if(batch.stirs-batch.stirsAtLastAddition<minimumStirs)return issue("stir","",Integer.toString(minimumStirs));

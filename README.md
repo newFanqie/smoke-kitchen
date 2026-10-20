@@ -2,7 +2,7 @@
 
 Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配、锅具投料、调火和翻炒，把食材做成可以装盘分享的饭菜。
 
-**当前版本：0.1.6 开发版。** 锅具嵌入低灶面，煤与燃气能把原版生肉变成真正熟食；修复管网供气，工具复用清楚的原版模型，气罐等资源有独立状态物品。完整设计仍在分阶段制作，本版补全目录中其余十道菜的独特工序：翻面、炒糖色、冷拌、腌制与刷蜜。白粥显示独立软烂进度，食材不再被悬浮字遮住，油面与糖色跟随实际加热变化。生物外观、农牧生态、独立建筑、经营与完整生存验收仍在后续范围。见 [实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md) 和 [玩法设计](docs/DESIGN.md)。
+**当前版本：0.1.7 开发版。** 锅具嵌入低灶面，煤与燃气能把原版生肉变成真正熟食；修复管网供气，工具复用清楚的原版模型，气罐等资源有独立状态物品。完整设计仍在分阶段制作，本版补充可读的品质原因与实际食用收益差异，散装半成品保留翻面、腌制、切法与温度历史，并提供可关闭的烫伤和自动详情。29道菜已有独特工序，白粥有软烂进度，油面与糖色跟随实际加热变化。生物外观、农牧生态、独立建筑、经营与完整生存验收仍在后续范围。见 [实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md) 和 [玩法设计](docs/DESIGN.md)。
 
 ## 当前玩法
 
@@ -17,16 +17,16 @@ Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配
 
 ## 安装
 
-[下载 0.1.6 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.6) · [本次更新与实测记录](docs/UPDATE-0.1.6.md)
+[下载 0.1.7 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.7) · [本次更新与实测记录](docs/UPDATE-0.1.7.md)
 
 1. 使用 Minecraft Java **26.1.2**、Fabric Loader **0.19.2** 或更高的兼容版本。
 2. 安装对应版本的 Fabric API；本工程验证使用 **0.149.1+26.1.2**。
-3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.6.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
+3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.7.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
 4. 联机时服务器与客户端均安装本模组及 Fabric API。
 
 实际客户端检查截图：
 
-![实际翻面煎鱼](docs/images/flip-vanilla-0.1.6.png)
+![同原料实际烹饪后的品质对照（测试展示页）](docs/images/quality-comparison-vanilla-0.1.7.png)
 ![原版工具和独立状态物品](docs/images/tools-0.1.2.png)
 
 GitHub Actions 成功后，可从运行的 `smoke-kitchen-26.1.2` 附件下载构建。开发版先用于测试存档，尚未宣称通过最终画面、平衡与跨模组验收。
@@ -79,6 +79,8 @@ node tools/generate-content.mjs
 node tools/validate-content.mjs
 ```
 
-配置位于游戏实例的 `config/smoke-kitchen.json`。`spoilage` 控制变质，`freshDays` 和 `spoiledDays` 控制品质下降与不可食用的游戏日数。存档关闭不按现实时间补算，持续运行的服务器按游戏时间推进。
+配置位于游戏实例的 `config/smoke-kitchen.json`。`spoilage` 控制变质，`freshDays` 和 `spoiledDays` 控制品质下降与不可食用的游戏日数。存档关闭不按现实时间补算，持续运行的服务器按游戏时间推进。`burns`默认false，开启后徒手接触热锅受伤；`detailedHints`默认true，关闭后不再自动显示准星详情和投料建议，温度计、食谱、品质物品提示和直接操作反馈仍可使用。配置修改后重启游戏或服务器。
+
+[第一餐获取路线核对](docs/FIRST-MEAL-ROUTE.md)列出了米、盐、油和工具的依赖；完整无作弊生存验收仍待完成。
 
 便携工具、游戏依赖、缓存和运行存档不上传到仓库。项目代码采用 MIT，素材来源见 [美术来源](art/ASSET-PROVENANCE.md)。本项目并非 Mojang 或 Microsoft 官方作品。

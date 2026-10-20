@@ -10,6 +10,8 @@ public final class KitchenConfig {
     public int freshDays=7;
     public int spoiledDays=14;
     public boolean showWorldLabels=true;
+    public boolean burns=false;
+    public boolean detailedHints=true;
     public static void load() {
         var path=FabricLoader.getInstance().getConfigDir().resolve("smoke-kitchen.json");
         var gson=new GsonBuilder().setPrettyPrinting().create();

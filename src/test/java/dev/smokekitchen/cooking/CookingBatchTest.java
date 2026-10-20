@@ -73,6 +73,7 @@ class CookingBatchTest {
         var b = batch(); b.ingredients.getFirst().cooked = 1; b.stirs = 5; b.salt = 2;
         assertEquals(1, b.quality());
         for (int i = 0; i < 3; i++) b.add("rice", CookingBatch.Cut.DICE, 1, false, true);
+        b.stir();b.stir();b.stir();
         assertEquals(3, b.quality());
     }
     @Test void fullPanDoesNotConsumeMoreIngredients() {

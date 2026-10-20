@@ -1,0 +1,80 @@
+{
+  "version": "0.1.7",
+  "date": "2026-10-21",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "itemDefinitions": 304,
+  "jarContainsTestCode": false,
+  "sha256": "f8c9cee8a5f3804ec15e309c41e621c77d9f91a8e5d261c0bcb8abdfe2ab130b",
+  "unitTests": {
+    "passed": 70,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 49,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "vanillaScope": [
+      "QualityFlowTest",
+      "KitchenVisualTest",
+      "FinishingFlowTest (final plain-staple quality)"
+    ],
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "irisPassed": true,
+    "shaderActuallyActive": true,
+    "knownShaderWarning": "Nonfatal fixedTaaCorrection parsing warning in shader pack",
+    "workflow": [
+      "place and fill three woks with identical raw chicken, oil and appropriate or excessive salt",
+      "ignite using actual gas canisters, stir the proper and salty pans while the neglected pan receives no stirring",
+      "observe actual cookedness and switch off each burner through its normal side controls",
+      "enable optional contact damage and disable automatic hints; actual bare-hand contact lowers health and leaves all ingredients intact",
+      "disable contact damage and serve all three actual batches while automatic hints remain disabled",
+      "normal item tooltips distinguish properly made, scorched and uneven, and excessively salty food; actual food components differ",
+      "preheat a separate pan, add raw cod, wait for setting, turn with tongs and retrieve the still-raw intermediate",
+      "put the actual loose cod in another cold pan; cookedness, char, turn record and peak food temperature remain exact while new-pot neighbour evidence starts empty",
+      "ignite the second pan, continue actual heating and retrieve vanilla cooked cod with its retained portion data",
+      "eat the actual good meal, close and reopen the real world; remaining servings, exact gas, food quality notes and cooked cod history survive",
+      "creative category, normal workbench frying-pan crafting, coal and gas cooked chicken, actual gas-pipeline regression"
+    ],
+    "finalNativeTextureReferences": 37,
+    "irisFullScope": [
+      "QualityFlowTest",
+      "FinishingFlowTest",
+      "KitchenVisualTest",
+      "RecipeFlowTest",
+      "WetRecipeFlowTest",
+      "StapleFlowTest",
+      "StapleAssetVisualTest"
+    ],
+    "finalPlainStapleVanillaPassed": true,
+    "finalPlainStapleIrisPassed": true,
+    "missingModAssets": 0
+  },
+  "saveChecks": {
+    "actualWorldReopenPassed": true,
+    "exactGasPreserved": true,
+    "qualityReasonsPreserved": true,
+    "looseCookedFoodHistoryPreserved": true,
+    "remainingServings": [
+      1,
+      1,
+      1
+    ]
+  },
+  "testScopeNotes": [
+    "The initial full server test found an older invariant requiring a new pot to record its own addition order. The implementation was corrected to carry food-owned history while preserving fresh order and entry conditions; all final tests pass.",
+    "The first vanilla client attempt correctly rejected a fixture action outside player reach. Moving the player next to the second station fixed the test scenario; production interaction reach is unchanged.",
+    "The final vanilla run covers the new quality, contact damage, hints-off serving, loose transfer, eating and saving workflows plus core creative/crafting/fuel checks. Other recipe regression workflows are included in the full Iris run.",
+    "The comparison screen displays real produced stacks using normal item tooltip lines; it is a test presentation, not a new production interface.",
+    "Raw ingredients, stage placement and hunger setup are test fixtures; cookedness, charring, transfer, contact damage, food effects and saving use normal game logic and real client packets.",
+    "First-meal acquisition dependencies were inspected and documented only. A complete uncheated survival route, animal-fat rendering, crop ecology and the remaining finite design scope are not marked complete.",
+    "After the full Iris run, a focused quality-only correction exempts plain rice, dough and pie from mandatory salt/soy. Final native and Iris finishing flows recook porridge and explicitly assert its real served quality; this changes no heating, fuel, cut or recipe-stage logic."
+  ],
+  "releaseDownloadVerified": false
+}

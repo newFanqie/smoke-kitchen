@@ -363,6 +363,10 @@ for(const [key,value]of Object.entries(problems))lang[`recipe_problem.${ns}.${ke
 Object.assign(problems,{turn:'%s需要成形后三成半熟再翻面，并继续加热另一面至少三成。',cold_mix:'蛋和葱应在点火前、保持生料时搅匀至少%s次。',caramel:'%s下锅前需在无水热油中把糖炒出糖色3秒；温度145–185°C，焦糖不能补救。',marinate:'%s需在点火前用蜂蜜和酱油冷腌至少%s秒。',cold:'冷拌食材不能超过%s°C。',roast:'需要在无水、至少140°C下烤制%s秒。',ferment:'需要有盐水、密封且低于60°C发酵%s秒。',soften:'%s还未软烂，请继续加热到软烂进度100%。'});
 Object.assign(messages,{softening:'软烂',softening_progress:'软烂进度 %s%%',caramel_progress:'糖色 %s/3秒（未焦%s）',contents:'食材：',open_first:'请先空手打开缸盖，再加入材料；重新加料会重计时间。'});
 messages.burner_status='%s｜%s°C｜进度 %s%%｜燃料 %s%s';
+Object.assign(messages,{quality_grade:'品质：%s（%s/3）',hot_hands:'锅面很烫！请用碗盘盛菜、隔热布搬锅，或冷却到80°C以下再徒手操作。'});
+for(const[key,value]of Object.entries({0:'失败',1:'欠佳',2:'家常',3:'用心烹制'}))lang[`quality.${ns}.${key}`]=value;
+lang[`quality_reason.${ns}.strong`]='口味偏重：盐量稍多，补充一些无盐食材再拌匀可改善。';
+for(const[key,value]of Object.entries({raw:'夹生：还有食材未熟。',burnt:'焦黑：食材已经烧坏，补水不能恢复。',salty:'过咸：盐或酱油比例过高，下次盛出前补充无盐食材。',bland:'偏淡：缺少适量盐或酱油。',overcooked:'过熟：加热过久，应及时关火盛出。',scorched:'焦底：局部受热过久，调低火力并及时翻动。',uneven:'受热或调味不匀：最后投料后再翻炒；煎物凝固后翻面并继续加热。',stale:'存放时间较久，新鲜度已经下降。'}))lang[`quality_reason.${ns}.${key}`]=value;
 for(const[key,value]of Object.entries(problems))lang[`recipe_problem.${ns}.${key}`]=value;
 for(const[key,value]of Object.entries({pepper_powder:'胡椒粉',cumin_powder:'孜然粉',sesame_oil:'芝麻油',honey:'蜂蜜'}))lang[`ingredient.${ns}.${key}`]=value;
 for(const[key,value]of Object.entries({WHOLE:'完整',SLICE:'切片',DICE:'切块',SHRED:'切丝',MINCE:'剁碎'}))lang[`cut.${ns}.${key}`]=value;

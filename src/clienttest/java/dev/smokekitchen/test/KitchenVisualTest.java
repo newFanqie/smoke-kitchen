@@ -43,8 +43,8 @@ public final class KitchenVisualTest implements FabricClientGameTest {
                 check(screen.getSelectedTab()==BuiltInRegistries.CREATIVE_MODE_TAB.getValue(dev.smokekitchen.SmokeKitchen.id("kitchen")),"The kitchen tab must be discoverable on first inventory open");
                 check(screen.getSelectedTab().getDisplayItems().size()==KitchenContent.ITEMS.size(),"Every mod item and state must be present in the one kitchen tab");
             });
-            context.takeScreenshot("kitchen-creative-0.1.6");
-            context.setScreen(ToolSheet::new);context.waitTicks(5);context.takeScreenshot("kitchen-tools-and-states-0.1.6");
+            context.takeScreenshot("kitchen-creative-0.1.7");
+            context.setScreen(ToolSheet::new);context.waitTicks(5);context.takeScreenshot("kitchen-tools-and-states-0.1.7");
             context.runOnClient(client->client.setScreen(null));
             server.runCommand("time set day");server.runCommand("weather clear");
             server.runCommand("fill -8 99 -8 8 99 8 minecraft:smooth_stone");server.runCommand("fill -8 100 -8 8 105 8 minecraft:air");
@@ -56,7 +56,7 @@ public final class KitchenVisualTest implements FabricClientGameTest {
             slotClick(context,1,0,net.minecraft.world.inventory.ContainerInput.SWAP);slotClick(context,1,0,net.minecraft.world.inventory.ContainerInput.PICKUP);
             for(int slot:new int[]{1,2,3})slotClick(context,slot,1,net.minecraft.world.inventory.ContainerInput.PICKUP);
             slotClick(context,5,1,net.minecraft.world.inventory.ContainerInput.SWAP);
-            context.waitTicks(4);context.takeScreenshot("kitchen-crafting-pan-0.1.6");slotClick(context,0,0,net.minecraft.world.inventory.ContainerInput.QUICK_MOVE);
+            context.waitTicks(4);context.takeScreenshot("kitchen-crafting-pan-0.1.7");slotClick(context,0,0,net.minecraft.world.inventory.ContainerInput.QUICK_MOVE);
             server.runOnServer(game->check(game.getPlayerList().getPlayers().getFirst().getInventory().contains(stack->stack.is(KitchenContent.item("frying_pan"))),"The normal crafting table must produce a frying pan from three iron ingots and one stick"));
             context.runOnClient(client->client.player.closeContainer());context.waitTicks(5);
             equip(context,server,"smoke_kitchen:frying_pan");click(context,new BlockPos(0,100,0),Direction.UP);
@@ -69,11 +69,11 @@ public final class KitchenVisualTest implements FabricClientGameTest {
             server.runOnServer(game->{
                 for(int x:new int[]{0,2}){var stove=(KitchenBlockEntity)game.overworld().getBlockEntity(new BlockPos(x,100,0));check(stove.mountedCookware.equals("frying_pan")&&stove.batch.ingredients.size()==1&&stove.heat==2,"Normal client clicks must mount cookware, load food and ignite");}
             });
-            world.getClientLevel().waitForChunksRender();context.takeScreenshot("kitchen-low-counter-raw-0.1.6");
-            context.waitTicks(6);context.takeScreenshot("kitchen-native-fire-next-frame-0.1.6");
+            world.getClientLevel().waitForChunksRender();context.takeScreenshot("kitchen-low-counter-raw-0.1.7");
+            context.waitTicks(6);context.takeScreenshot("kitchen-native-fire-next-frame-0.1.7");
             context.waitTicks(1100);
             server.runOnServer(game->{for(int x:new int[]{0,2}){var stove=(KitchenBlockEntity)game.overworld().getBlockEntity(new BlockPos(x,100,0));check(stove.batch.ready()&&!stove.batch.burnt()&&stove.displayedFood(0).is(Items.COOKED_CHICKEN),"Both coal and gas must produce actual cooked chicken");}});
-            context.waitTicks(4);context.takeScreenshot("kitchen-low-counter-cooked-0.1.6");
+            context.waitTicks(4);context.takeScreenshot("kitchen-low-counter-cooked-0.1.7");
             context.getInput().holdKey(options->options.keyShift);context.waitTicks(3);
             click(context,new BlockPos(0,100,0),Direction.UP);context.getInput().releaseKey(options->options.keyShift);context.waitTicks(3);
             server.runOnServer(game->check(game.getPlayerList().getPlayers().getFirst().getInventory().contains(stack->stack.is(Items.COOKED_CHICKEN)),"A real client must retrieve cooked chicken into inventory"));
@@ -83,14 +83,14 @@ public final class KitchenVisualTest implements FabricClientGameTest {
             server.runCommand("setblock 3 100 0 smoke_kitchen:gas_pipe");server.runCommand("setblock 4 100 0 smoke_kitchen:gas_tank");
             equip(context,server,"smoke_kitchen:gas_canister");click(context,new BlockPos(4,100,0),Direction.NORTH);equip(context,server,"minecraft:air");click(context,new BlockPos(2,100,0),Direction.NORTH);context.waitTicks(45);
             server.runOnServer(game->{var tank=(KitchenBlockEntity)game.overworld().getBlockEntity(new BlockPos(4,100,0));var stove=(KitchenBlockEntity)game.overworld().getBlockEntity(new BlockPos(2,100,0));check(tank.fuelSeconds>0&&tank.fuelSeconds<600&&stove.getFuelUnits()>0,"Filling a tank through real client interaction must feed the stove through a pipe");});
-            context.takeScreenshot("kitchen-working-gas-pipe-0.1.6");
+            context.takeScreenshot("kitchen-working-gas-pipe-0.1.7");
         }
     }
     private static final class ToolSheet extends Screen {
         private final List<String> ids=List.of("stone_knife","iron_knife","refined_knife","wooden_spatula","iron_spatula","ladle","tongs","chopsticks","rolling_pin","heat_cloth","sieve","thermometer","gas_canister","partial_gas_canister","empty_gas_canister","used_iron_knife","broken_iron_knife","used_salt");
-        ToolSheet(){super(Component.literal("Smoke Kitchen 0.1.6"));}
+        ToolSheet(){super(Component.literal("Smoke Kitchen 0.1.7"));}
         @Override public void extractRenderState(GuiGraphicsExtractor g,int x,int y,float delta){
-            g.fill(0,0,width,height,0xff262e35);g.centeredText(font,"SMOKE KITCHEN 0.1.6 | vanilla tools and container states",width/2,8,0xffffffff);
+            g.fill(0,0,width,height,0xff262e35);g.centeredText(font,"SMOKE KITCHEN 0.1.7 | vanilla tools and container states",width/2,8,0xffffffff);
             int columns=6,pitch=(width-12)/columns;
             for(int i=0;i<ids.size();i++){
                 int px=6+(i%columns)*pitch,py=27+(i/columns)*70;var stack=new ItemStack(KitchenContent.item(ids.get(i)));

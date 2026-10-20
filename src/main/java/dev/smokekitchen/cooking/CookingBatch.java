@@ -27,6 +27,7 @@ public final class CookingBatch {
         public boolean turnedAfterSetting;
         public double cookedAtTurn;
         public int marinatedSeconds;
+        public double maximumTemperature;
         public Map<String,Integer> priorCounts = new HashMap<>();
         public Map<String,Double> priorCooked = new HashMap<>();
         public Portion(String id, Cut cut, double resistance, boolean needsWater, boolean ready) {
@@ -72,6 +73,7 @@ public final class CookingBatch {
         var portion=new Portion(id,cut,Math.max(.25,resistance),needsWater,ready);
         portion.additionRecorded=true;portion.temperatureOnAdd=temperature;portion.oilOnAdd=oil;portion.waterOnAdd=water;
         portion.caramelOnAdd=caramelSeconds>=3&&burntSugarSeconds<5;
+        portion.maximumTemperature=temperature;
         for(var previous:ingredients){portion.priorCounts.merge(previous.id,1,Integer::sum);portion.priorCooked.merge(previous.id,previous.cooked,Math::min);}
         ingredients.add(portion);stirsAtLastAddition=stirs;coldMixes=0;fermentationSeconds=0;
         maximumFoodTemperature=Math.max(maximumFoodTemperature,temperature);
@@ -83,6 +85,20 @@ public final class CookingBatch {
         seasoningProgress.put(seasoning,ingredients.stream().mapToDouble(p->p.cooked).min().orElse(-1));
         seasoningCounts.put(seasoning,ingredients.size());
     }
+
+    /** Loose food retains its preparation evidence; liquids and seasoning stay in the pot. */
+    public void restorePortion(int index,Portion saved) {
+        var fresh=ingredients.get(index);
+        if(saved==null||!fresh.id.equals(saved.id))return;
+        fresh.cooked=Math.max(fresh.cooked,saved.cooked);fresh.charred=saved.charred;
+        fresh.maximumTemperature=Math.max(fresh.maximumTemperature,Math.max(saved.maximumTemperature,saved.temperatureOnAdd));
+        fresh.turnedAfterSetting=saved.turnedAfterSetting;fresh.cookedAtTurn=saved.cookedAtTurn;
+        fresh.marinatedSeconds=saved.marinatedSeconds;fresh.coveredCookingSeconds=saved.coveredCookingSeconds;fresh.lowHeatSeconds=saved.lowHeatSeconds;
+        fresh.caramelOnAdd|=saved.caramelOnAdd;fresh.rolled|=saved.rolled;
+        // Order and entry temperature belong to this pot; old neighbours cannot prove a new recipe step.
+        normalize();
+    }
+    public void refreshTemperatureHistory(){maximumFoodTemperature=ingredients.stream().mapToDouble(p->p.maximumTemperature).max().orElse(0);}
 
     /** Mix room-temperature water with the existing water and the pot's thermal mass. */
     public double addWater(double requested) {
@@ -126,6 +142,7 @@ public final class CookingBatch {
         boolean marinating=temperature<60&&seasoningCounts.getOrDefault("honey",-1)>=ingredients.size()&&seasoningCounts.getOrDefault("soy",-1)>=ingredients.size();
         boolean wetMethod = method == Method.BOIL || method == Method.STEAM || method == Method.STEW;
         for (Portion p : ingredients) {
+            p.maximumTemperature=Math.max(p.maximumTemperature,temperature);
             if(marinating&&p.cooked<.1)p.marinatedSeconds++;
             double cutFactor = switch (p.cut) {
                 case WHOLE -> .75;
@@ -165,12 +182,22 @@ public final class CookingBatch {
     }
     public int quality() {
         if (!ready() || burnt()) return 0;
-        double saltRatio = (double) salt / Math.max(1, ingredients.size());
-        boolean oversalted = saltRatio > .8 || soy > ingredients.size();
-        if (oversalted || ingredients.stream().anyMatch(p -> p.cooked > 3.2)) return 1;
-        boolean needsStir = method == Method.STIR_FRY || method == Method.FRY;
-        if ((!needsStir || stirs >= 3) && saltRatio >= .1 && saltRatio <= .5) return 3;
-        return 2;
+        var reasons=qualityReasons();
+        if(reasons.contains("salty")||reasons.contains("overcooked")||reasons.contains("scorched"))return 1;
+        return reasons.isEmpty()?3:2;
+    }
+    public List<String> qualityReasons() {
+        var reasons=new ArrayList<String>();
+        if(!ready())reasons.add("raw");
+        if(burnt())reasons.add("burnt");
+        double ratio=(double)salt/Math.max(1,ingredients.size());
+        if(ratio>.8||soy>ingredients.size())reasons.add("salty");
+        else if(ratio>.5)reasons.add("strong");
+        else if(ratio<.1&&soy==0&&!ingredients.stream().allMatch(p->java.util.Set.of("rice","dough","dough_fermented","pie").contains(p.id)))reasons.add("bland");
+        if(ingredients.stream().anyMatch(p->p.cooked>3.2))reasons.add("overcooked");
+        if(!burnt()&&ingredients.stream().anyMatch(p->p.charred>=.25))reasons.add("scorched");
+        if(method==Method.STIR_FRY&&stirs-stirsAtLastAddition<3 || method==Method.FRY&&ingredients.stream().anyMatch(p->!p.turnedAfterSetting||p.cooked-p.cookedAtTurn<.3))reasons.add("uneven");
+        return reasons;
     }
     public long count(String id) { return ingredients.stream().filter(p -> p.id.equals(id)).count(); }
 
@@ -194,6 +221,8 @@ public final class CookingBatch {
         if (lockedDish == null) lockedDish = "";
         if(seasoningProgress==null)seasoningProgress=new HashMap<>();
         if(seasoningCounts==null)seasoningCounts=new HashMap<>();
+        temperature=Math.clamp(Double.isFinite(temperature)?temperature:20,0,500);
+        maximumFoodTemperature=Math.clamp(Double.isFinite(maximumFoodTemperature)?maximumFoodTemperature:0,0,500);
         ingredients.removeIf(p -> p == null || p.id == null || p.id.isBlank());
         ingredients = new ArrayList<>(ingredients.subList(0, Math.min(12, ingredients.size())));
         for (Portion p : ingredients) {
@@ -205,10 +234,13 @@ public final class CookingBatch {
             p.lowHeatSeconds=Math.clamp(p.lowHeatSeconds,0,100000);
             p.cookedAtTurn=Math.clamp(Double.isFinite(p.cookedAtTurn)?p.cookedAtTurn:0,0,100);
             p.marinatedSeconds=Math.clamp(p.marinatedSeconds,0,100000);
+            p.maximumTemperature=Math.clamp(Double.isFinite(p.maximumTemperature)?p.maximumTemperature:0,0,500);
+            if(p.maximumTemperature==0)p.maximumTemperature=Math.max(temperature,maximumFoodTemperature);
             p.resistance = Math.clamp(Double.isFinite(p.resistance) ? p.resistance : 1, .25, 5);
             p.cooked = Math.clamp(Double.isFinite(p.cooked) ? p.cooked : 0, 0, 100);
             p.charred = Math.clamp(Double.isFinite(p.charred) ? p.charred : 0, 0, 100);
         }
+        refreshTemperatureHistory();
         temperature = Math.clamp(Double.isFinite(temperature) ? temperature : 20, 0, 500);
         water = Math.clamp(Double.isFinite(water) ? water : 0, 0, 12);
         oil = Math.clamp(oil, 0, 16);

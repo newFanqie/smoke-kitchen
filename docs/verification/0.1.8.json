@@ -76,7 +76,13 @@
     "Wild crop ecology, a complete natural survival route, soybean pre-cooking/filtering, buildings, animals, professions, multiplayer and long-term preservation remain unfinished.",
     "Loose transfer retains food preparation and heat history; original batch liquids and seasoning remain in the pot. Per-food flavor attachment, reheating and quality inheritance still require audit; whole-pot transport preserves the complete batch."
   ],
-  "releaseDownloadVerified": false,
-  "codeCommit": null,
-  "release": null
+  "releaseDownloadVerified": true,
+  "codeCommit": "fe8c1804af704e1af158700ba2f18102213fd6d6",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.8",
+  "downloadedBytes": 670451,
+  "continuousIntegration": {
+    "sourceCommit": "fe8c1804af704e1af158700ba2f18102213fd6d6",
+    "buildAndGameTestsPassed": true,
+    "run": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39489334913"
+  }
 }

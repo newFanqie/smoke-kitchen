@@ -41,4 +41,8 @@ Iris全部八组客户端流程与截图检查通过，包括新获取、品质�
 
 ## 发布核对
 
-本地原版与Iris流程、截图目视和构建均已通过，等待上传并从GitHub实际下载核对。
+[0.1.8开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.8)已发布，源码提交fe8c1804af704e1af158700ba2f18102213fd6d6。实际从GitHub资产接口重新下载smoke-kitchen-0.1.8.jar（670451字节），本地、服务器摘要与下载文件SHA256一致。安装时移出旧版JAR，保留对应Fabric API。
+
+SHA256：19a4e9443cdb9564deef2eb19d508a387fb0020a085e65d6793d954e1214569e
+
+[GitHub上的源码构建与游戏测试](https://github.com/newFanqie/smoke-kitchen/actions/runs/39489334913)也已通过。

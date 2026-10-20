@@ -13,6 +13,108 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void liftingAndRemountingPreservesPotWithoutMovingItsGasCanister(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("gas_stove"));
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,p,player,ResourceStates.gasStack(271),net.minecraft.core.Direction.NORTH);
+        use(test,p,player,new ItemStack(KitchenContent.item("soup_pot")),net.minecraft.core.Direction.UP);
+        use(test,p,player,new ItemStack(Items.CHICKEN),net.minecraft.core.Direction.UP);
+        use(test,p,player,new ItemStack(KitchenContent.item("pot_lid")),net.minecraft.core.Direction.UP);
+        var stove=test.getBlockEntity(p,KitchenBlockEntity.class);stove.batch.water=4;stove.batch.ingredients.getFirst().cooked=.42;
+        stove.methodIndex=1;stove.batch.method=CookingBatch.Method.STEW;
+        player.setShiftKeyDown(true);use(test,p,player,new ItemStack(KitchenContent.item("heat_cloth")),net.minecraft.core.Direction.UP);
+        test.assertTrue(stove.mountedCookware.isEmpty()&&stove.batch.ingredients.isEmpty()&&ResourceStates.gasUnits(stove.items.get(26))==271,"Lifting cookware must leave its gas canister on the stove");
+        ItemStack saved=ItemStack.EMPTY;for(var stack:player.getInventory())if(stack.is(KitchenContent.item("soup_pot")))saved=stack.copy();
+        test.assertTrue(!saved.isEmpty(),"The full pot must be returned as a portable block item");
+        player.setShiftKeyDown(false);use(test,p,player,saved,net.minecraft.core.Direction.UP);
+        test.assertTrue(stove.batch.water==4&&stove.batch.ingredients.getFirst().cooked==.42&&stove.methodIndex==1&&stove.batch.method==CookingBatch.Method.STEW,"Remounting must restore water, individual cookedness and the selected cooking method");
+        test.assertTrue(stove.attachedLid.equals("pot_lid")&&stove.getBlockState().getValue(dev.smokekitchen.world.KitchenBlock.LID),"The lid must survive moving the pot");test.succeed();
+    }
+    @GameTest public void finishingServingsKeepsTheAttachedGasCanister(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("gas_stove"));
+        var stove=test.getBlockEntity(p,KitchenBlockEntity.class);stove.mountedCookware="frying_pan";stove.items.set(26,ResourceStates.gasStack(271));
+        stove.batch.add("egg",CookingBatch.Cut.DICE,1,false,true);stove.items.set(0,new ItemStack(Items.EGG));stove.batch.serve("fried_rice",2);
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,p,player,new ItemStack(Items.BOWL),net.minecraft.core.Direction.UP);
+        test.assertTrue(stove.batch.ingredients.isEmpty()&&ResourceStates.gasUnits(stove.items.get(26))==271,"Finishing a meal must clear food slots without deleting the connected fuel container");test.succeed();
+    }
+    @GameTest public void freshnessUsesSeparateItemsAndSpoiledMealsReturnTheirBowlWhenComposted(GameTestHelper test) {
+        var meal=new ItemStack(KitchenContent.item("fried_rice"));KitchenFoodItem.agedStack(meal,1000);
+        var stale=KitchenFoodItem.agedStack(meal,1001+dev.smokekitchen.KitchenConfig.INSTANCE.freshDays*24000L);
+        test.assertTrue(stale.is(KitchenContent.item("stale_fried_rice")),"Old meals must become the separate stale item");
+        var spoiled=KitchenFoodItem.agedStack(stale,1001+dev.smokekitchen.KitchenConfig.INSTANCE.spoiledDays*24000L);
+        test.assertTrue(spoiled.is(KitchenContent.item("spoiled_fried_rice"))&&!spoiled.has(net.minecraft.core.component.DataComponents.FOOD)&&ResourceStates.spent(spoiled),"Spoiled meals must be separate and inedible");
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("compost_bin"));
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);use(test,p,player,spoiled,net.minecraft.core.Direction.UP);
+        test.assertTrue(spoiled.isEmpty()&&player.getInventory().contains(s->s.is(Items.BOWL)),"Composting a spoiled meal must return its reusable bowl");test.succeed();
+    }
+    @GameTest(maxTicks=80) public void vanillaCampfireHeatsTheExistingPot(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,net.minecraft.world.level.block.Blocks.CAMPFIRE);
+        test.setBlock(p.above(),KitchenContent.BLOCKS.get("soup_pot"));var pot=test.getBlockEntity(p.above(),KitchenBlockEntity.class);pot.batch.water=6;
+        test.runAfterDelay(45,()->{test.assertTrue(pot.batch.temperature>20,"A lit vanilla campfire must supply heat without another custom furnace implementation");test.succeed();});
+    }
+    @GameTest(maxTicks=40) public void breakingMountedMealCannotReturnAlreadyServedRawIngredients(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("brick_stove"));var stove=test.getBlockEntity(p,KitchenBlockEntity.class);
+        stove.mountedCookware="wok";stove.items.set(0,new ItemStack(Items.EGG));stove.batch.add("egg",CookingBatch.Cut.DICE,1,false,true);
+        stove.batch.serve("fried_rice",3);test.getLevel().destroyBlock(test.absolutePos(p),true);
+        test.runAfterDelay(2,()->{test.assertItemEntityNotPresent(Items.EGG,p,2);test.assertItemEntityCountIs(KitchenContent.item("fried_rice"),p,2,2);test.succeed();});
+    }
+    private static void use(GameTestHelper test,BlockPos pos,net.minecraft.world.entity.player.Player player,ItemStack stack,net.minecraft.core.Direction face) {
+        var station=test.getBlockEntity(pos,KitchenBlockEntity.class);station.lastAction=-100;
+        player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,stack);
+        test.useBlock(pos,player,new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(test.absolutePos(pos)),face,test.absolutePos(pos),false));
+    }
+    @GameTest(maxTicks=1300) public void oneCoalActuallyCooksAndReturnsVanillaChicken(GameTestHelper test) {
+        var pos=new BlockPos(1,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("brick_stove"));
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,pos,player,new ItemStack(KitchenContent.item("frying_pan")),net.minecraft.core.Direction.UP);
+        var stove=test.getBlockEntity(pos,KitchenBlockEntity.class);
+        test.assertTrue(stove.mountedCookware.equals("frying_pan")&&test.getBlockState(pos.above()).isAir(),"Placing cookware must mount inside one counter-height station");
+        use(test,pos,player,new ItemStack(Items.COAL),net.minecraft.core.Direction.NORTH);
+        use(test,pos,player,new ItemStack(Items.CHICKEN),net.minecraft.core.Direction.UP);
+        test.runAfterDelay(1100,()->{
+            test.assertTrue(stove.batch.ready()&&!stove.batch.burnt(),"One coal must actually cook a whole chicken before burning it");
+            test.assertTrue(stove.displayedFood(0).is(Items.COOKED_CHICKEN),"The visible item must become cooked chicken");
+            player.setShiftKeyDown(true);use(test,pos,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);
+            test.assertTrue(player.getInventory().contains(s->s.is(Items.COOKED_CHICKEN)),"Retrieving must give the real vanilla cooked food, not raw food carrying hidden data");
+            test.succeed();
+        });
+    }
+    @GameTest(maxTicks=1300) public void attachedGasCanisterCooksAndReturnsPartialState(GameTestHelper test) {
+        var pos=new BlockPos(1,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("gas_stove"));
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,pos,player,ResourceStates.gasStack(600),net.minecraft.core.Direction.NORTH);
+        use(test,pos,player,new ItemStack(KitchenContent.item("frying_pan")),net.minecraft.core.Direction.UP);
+        use(test,pos,player,new ItemStack(Items.CHICKEN),net.minecraft.core.Direction.UP);
+        var stove=test.getBlockEntity(pos,KitchenBlockEntity.class);
+        test.runAfterDelay(1100,()->{
+            test.assertTrue(stove.batch.ready()&&!stove.batch.burnt(),"A canister connected directly to the stove must cook real food");
+            test.assertTrue(stove.items.get(26).is(KitchenContent.item("partial_gas_canister")),"A used canister must have the partial-state registered item");
+            int remaining=ResourceStates.gasUnits(stove.items.get(26));
+            var tag=stove.saveWithFullMetadata(test.getLevel().registryAccess());
+            var restored=(KitchenBlockEntity)BlockEntity.loadStatic(pos,stove.getBlockState(),tag,test.getLevel().registryAccess());
+            test.assertTrue(restored!=null&&restored.mountedCookware.equals("frying_pan")&&ResourceStates.gasUnits(restored.items.get(26))==remaining,"Saving must preserve the exact gas amount and mounted cookware");
+            player.setShiftKeyDown(true);use(test,pos,player,ItemStack.EMPTY,net.minecraft.core.Direction.NORTH);
+            test.assertTrue(player.getInventory().contains(s->s.is(KitchenContent.item("partial_gas_canister"))&&ResourceStates.gasUnits(s)==remaining),"The partial canister must be retrievable as its separate item with exact remaining fuel");test.succeed();
+        });
+    }
+    @GameTest public void pipeSearchCountsPipesInsteadOfSurroundingAir(GameTestHelper test) {
+        var pos=new BlockPos(1,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("gas_stove"));
+        for(int i=1;i<=18;i++)test.setBlock(pos.above(i),KitchenContent.BLOCKS.get("gas_pipe"));
+        test.setBlock(pos.above(19),KitchenContent.BLOCKS.get("gas_tank"));
+        var tank=test.getBlockEntity(pos.above(19),KitchenBlockEntity.class);tank.fuelSeconds=600;
+        var stove=test.getBlockEntity(pos,KitchenBlockEntity.class);
+        test.assertTrue(stove.pullGas(100,java.util.Set.of("gas_tank"))==100 && tank.fuelSeconds==500,"An 18-pipe run must not exhaust its budget by counting air cells");test.succeed();
+    }
+    @GameTest public void toolAndSeasoningStatesAreSeparateItems(GameTestHelper test) {
+        var knife=new ItemStack(KitchenContent.item("iron_knife"));knife.setDamageValue(1);
+        var used=ResourceStates.usedStack(knife,Items.AIR);
+        test.assertTrue(used.is(KitchenContent.item("used_iron_knife"))&&used.getDamageValue()==1,"A used knife must preserve exact durability on its own state item");
+        used.setDamageValue(used.getMaxDamage());var broken=ResourceStates.usedStack(used,Items.AIR);
+        test.assertTrue(broken.is(KitchenContent.item("broken_iron_knife"))&&ResourceStates.spent(broken),"A broken tool must have an unusable broken-state item");
+        test.assertTrue(ResourceStates.gasUnits(ResourceStates.gasStack(271))==271,"Representative 50% icons must not round the actual stored fuel");
+        test.succeed();
+    }
     @GameTest public void coalClickIgnitesAndRetainsFuel(GameTestHelper test) {
         var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("brick_stove"));
         var stove=test.getBlockEntity(p,KitchenBlockEntity.class);
@@ -20,11 +122,11 @@ public final class KitchenGameTests {
         var coal=new ItemStack(Items.COAL,2);
         var hit=new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(test.absolutePos(p)),net.minecraft.core.Direction.NORTH,test.absolutePos(p),false);
         stove.interact(player,coal,hit);
-        test.assertTrue(stove.fuelSeconds==80 && stove.heat==2 && coal.getCount()==1,"A coal click must consume one coal, store fuel, and ignite");
+        test.assertTrue(stove.fuelSeconds==160 && stove.heat==2 && coal.getCount()==1,"A coal click must consume one coal, store fuel, and ignite");
         test.assertBlockProperty(p,dev.smokekitchen.world.KitchenBlock.HEAT,2);
         test.assertBlockProperty(p,dev.smokekitchen.world.KitchenBlock.FUELED,true);
         stove.lastAction=-100;stove.interact(player,new ItemStack(Items.CHICKEN),hit);
-        test.assertTrue(stove.fuelSeconds==80 && stove.heat==2,"Holding meat must not clear already loaded fuel");
+        test.assertTrue(stove.fuelSeconds==160 && stove.heat==2,"Holding meat must not clear already loaded fuel");
         test.succeed();
     }
     @GameTest public void allSpawnEggsPointToRegisteredAnimals(GameTestHelper test) {
@@ -66,7 +168,7 @@ public final class KitchenGameTests {
         var tank=test.getBlockEntity(p,KitchenBlockEntity.class);tank.fuelSeconds=600;
         var stove=test.getBlockEntity(p.east(),KitchenBlockEntity.class);stove.heat=2;
         var pot=test.getBlockEntity(p.east().above(),KitchenBlockEntity.class);pot.batch.water=6;
-        test.runAfterDelay(45,()->{test.assertTrue(pot.batch.temperature>20 && tank.fuelSeconds<600,"Connected gas burner must heat cookware while drawing actual gas");test.succeed();});
+        test.runAfterDelay(45,()->{test.assertTrue(stove.batch.temperature>20 && stove.mountedCookware.equals("soup_pot") && tank.fuelSeconds<600,"Connected gas burner must heat mounted cookware while drawing actual gas");test.succeed();});
     }
     @GameTest public void contentLoads(GameTestHelper test) {
         test.assertTrue(ContentCatalog.DISHES.size()==29,"All named dishes must be present");
@@ -81,7 +183,7 @@ public final class KitchenGameTests {
         var pot=test.getBlockEntity(p.above(),KitchenBlockEntity.class); pot.batch.water=6;
         pot.batch.add("rice",CookingBatch.Cut.DICE,1,true,false);
         test.runAfterDelay(45,()->{
-            test.assertTrue(pot.batch.temperature>20,"Adjacent stove must heat pot");
+            test.assertTrue(stove.batch.temperature>20 && stove.mountedCookware.equals("clay_pot"),"Legacy pot must mount at counter height and receive heat");
             test.assertTrue(stove.fuelSeconds<500,"Heat must consume fuel");
             test.succeed();
         });

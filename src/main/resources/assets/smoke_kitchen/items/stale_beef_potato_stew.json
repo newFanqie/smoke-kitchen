@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/beef_potato_stew"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/stale_beef_potato_stew_state"
+      }
+    ]
+  }
+}

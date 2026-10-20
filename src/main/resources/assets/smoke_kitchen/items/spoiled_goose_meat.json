@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/goose_meat"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/spoiled_goose_meat_state"
+      }
+    ]
+  }
+}

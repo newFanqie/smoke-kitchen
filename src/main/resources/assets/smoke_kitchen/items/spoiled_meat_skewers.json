@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/meat_skewers"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/spoiled_meat_skewers_state"
+      }
+    ]
+  }
+}

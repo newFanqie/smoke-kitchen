@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/garlic_greens"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/spoiled_garlic_greens_state"
+      }
+    ]
+  }
+}

@@ -1,134 +1,88 @@
 {
   "textures": {
-    "fire": "minecraft:block/light_blue_concrete",
-    "particle": "minecraft:block/light_blue_concrete"
+    "fire": "minecraft:block/soul_fire_0",
+    "particle": "minecraft:block/soul_fire_0"
   },
   "elements": [
     {
       "from": [
         4,
-        15,
-        4
-      ],
-      "to": [
-        5,
-        17,
-        12
-      ],
-      "faces": {
-        "north": {
-          "texture": "#fire"
-        },
-        "south": {
-          "texture": "#fire"
-        },
-        "east": {
-          "texture": "#fire"
-        },
-        "west": {
-          "texture": "#fire"
-        },
-        "up": {
-          "texture": "#fire"
-        },
-        "down": {
-          "texture": "#fire"
-        }
-      }
-    },
-    {
-      "from": [
-        11,
-        15,
-        4
+        13,
+        8
       ],
       "to": [
         12,
-        17,
-        12
+        14,
+        8
       ],
+      "rotation": {
+        "origin": [
+          8,
+          13,
+          8
+        ],
+        "axis": "y",
+        "angle": -45
+      },
       "faces": {
         "north": {
-          "texture": "#fire"
+          "texture": "#fire",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
         },
         "south": {
-          "texture": "#fire"
-        },
-        "east": {
-          "texture": "#fire"
-        },
-        "west": {
-          "texture": "#fire"
-        },
-        "up": {
-          "texture": "#fire"
-        },
-        "down": {
-          "texture": "#fire"
+          "texture": "#fire",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
         }
       }
     },
     {
       "from": [
-        5,
-        15,
-        4
+        4,
+        13,
+        8
       ],
       "to": [
-        11,
-        17,
-        5
+        12,
+        14,
+        8
       ],
+      "rotation": {
+        "origin": [
+          8,
+          13,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      },
       "faces": {
         "north": {
-          "texture": "#fire"
+          "texture": "#fire",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
         },
         "south": {
-          "texture": "#fire"
-        },
-        "east": {
-          "texture": "#fire"
-        },
-        "west": {
-          "texture": "#fire"
-        },
-        "up": {
-          "texture": "#fire"
-        },
-        "down": {
-          "texture": "#fire"
-        }
-      }
-    },
-    {
-      "from": [
-        5,
-        15,
-        11
-      ],
-      "to": [
-        11,
-        17,
-        12
-      ],
-      "faces": {
-        "north": {
-          "texture": "#fire"
-        },
-        "south": {
-          "texture": "#fire"
-        },
-        "east": {
-          "texture": "#fire"
-        },
-        "west": {
-          "texture": "#fire"
-        },
-        "up": {
-          "texture": "#fire"
-        },
-        "down": {
-          "texture": "#fire"
+          "texture": "#fire",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
         }
       }
     }

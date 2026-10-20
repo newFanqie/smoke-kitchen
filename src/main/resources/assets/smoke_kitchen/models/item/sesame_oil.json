@@ -99,6 +99,38 @@
       ],
       "faces": {
         "north": {
+          "texture": "#o"
+        },
+        "south": {
+          "texture": "#o"
+        },
+        "east": {
+          "texture": "#o"
+        },
+        "west": {
+          "texture": "#o"
+        },
+        "up": {
+          "texture": "#o"
+        },
+        "down": {
+          "texture": "#o"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        11,
+        7
+      ],
+      "to": [
+        7,
+        12,
+        9
+      ],
+      "faces": {
+        "north": {
           "texture": "#w"
         },
         "south": {
@@ -120,7 +152,7 @@
     },
     {
       "from": [
-        6,
+        7,
         11,
         7
       ],
@@ -675,22 +707,22 @@
       ],
       "faces": {
         "north": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "south": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "east": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "west": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "up": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "down": {
-          "texture": "#o"
+          "texture": "#g"
         }
       }
     },
@@ -899,22 +931,22 @@
       ],
       "faces": {
         "north": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "south": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "east": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "west": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "up": {
-          "texture": "#o"
+          "texture": "#g"
         },
         "down": {
-          "texture": "#o"
+          "texture": "#g"
         }
       }
     },
@@ -1464,12 +1496,12 @@
     },
     {
       "from": [
-        8,
+        9,
         1,
         7
       ],
       "to": [
-        9,
+        10,
         2,
         9
       ],

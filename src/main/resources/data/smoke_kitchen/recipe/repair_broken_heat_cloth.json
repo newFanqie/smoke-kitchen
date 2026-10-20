@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:broken_heat_cloth",
+    "minecraft:leather"
+  ],
+  "result": {
+    "id": "smoke_kitchen:heat_cloth",
+    "count": 1
+  }
+}

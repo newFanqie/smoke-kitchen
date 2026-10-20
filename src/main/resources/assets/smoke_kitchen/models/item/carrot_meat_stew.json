@@ -1016,33 +1016,33 @@
     },
     {
       "from": [
-        13,
+        2,
         1,
         7
       ],
       "to": [
-        14,
+        3,
         2,
         9
       ],
       "faces": {
         "north": {
-          "texture": "#r"
+          "texture": "#o"
         },
         "south": {
-          "texture": "#r"
+          "texture": "#o"
         },
         "east": {
-          "texture": "#r"
+          "texture": "#o"
         },
         "west": {
-          "texture": "#r"
+          "texture": "#o"
         },
         "up": {
-          "texture": "#r"
+          "texture": "#o"
         },
         "down": {
-          "texture": "#r"
+          "texture": "#o"
         }
       }
     }

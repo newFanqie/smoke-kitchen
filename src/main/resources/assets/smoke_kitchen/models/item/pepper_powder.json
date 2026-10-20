@@ -93,7 +93,7 @@
         7
       ],
       "to": [
-        9,
+        10,
         12,
         9
       ],
@@ -120,12 +120,12 @@
     },
     {
       "from": [
-        9,
+        10,
         11,
         7
       ],
       "to": [
-        10,
+        11,
         12,
         9
       ],
@@ -147,38 +147,6 @@
         },
         "down": {
           "texture": "#w"
-        }
-      }
-    },
-    {
-      "from": [
-        10,
-        11,
-        7
-      ],
-      "to": [
-        11,
-        12,
-        9
-      ],
-      "faces": {
-        "north": {
-          "texture": "#o"
-        },
-        "south": {
-          "texture": "#o"
-        },
-        "east": {
-          "texture": "#o"
-        },
-        "west": {
-          "texture": "#o"
-        },
-        "up": {
-          "texture": "#o"
-        },
-        "down": {
-          "texture": "#o"
         }
       }
     },
@@ -707,22 +675,22 @@
       ],
       "faces": {
         "north": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "south": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "east": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "west": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "up": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "down": {
-          "texture": "#b"
+          "texture": "#o"
         }
       }
     },
@@ -931,22 +899,22 @@
       ],
       "faces": {
         "north": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "south": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "east": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "west": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "up": {
-          "texture": "#b"
+          "texture": "#o"
         },
         "down": {
-          "texture": "#b"
+          "texture": "#o"
         }
       }
     },
@@ -1496,12 +1464,12 @@
     },
     {
       "from": [
-        12,
+        13,
         1,
         7
       ],
       "to": [
-        13,
+        14,
         2,
         9
       ],

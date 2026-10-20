@@ -10,7 +10,7 @@
     "l": "minecraft:block/lime_concrete",
     "r": "minecraft:block/red_concrete",
     "p": "minecraft:block/pink_concrete",
-    "y": "minecraft:block/red_concrete",
+    "y": "minecraft:block/yellow_concrete",
     "a": "minecraft:block/orange_concrete",
     "b": "minecraft:block/blue_concrete",
     "c": "minecraft:block/cyan_concrete",
@@ -1144,6 +1144,38 @@
     },
     {
       "from": [
+        2,
+        1,
+        7
+      ],
+      "to": [
+        3,
+        2,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#r"
+        },
+        "south": {
+          "texture": "#r"
+        },
+        "east": {
+          "texture": "#r"
+        },
+        "west": {
+          "texture": "#r"
+        },
+        "up": {
+          "texture": "#r"
+        },
+        "down": {
+          "texture": "#r"
+        }
+      }
+    },
+    {
+      "from": [
         8,
         1,
         7
@@ -1171,38 +1203,6 @@
         },
         "down": {
           "texture": "#o"
-        }
-      }
-    },
-    {
-      "from": [
-        13,
-        1,
-        7
-      ],
-      "to": [
-        14,
-        2,
-        9
-      ],
-      "faces": {
-        "north": {
-          "texture": "#g"
-        },
-        "south": {
-          "texture": "#g"
-        },
-        "east": {
-          "texture": "#g"
-        },
-        "west": {
-          "texture": "#g"
-        },
-        "up": {
-          "texture": "#g"
-        },
-        "down": {
-          "texture": "#g"
         }
       }
     }

@@ -1,4 +1,5 @@
 {
+  "parent": "minecraft:block/block",
   "textures": {
     "base": "minecraft:block/oak_planks",
     "metal": "minecraft:block/iron_block",
@@ -12,7 +13,8 @@
     "grain": "minecraft:block/yellow_concrete",
     "leaf": "minecraft:block/green_concrete",
     "salt": "minecraft:block/white_concrete",
-    "dirt": "minecraft:block/dirt"
+    "dirt": "minecraft:block/dirt",
+    "firebox": "minecraft:block/furnace_front"
   },
   "elements": [
     {

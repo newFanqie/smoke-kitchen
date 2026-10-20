@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/tongs"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/used_tongs_state"
+      }
+    ]
+  }
+}

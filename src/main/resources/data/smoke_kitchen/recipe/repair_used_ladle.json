@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:used_ladle",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "smoke_kitchen:ladle",
+    "count": 1
+  }
+}

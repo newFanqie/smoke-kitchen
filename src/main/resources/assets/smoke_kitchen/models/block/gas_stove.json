@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "textures": {
     "base": "minecraft:block/oak_planks",
-    "metal": "minecraft:block/iron_block",
+    "metal": "minecraft:block/polished_andesite",
     "dark": "minecraft:block/black_concrete",
     "stone": "minecraft:block/smooth_stone",
     "clay": "minecraft:block/terracotta",
@@ -13,7 +13,8 @@
     "grain": "minecraft:block/yellow_concrete",
     "leaf": "minecraft:block/green_concrete",
     "salt": "minecraft:block/white_concrete",
-    "dirt": "minecraft:block/dirt"
+    "dirt": "minecraft:block/dirt",
+    "firebox": "minecraft:block/furnace_front"
   },
   "elements": [
     {
@@ -56,7 +57,7 @@
       ],
       "to": [
         16,
-        14,
+        13,
         16
       ],
       "faces": {
@@ -83,12 +84,12 @@
     {
       "from": [
         3,
-        14,
+        13,
         3
       ],
       "to": [
         13,
-        15,
+        13.5,
         13
       ],
       "faces": {
@@ -115,12 +116,12 @@
     {
       "from": [
         3,
-        15,
+        13.5,
         7
       ],
       "to": [
         13,
-        16,
+        14,
         9
       ],
       "faces": {
@@ -147,12 +148,12 @@
     {
       "from": [
         7,
-        15,
+        13.5,
         3
       ],
       "to": [
         9,
-        16,
+        14,
         13
       ],
       "faces": {
@@ -179,12 +180,12 @@
     {
       "from": [
         2,
-        10,
+        9,
         -1
       ],
       "to": [
         5,
-        12,
+        11,
         0
       ],
       "faces": {
@@ -211,12 +212,12 @@
     {
       "from": [
         11,
-        10,
+        9,
         -1
       ],
       "to": [
         14,
-        12,
+        11,
         0
       ],
       "faces": {

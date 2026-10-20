@@ -37,7 +37,8 @@ public class KitchenBlock extends Block implements EntityBlock {
     @Override protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
         if(hit.getDirection()==Direction.UP && stack.getItem() instanceof net.minecraft.world.item.BlockItem placed && placed.getBlock() instanceof KitchenBlock block
-                && java.util.Set.of("cook","board","plate").contains(block.kind) && java.util.Set.of("stove","gas_stove","storage").contains(kind)) return InteractionResult.PASS;
+                && java.util.Set.of("cook","board","plate").contains(block.kind) && kind.equals("storage")) return InteractionResult.PASS;
+        if(stack.getItem() instanceof net.minecraft.world.item.BlockItem placed && (!(placed.getBlock() instanceof KitchenBlock block)||!block.kind.equals("cook")))return InteractionResult.PASS;
         if (level.isClientSide()) return InteractionResult.SUCCESS;
         return level.getBlockEntity(pos) instanceof KitchenBlockEntity station ? station.interact(player, stack, hit) : InteractionResult.PASS;
     }
@@ -56,8 +57,9 @@ public class KitchenBlock extends Block implements EntityBlock {
     }
     @Override protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, CollisionContext context) {
         if(id.equals("oven"))return Shapes.block();
+        if(kind.equals("stove")||kind.equals("gas_stove"))return Block.box(0,0,0,16,level.getBlockEntity(pos) instanceof KitchenBlockEntity station && !station.mountedCookware.isEmpty()?18:14,16);
         return switch (kind) {
-            case "stove" -> Block.box(0,0,0,16,id.equals("clay_stove")?13:16,16);
+            case "stove","gas_stove" -> Block.box(0,0,0,16,14,16);
             case "gas_pipe" -> Block.box(6,0,6,10,16,10);
             case "board" -> Block.box(0,0,0,16,2,16);
             case "cook" -> Block.box(1,0,1,15,7,15);
@@ -65,6 +67,16 @@ public class KitchenBlock extends Block implements EntityBlock {
             case "rack" -> Block.box(0,0,2,16,15,14);
             default -> Shapes.block();
         };
+    }
+    @Override public void animateTick(BlockState state,Level level,BlockPos pos,net.minecraft.util.RandomSource random) {
+        if(state.getValue(HEAT)==0 || !(kind.equals("stove")||kind.equals("gas_stove")))return;
+        var face=state.getValue(FACING);
+        double x=pos.getX()+.5+face.getStepX()*.51,z=pos.getZ()+.5+face.getStepZ()*.51;
+        if(kind.equals("stove")&&random.nextInt(3)==0){
+            level.addParticle(net.minecraft.core.particles.ParticleTypes.SMALL_FLAME,x,pos.getY()+.35,z,0,.01,0);
+            level.addParticle(net.minecraft.core.particles.ParticleTypes.SMOKE,x,pos.getY()+.5,z,0,.015,0);
+        }
+        if(random.nextInt(20)==0)level.playLocalSound(pos.getX()+.5,pos.getY()+.5,pos.getZ()+.5,net.minecraft.sounds.SoundEvents.FURNACE_FIRE_CRACKLE,net.minecraft.sounds.SoundSource.BLOCKS,.35f,.9f+random.nextFloat()*.2f,false);
     }
     @Override protected boolean hasAnalogOutputSignal(BlockState state) {return true;}
     @Override protected int getAnalogOutputSignal(BlockState state,Level level,BlockPos pos,Direction direction) {

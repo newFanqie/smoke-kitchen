@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/stone_knife"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/used_stone_knife_state"
+      }
+    ]
+  }
+}

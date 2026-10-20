@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/mixed_stir_fry"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/spoiled_mixed_stir_fry_state"
+      }
+    ]
+  }
+}

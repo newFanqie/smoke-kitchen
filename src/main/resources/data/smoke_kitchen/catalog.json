@@ -311,13 +311,19 @@
     },
     {
       "id": "empty_gas_canister",
-      "name": "空燃气罐",
+      "name": "煤气罐（0%）",
       "texture": "bucket",
       "unstackable": true
     },
     {
       "id": "gas_canister",
-      "name": "天然气罐",
+      "name": "煤气罐（100%）",
+      "texture": "bucket",
+      "unstackable": true
+    },
+    {
+      "id": "partial_gas_canister",
+      "name": "煤气罐（50%）",
       "texture": "bucket",
       "unstackable": true
     },
@@ -789,6 +795,1169 @@
       "texture": "charcoal",
       "nutrition": 1,
       "meal": true
+    },
+    {
+      "id": "stale_tomato",
+      "name": "不新鲜的番茄",
+      "texture": "apple",
+      "nutrition": 1,
+      "ingredient": "tomato",
+      "variant_of": "tomato",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_tomato",
+      "name": "变质的番茄",
+      "texture": "apple",
+      "nutrition": 0,
+      "ingredient": "tomato",
+      "variant_of": "tomato",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_cucumber",
+      "name": "不新鲜的黄瓜",
+      "texture": "sea_pickle",
+      "nutrition": 1,
+      "ingredient": "cucumber",
+      "variant_of": "cucumber",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cucumber",
+      "name": "变质的黄瓜",
+      "texture": "sea_pickle",
+      "nutrition": 0,
+      "ingredient": "cucumber",
+      "variant_of": "cucumber",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_cabbage",
+      "name": "不新鲜的白菜",
+      "texture": "kelp",
+      "nutrition": 1,
+      "ingredient": "cabbage",
+      "variant_of": "cabbage",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cabbage",
+      "name": "变质的白菜",
+      "texture": "kelp",
+      "nutrition": 0,
+      "ingredient": "cabbage",
+      "variant_of": "cabbage",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_tofu",
+      "name": "不新鲜的豆腐",
+      "texture": "snowball",
+      "ingredient": "tofu",
+      "ready": true,
+      "nutrition": 1,
+      "variant_of": "tofu",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_tofu",
+      "name": "变质的豆腐",
+      "texture": "snowball",
+      "ingredient": "tofu",
+      "ready": true,
+      "nutrition": 0,
+      "variant_of": "tofu",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_duck_meat",
+      "name": "不新鲜的鸭肉",
+      "texture": "chicken",
+      "ingredient": "duck",
+      "nutrition": 1,
+      "resistance": 1.6,
+      "variant_of": "duck_meat",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_duck_meat",
+      "name": "变质的鸭肉",
+      "texture": "chicken",
+      "ingredient": "duck",
+      "nutrition": 0,
+      "resistance": 1.6,
+      "variant_of": "duck_meat",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_goose_meat",
+      "name": "不新鲜的鹅肉",
+      "texture": "chicken",
+      "ingredient": "goose",
+      "nutrition": 1,
+      "resistance": 1.6,
+      "variant_of": "goose_meat",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_goose_meat",
+      "name": "变质的鹅肉",
+      "texture": "chicken",
+      "ingredient": "goose",
+      "nutrition": 0,
+      "resistance": 1.6,
+      "variant_of": "goose_meat",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_boar_meat",
+      "name": "不新鲜的野猪肉",
+      "texture": "porkchop",
+      "ingredient": "pork",
+      "nutrition": 1,
+      "resistance": 1.6,
+      "variant_of": "boar_meat",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_boar_meat",
+      "name": "变质的野猪肉",
+      "texture": "porkchop",
+      "ingredient": "pork",
+      "nutrition": 0,
+      "resistance": 1.6,
+      "variant_of": "boar_meat",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_raw_shrimp",
+      "name": "不新鲜的河虾",
+      "texture": "salmon",
+      "ingredient": "shrimp",
+      "nutrition": 1,
+      "resistance": 1.6,
+      "variant_of": "raw_shrimp",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_raw_shrimp",
+      "name": "变质的河虾",
+      "texture": "salmon",
+      "ingredient": "shrimp",
+      "nutrition": 0,
+      "resistance": 1.6,
+      "variant_of": "raw_shrimp",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_shrimp_meat",
+      "name": "不新鲜的虾仁",
+      "texture": "salmon",
+      "ingredient": "shrimp",
+      "nutrition": 1,
+      "resistance": 1.6,
+      "variant_of": "shrimp_meat",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_shrimp_meat",
+      "name": "变质的虾仁",
+      "texture": "salmon",
+      "ingredient": "shrimp",
+      "nutrition": 0,
+      "resistance": 1.6,
+      "variant_of": "shrimp_meat",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_raw_crab",
+      "name": "不新鲜的河蟹",
+      "texture": "salmon",
+      "ingredient": "crab",
+      "nutrition": 1,
+      "resistance": 1.6,
+      "variant_of": "raw_crab",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_raw_crab",
+      "name": "变质的河蟹",
+      "texture": "salmon",
+      "ingredient": "crab",
+      "nutrition": 0,
+      "resistance": 1.6,
+      "variant_of": "raw_crab",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_cooked_duck",
+      "name": "不新鲜的熟鸭肉",
+      "texture": "cooked_chicken",
+      "ingredient": "duck",
+      "nutrition": 3,
+      "ready": true,
+      "variant_of": "cooked_duck",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cooked_duck",
+      "name": "变质的熟鸭肉",
+      "texture": "cooked_chicken",
+      "ingredient": "duck",
+      "nutrition": 0,
+      "ready": true,
+      "variant_of": "cooked_duck",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_cooked_goose",
+      "name": "不新鲜的熟鹅肉",
+      "texture": "cooked_chicken",
+      "ingredient": "goose",
+      "nutrition": 3,
+      "ready": true,
+      "variant_of": "cooked_goose",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cooked_goose",
+      "name": "变质的熟鹅肉",
+      "texture": "cooked_chicken",
+      "ingredient": "goose",
+      "nutrition": 0,
+      "ready": true,
+      "variant_of": "cooked_goose",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_cooked_boar",
+      "name": "不新鲜的熟野猪肉",
+      "texture": "cooked_chicken",
+      "ingredient": "pork",
+      "nutrition": 3,
+      "ready": true,
+      "variant_of": "cooked_boar",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cooked_boar",
+      "name": "变质的熟野猪肉",
+      "texture": "cooked_chicken",
+      "ingredient": "pork",
+      "nutrition": 0,
+      "ready": true,
+      "variant_of": "cooked_boar",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_cooked_shrimp",
+      "name": "不新鲜的熟河虾",
+      "texture": "cooked_chicken",
+      "ingredient": "shrimp",
+      "nutrition": 3,
+      "ready": true,
+      "variant_of": "cooked_shrimp",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cooked_shrimp",
+      "name": "变质的熟河虾",
+      "texture": "cooked_chicken",
+      "ingredient": "shrimp",
+      "nutrition": 0,
+      "ready": true,
+      "variant_of": "cooked_shrimp",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_cooked_crab",
+      "name": "不新鲜的熟河蟹",
+      "texture": "cooked_chicken",
+      "ingredient": "crab",
+      "nutrition": 3,
+      "ready": true,
+      "variant_of": "cooked_crab",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cooked_crab",
+      "name": "变质的熟河蟹",
+      "texture": "cooked_chicken",
+      "ingredient": "crab",
+      "nutrition": 0,
+      "ready": true,
+      "variant_of": "cooked_crab",
+      "state": "spoiled"
+    },
+    {
+      "id": "used_salt",
+      "name": "盐罐（已使用）",
+      "texture": "sugar",
+      "seasoning": "salt",
+      "uses": 16,
+      "variant_of": "salt",
+      "state": "used"
+    },
+    {
+      "id": "used_rapeseed_oil",
+      "name": "菜籽油（已使用）",
+      "texture": "honey_bottle",
+      "seasoning": "oil",
+      "uses": 8,
+      "variant_of": "rapeseed_oil",
+      "state": "used"
+    },
+    {
+      "id": "used_sesame_oil",
+      "name": "芝麻油（已使用）",
+      "texture": "honey_bottle",
+      "seasoning": "oil",
+      "uses": 8,
+      "variant_of": "sesame_oil",
+      "state": "used"
+    },
+    {
+      "id": "used_soy_sauce",
+      "name": "酱油（已使用）",
+      "texture": "glass_bottle",
+      "seasoning": "soy",
+      "uses": 8,
+      "variant_of": "soy_sauce",
+      "state": "used"
+    },
+    {
+      "id": "used_rice_vinegar",
+      "name": "米醋（已使用）",
+      "texture": "glass_bottle",
+      "seasoning": "vinegar",
+      "uses": 8,
+      "variant_of": "rice_vinegar",
+      "state": "used"
+    },
+    {
+      "id": "used_chili_powder",
+      "name": "辣椒粉（已使用）",
+      "texture": "redstone",
+      "seasoning": "spice",
+      "uses": 16,
+      "variant_of": "chili_powder",
+      "state": "used"
+    },
+    {
+      "id": "used_pepper_powder",
+      "name": "胡椒粉（已使用）",
+      "texture": "gunpowder",
+      "seasoning": "spice",
+      "uses": 16,
+      "variant_of": "pepper_powder",
+      "state": "used"
+    },
+    {
+      "id": "used_cumin_powder",
+      "name": "孜然粉（已使用）",
+      "texture": "glowstone_dust",
+      "seasoning": "spice",
+      "uses": 16,
+      "variant_of": "cumin_powder",
+      "state": "used"
+    },
+    {
+      "id": "used_mushroom_powder",
+      "name": "菌菇鲜粉（已使用）",
+      "texture": "sugar",
+      "seasoning": "spice",
+      "uses": 16,
+      "variant_of": "mushroom_powder",
+      "state": "used"
+    },
+    {
+      "id": "used_stone_knife",
+      "name": "石厨刀（已使用）",
+      "texture": "stone_sword",
+      "uses": 96,
+      "variant_of": "stone_knife",
+      "state": "used"
+    },
+    {
+      "id": "broken_stone_knife",
+      "name": "石厨刀（损坏）",
+      "texture": "stone_sword",
+      "variant_of": "stone_knife",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_iron_knife",
+      "name": "铁厨刀（已使用）",
+      "texture": "iron_sword",
+      "uses": 256,
+      "variant_of": "iron_knife",
+      "state": "used"
+    },
+    {
+      "id": "broken_iron_knife",
+      "name": "铁厨刀（损坏）",
+      "texture": "iron_sword",
+      "variant_of": "iron_knife",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_refined_knife",
+      "name": "精制厨刀（已使用）",
+      "texture": "iron_sword",
+      "uses": 512,
+      "variant_of": "refined_knife",
+      "state": "used"
+    },
+    {
+      "id": "broken_refined_knife",
+      "name": "精制厨刀（损坏）",
+      "texture": "iron_sword",
+      "variant_of": "refined_knife",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_wooden_spatula",
+      "name": "木铲（已使用）",
+      "texture": "wooden_shovel",
+      "uses": 128,
+      "variant_of": "wooden_spatula",
+      "state": "used"
+    },
+    {
+      "id": "broken_wooden_spatula",
+      "name": "木铲（损坏）",
+      "texture": "wooden_shovel",
+      "variant_of": "wooden_spatula",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_iron_spatula",
+      "name": "铁锅铲（已使用）",
+      "texture": "iron_shovel",
+      "uses": 384,
+      "variant_of": "iron_spatula",
+      "state": "used"
+    },
+    {
+      "id": "broken_iron_spatula",
+      "name": "铁锅铲（损坏）",
+      "texture": "iron_shovel",
+      "variant_of": "iron_spatula",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_ladle",
+      "name": "汤勺（已使用）",
+      "texture": "iron_shovel",
+      "uses": 384,
+      "variant_of": "ladle",
+      "state": "used"
+    },
+    {
+      "id": "broken_ladle",
+      "name": "汤勺（损坏）",
+      "texture": "iron_shovel",
+      "variant_of": "ladle",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_tongs",
+      "name": "夹子（已使用）",
+      "texture": "shears",
+      "uses": 256,
+      "variant_of": "tongs",
+      "state": "used"
+    },
+    {
+      "id": "broken_tongs",
+      "name": "夹子（损坏）",
+      "texture": "shears",
+      "variant_of": "tongs",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_chopsticks",
+      "name": "长筷（已使用）",
+      "texture": "stick",
+      "uses": 128,
+      "variant_of": "chopsticks",
+      "state": "used"
+    },
+    {
+      "id": "broken_chopsticks",
+      "name": "长筷（损坏）",
+      "texture": "stick",
+      "variant_of": "chopsticks",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_rolling_pin",
+      "name": "擀面杖（已使用）",
+      "texture": "stick",
+      "uses": 256,
+      "variant_of": "rolling_pin",
+      "state": "used"
+    },
+    {
+      "id": "broken_rolling_pin",
+      "name": "擀面杖（损坏）",
+      "texture": "stick",
+      "variant_of": "rolling_pin",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_water_jug",
+      "name": "水壶（已使用）",
+      "texture": "bucket",
+      "uses": 8,
+      "variant_of": "water_jug",
+      "state": "used"
+    },
+    {
+      "id": "used_heat_cloth",
+      "name": "隔热布（已使用）",
+      "texture": "paper",
+      "uses": 128,
+      "variant_of": "heat_cloth",
+      "state": "used"
+    },
+    {
+      "id": "broken_heat_cloth",
+      "name": "隔热布（损坏）",
+      "texture": "paper",
+      "variant_of": "heat_cloth",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "stale_cooked_rice",
+      "name": "不新鲜的米饭",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "ingredient": "rice_cooked",
+      "ready": true,
+      "variant_of": "cooked_rice",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cooked_rice",
+      "name": "变质的米饭",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "ingredient": "rice_cooked",
+      "ready": true,
+      "variant_of": "cooked_rice",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_rice_porridge",
+      "name": "不新鲜的白粥",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "rice_porridge",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_rice_porridge",
+      "name": "变质的白粥",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "rice_porridge",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_fried_rice",
+      "name": "不新鲜的蛋炒饭",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "fried_rice",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_fried_rice",
+      "name": "变质的蛋炒饭",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "fried_rice",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_tomato_eggs",
+      "name": "不新鲜的番茄炒蛋",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "tomato_eggs",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_tomato_eggs",
+      "name": "变质的番茄炒蛋",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "tomato_eggs",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_sour_spicy_potato",
+      "name": "不新鲜的酸辣土豆丝",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "sour_spicy_potato",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_sour_spicy_potato",
+      "name": "变质的酸辣土豆丝",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "sour_spicy_potato",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_garlic_greens",
+      "name": "不新鲜的蒜蓉青菜",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "garlic_greens",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_garlic_greens",
+      "name": "变质的蒜蓉青菜",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "garlic_greens",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_scallion_omelette",
+      "name": "不新鲜的葱花煎蛋",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "scallion_omelette",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_scallion_omelette",
+      "name": "变质的葱花煎蛋",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "scallion_omelette",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_pan_fried_fish",
+      "name": "不新鲜的煎鱼",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "pan_fried_fish",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_pan_fried_fish",
+      "name": "变质的煎鱼",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "pan_fried_fish",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_steamed_fish",
+      "name": "不新鲜的姜葱蒸鱼",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "steamed_fish",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_steamed_fish",
+      "name": "变质的姜葱蒸鱼",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "steamed_fish",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_boiled_shrimp",
+      "name": "不新鲜的白灼虾",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "boiled_shrimp",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_boiled_shrimp",
+      "name": "变质的白灼虾",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "boiled_shrimp",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_steamed_crab",
+      "name": "不新鲜的蒸河蟹",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "steamed_crab",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_steamed_crab",
+      "name": "变质的蒸河蟹",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "steamed_crab",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_mushroom_soup",
+      "name": "不新鲜的菌菇汤",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "mushroom_soup",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_mushroom_soup",
+      "name": "变质的菌菇汤",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "mushroom_soup",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_tomato_egg_soup",
+      "name": "不新鲜的番茄蛋汤",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "tomato_egg_soup",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_tomato_egg_soup",
+      "name": "变质的番茄蛋汤",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "tomato_egg_soup",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_carrot_meat_stew",
+      "name": "不新鲜的萝卜炖肉",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "carrot_meat_stew",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_carrot_meat_stew",
+      "name": "变质的萝卜炖肉",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "carrot_meat_stew",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_beef_potato_stew",
+      "name": "不新鲜的土豆炖牛肉",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "beef_potato_stew",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_beef_potato_stew",
+      "name": "变质的土豆炖牛肉",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "beef_potato_stew",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_pumpkin_soup",
+      "name": "不新鲜的南瓜浓汤",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "pumpkin_soup",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_pumpkin_soup",
+      "name": "变质的南瓜浓汤",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "pumpkin_soup",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_braised_pork",
+      "name": "不新鲜的红烧肉",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "braised_pork",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_braised_pork",
+      "name": "变质的红烧肉",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "braised_pork",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_braised_eggplant",
+      "name": "不新鲜的烧茄子",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "braised_eggplant",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_braised_eggplant",
+      "name": "变质的烧茄子",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "braised_eggplant",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_mapo_tofu",
+      "name": "不新鲜的麻婆豆腐",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "mapo_tofu",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_mapo_tofu",
+      "name": "变质的麻婆豆腐",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "mapo_tofu",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_cucumber_salad",
+      "name": "不新鲜的凉拌黄瓜",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "cucumber_salad",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cucumber_salad",
+      "name": "变质的凉拌黄瓜",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "cucumber_salad",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_pickled_cabbage",
+      "name": "不新鲜的泡菜",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "pickled_cabbage",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_pickled_cabbage",
+      "name": "变质的泡菜",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "pickled_cabbage",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_meat_skewers",
+      "name": "不新鲜的烤肉串",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "meat_skewers",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_meat_skewers",
+      "name": "变质的烤肉串",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "meat_skewers",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_honey_roast_duck",
+      "name": "不新鲜的蜂蜜烤鸭",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "honey_roast_duck",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_honey_roast_duck",
+      "name": "变质的蜂蜜烤鸭",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "honey_roast_duck",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_roast_potatoes",
+      "name": "不新鲜的烤土豆",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "roast_potatoes",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_roast_potatoes",
+      "name": "变质的烤土豆",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "roast_potatoes",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_noodle_soup",
+      "name": "不新鲜的手擀汤面",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "noodle_soup",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_noodle_soup",
+      "name": "变质的手擀汤面",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "noodle_soup",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_pork_dumplings",
+      "name": "不新鲜的猪肉白菜饺子",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "pork_dumplings",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_pork_dumplings",
+      "name": "变质的猪肉白菜饺子",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "pork_dumplings",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_steamed_buns",
+      "name": "不新鲜的馒头",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "steamed_buns",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_steamed_buns",
+      "name": "变质的馒头",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "steamed_buns",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_homestyle_bread",
+      "name": "不新鲜的家常面包",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "homestyle_bread",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_homestyle_bread",
+      "name": "变质的家常面包",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "homestyle_bread",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_apple_pie",
+      "name": "不新鲜的苹果派",
+      "texture": "bowl",
+      "nutrition": 3,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "apple_pie",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_apple_pie",
+      "name": "变质的苹果派",
+      "texture": "bowl",
+      "nutrition": 0,
+      "saturation": 0.5,
+      "meal": true,
+      "variant_of": "apple_pie",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_mixed_stir_fry",
+      "name": "不新鲜的家常杂炒",
+      "texture": "bowl",
+      "nutrition": 2,
+      "meal": true,
+      "variant_of": "mixed_stir_fry",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_mixed_stir_fry",
+      "name": "变质的家常杂炒",
+      "texture": "bowl",
+      "nutrition": 0,
+      "meal": true,
+      "variant_of": "mixed_stir_fry",
+      "state": "spoiled"
+    },
+    {
+      "id": "stale_mixed_stew",
+      "name": "不新鲜的家常炖汤",
+      "texture": "bowl",
+      "nutrition": 2,
+      "meal": true,
+      "variant_of": "mixed_stew",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_mixed_stew",
+      "name": "变质的家常炖汤",
+      "texture": "bowl",
+      "nutrition": 0,
+      "meal": true,
+      "variant_of": "mixed_stew",
+      "state": "spoiled"
     }
   ],
   "stations": [

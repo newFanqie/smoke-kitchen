@@ -35,14 +35,14 @@ public final class KitchenContent {
             int uses = ContentCatalog.num(d,"uses",0);
             if (uses > 0) props.durability(uses);
             else if (ContentCatalog.flag(d,"unstackable")) props.stacksTo(1);
-            ITEMS.put(name, Registry.register(BuiltInRegistries.ITEM, SmokeKitchen.id(name), nutrition>0?new KitchenFoodItem(props,nutrition):new Item(props)));
+            ITEMS.put(name, Registry.register(BuiltInRegistries.ITEM, SmokeKitchen.id(name), nutrition>0?new KitchenFoodItem(props,nutrition):new KitchenStateItem(props)));
             DEFINITIONS.put(name,d);
         }
         for (var e : ContentCatalog.DATA.getAsJsonArray("stations")) {
             var d = e.getAsJsonObject(); String name = ContentCatalog.str(d,"id");
             var props = BlockBehaviour.Properties.of().strength(2.5f).noOcclusion().sound(SoundType.WOOD)
                     .setId(ResourceKey.create(Registries.BLOCK, SmokeKitchen.id(name)));
-            if(ContentCatalog.str(d,"kind").equals("stove") || name.equals("gas_stove"))props.lightLevel(state->state.getValue(KitchenBlock.HEAT)>0?12:0).sound(SoundType.STONE);
+            if(ContentCatalog.str(d,"kind").equals("stove") || name.equals("gas_stove"))props.dynamicShape().lightLevel(state->state.getValue(KitchenBlock.HEAT)>0?12:0).sound(SoundType.STONE);
             if(name.equals("double_stove"))props.pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK);
             Block block = Registry.register(BuiltInRegistries.BLOCK, SmokeKitchen.id(name), name.equals("double_stove")?new dev.smokekitchen.world.DoubleStoveBlock(props):new KitchenBlock(props, name, ContentCatalog.str(d,"kind")));
             BLOCKS.put(name,block); DEFINITIONS.put(name,d);
@@ -58,17 +58,20 @@ public final class KitchenContent {
             CROPS.put(name,crop);
             registerBlockItem(name+"_seeds",crop);
         }
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> BLOCKS.values().forEach(output::accept));
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> ITEMS.values().forEach(output::accept));
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> ITEMS.values().stream().filter(i->i.getDefaultInstance().has(net.minecraft.core.component.DataComponents.FOOD)).forEach(output::accept));
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.SPAWN_EGGS).register(output -> ITEMS.entrySet().stream().filter(e->e.getKey().endsWith("_spawn_egg")).forEach(e->output.accept(e.getValue())));
     }
     public static void registerCreativeTab() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB,SmokeKitchen.id("kitchen"),
             net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab.builder()
                 .title(net.minecraft.network.chat.Component.translatable("itemGroup.smoke_kitchen"))
                 .icon(()->new ItemStack(item("brick_stove")))
-                .displayItems((parameters,output)->ITEMS.values().forEach(output::accept)).build());
+                .displayItems((parameters,output)->{
+                    BLOCKS.values().forEach(output::accept);
+                    ITEMS.entrySet().stream().filter(e->!BLOCKS.containsKey(e.getKey())).forEach(e->{
+                        var stack=new ItemStack(e.getValue());var def=DEFINITIONS.get(e.getKey());
+                        if(def!=null&&ContentCatalog.str(def,"state").equals("used"))stack.setDamageValue(Math.max(1,stack.getMaxDamage()/2));
+                        output.accept(stack);
+                    });
+                }).build());
     }
     private static void registerBlockItem(String name, Block block) {
         var key = ResourceKey.create(Registries.ITEM, SmokeKitchen.id(name));

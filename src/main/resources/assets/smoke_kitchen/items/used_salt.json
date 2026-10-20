@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/salt"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/used_salt_state"
+      }
+    ]
+  }
+}

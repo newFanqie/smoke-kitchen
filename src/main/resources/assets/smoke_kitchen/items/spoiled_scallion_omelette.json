@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/scallion_omelette"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/spoiled_scallion_omelette_state"
+      }
+    ]
+  }
+}

@@ -17,6 +17,12 @@ export function pixelModel(rows,colors={}) {
 }
 export function inventoryModel(item,index=0) {
  const id=item.id;
+ if(item.variant_of){
+  const rows=Array.from({length:16},()=>'.'.repeat(16));
+  const color={used:'y',broken:'r',stale:'o',spoiled:'g'}[item.state]||'s';
+  rows[12]='............oooo';rows[13]='............o'+color+color+'o';rows[14]='............o'+color+color+'o';rows[15]='............oooo';
+  return pixelModel(rows);
+ }
  const grid=Array.from({length:16},()=>Array(16).fill('.'));
  const set=(x,y,c)=>{if(x>=0&&x<16&&y>=0&&y<16)grid[y][x]=c;};
  const rect=(x,y,w,h,c)=>{for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)set(i,j,c);};
@@ -89,12 +95,12 @@ export function inventoryModel(item,index=0) {
 
 export function stationGeometry(s,models) {
  const b=cube,base=models[s.model];
- const door=(x=4,width=8)=>[b([x,2,-.02],[x+width,8,1],'#dark'),b([x,1,-.1],[x+width,2,1],'#metal')];
+ const front=()=>{const pane=b([3,3,-.02],[13,10,0],'#firebox');pane.faces={north:{texture:'#firebox',uv:[3,7,13,14]}};return pane;};
  const burner=(x,z,size=8)=>[b([x,14,z],[x+size,15,z+size],'#dark'),b([x,15,z+size/2-1],[x+size,16,z+size/2+1],'#metal'),b([x+size/2-1,15,z],[x+size/2+1,16,z+size],'#metal')];
- if(s.id==='clay_stove')return [b([1,0,1],[15,2,15],'#clay'),b([1,2,1],[4,10,15],'#clay'),b([12,2,1],[15,10,15],'#clay'),b([4,2,12],[12,10,15],'#clay'),b([1,10,1],[15,12,15],'#clay'),b([4,12,4],[12,13,12],'#dark'),b([4,2,11.9],[12,8,12],'#dark')];
- if(s.id==='brick_stove')return [b([0,0,0],[16,2,16]),b([0,2,0],[4,11,16]),b([12,2,0],[16,11,16]),b([4,2,13],[12,11,16]),b([0,11,0],[16,14,16]),...burner(4,4),b([4,2,12.9],[12,9,13],'#dark'),b([2,2,-.1],[3,10,0],'#stone'),b([13,2,-.1],[14,10,0],'#stone')];
- if(s.id==='double_stove')return [b([0,0,0],[16,2,16],'#stone'),b([0,2,0],[3,11,16],'#metal'),b([13,2,0],[16,11,16],'#metal'),b([3,2,13],[13,11,16],'#stone'),b([0,11,0],[16,14,16],'#metal'),b([3,2,12.9],[13,10,13],'#dark'),...burner(3,3,10),b([1,11,-.5],[3,13,1],'#dark'),b([13,11,-.5],[15,13,1],'#dark')];
- if(s.id==='gas_stove')return [b([0,0,0],[16,12,16],'#blue'),b([0,12,0],[16,14,16],'#metal'),b([3,14,3],[13,15,13],'#dark'),b([3,15,7],[13,16,9],'#metal'),b([7,15,3],[9,16,13],'#metal'),b([2,10,-1],[5,12,0],'#dark'),b([11,10,-1],[14,12,0],'#dark'),b([6,0,14],[10,3,17],'#copper')];
+ if(s.id==='clay_stove')return [b([0,0,0],[16,12,16],'#clay'),front(),b([0,12,0],[16,13,16],'#stone'),b([4,13,4],[12,13.5,12],'#dark')];
+ if(s.id==='brick_stove')return [b([0,0,0],[16,12,16]),front(),b([0,12,0],[16,13,16],'#stone'),b([3,13,3],[13,13.5,13],'#dark'),b([3,13.5,7],[13,14,9],'#metal'),b([7,13.5,3],[9,14,13],'#metal')];
+ if(s.id==='double_stove')return [b([0,0,0],[16,12,16],'#stone'),front(),b([0,12,0],[16,13,16],'#metal'),b([3,13,3],[13,13.5,13],'#dark'),b([3,13.5,7],[13,14,9],'#metal'),b([7,13.5,3],[9,14,13],'#metal'),b([2,10,-.5],[4,12,0],'#dark')];
+ if(s.id==='gas_stove')return [b([0,0,0],[16,12,16],'#blue'),b([0,12,0],[16,13,16],'#metal'),b([3,13,3],[13,13.5,13],'#dark'),b([3,13.5,7],[13,14,9],'#metal'),b([7,13.5,3],[9,14,13],'#metal'),b([2,9,-1],[5,11,0],'#dark'),b([11,9,-1],[14,11,0],'#dark'),b([6,0,14],[10,3,17],'#copper')];
  if(s.id==='gas_pipe')return [b([6,0,6],[10,16,10],'#copper'),b([0,6,6],[16,10,10],'#copper'),b([6,6,0],[10,10,16],'#copper'),b([5,5,5],[11,11,11],'#metal')];
  if(s.id==='gas_tank')return [b([3,0,3],[13,2,13],'#dark'),b([2,2,2],[14,12,14],'#blue'),b([4,12,4],[12,14,12],'#blue'),b([7,14,7],[9,16,9],'#copper'),b([5,15,7],[11,16,9],'#dark'),b([5,6,1.9],[11,10,2],'#metal')];
  if(s.id==='gas_extractor')return [b([0,0,0],[16,3,16],'#metal'),b([5,3,5],[11,12,11],'#dark'),b([2,11,2],[14,15,14],'#metal'),b([7,0,7],[9,16,9],'#copper'),b([1,4,1],[3,11,3],'#copper'),b([13,4,13],[15,11,15],'#copper')];

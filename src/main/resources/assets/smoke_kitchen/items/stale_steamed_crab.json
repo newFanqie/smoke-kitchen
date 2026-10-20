@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/steamed_crab"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/stale_steamed_crab_state"
+      }
+    ]
+  }
+}

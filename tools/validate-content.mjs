@@ -32,9 +32,10 @@ for(const id of known)if(!fs.existsSync(path.join(root,'assets',ns,'items',id+'.
 const iconSignatures=new Map();
 for(const id of known){
  let model=read(`assets/${ns}/models/item/${id}.json`);
+ const client=read(`assets/${ns}/items/${id}.json`).model;
  if(model.parent===`${ns}:block/${id}`)model=read(`assets/${ns}/models/block/${id}.json`);
  if(model.elements && model.parent!=='minecraft:block/block')errors.push(`Missing 3D inventory transforms: ${id}`);
- const signature=JSON.stringify(model);
+ const signature=JSON.stringify(client.type==='minecraft:composite'?{base:model,badge:read(`assets/${ns}/models/item/${id}_state.json`)}:model);
  if(iconSignatures.has(signature))errors.push(`Identical inventory art: ${id} and ${iconSignatures.get(signature)}`);
  iconSignatures.set(signature,id);
 }
@@ -42,7 +43,7 @@ for(const id of ['clay_stove','brick_stove','double_stove']){
  const model=read(`assets/${ns}/models/block/${id}.json`);
  if(model.parent!=='minecraft:block/block')errors.push(`Flat stove icon: ${id}`);
  const state=read(`assets/${ns}/blockstates/${id}.json`);
- if(!state.multipart.some(p=>p.when.fueled==='true'))errors.push(`No visible fuel bed: ${id}`);
+ if(!state.multipart.some(p=>p.when.heat==='1|2|3'&&p.apply.model.endsWith('_lit')))errors.push(`No animated lit furnace face: ${id}`);
 }
 const sprite=fs.readFileSync(path.join(root,'assets',ns,'textures','item','fried_rice.png'));
 if(sprite.readUInt32BE(16)!==64||sprite.readUInt32BE(20)!==64)errors.push('Fried rice export must be 64x64.');

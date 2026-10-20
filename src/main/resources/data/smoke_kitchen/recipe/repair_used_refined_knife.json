@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:used_refined_knife",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "smoke_kitchen:refined_knife",
+    "count": 1
+  }
+}

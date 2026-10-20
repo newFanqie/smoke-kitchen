@@ -10,7 +10,7 @@
     "l": "minecraft:block/lime_concrete",
     "r": "minecraft:block/red_concrete",
     "p": "minecraft:block/pink_concrete",
-    "y": "minecraft:block/red_concrete",
+    "y": "minecraft:block/yellow_concrete",
     "a": "minecraft:block/orange_concrete",
     "b": "minecraft:block/blue_concrete",
     "c": "minecraft:block/cyan_concrete",
@@ -1176,12 +1176,12 @@
     },
     {
       "from": [
-        10,
+        11,
         1,
         7
       ],
       "to": [
-        11,
+        12,
         2,
         9
       ],

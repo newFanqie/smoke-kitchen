@@ -16,18 +16,23 @@ public final class KitchenFoodItem extends Item {
     @Override public void inventoryTick(ItemStack stack,ServerLevel level,Entity owner,EquipmentSlot slot) {
         super.inventoryTick(stack,level,owner,slot);
         if(level.getGameTime()%100!=0 || !KitchenConfig.INSTANCE.spoilage)return;
+        var result=agedStack(stack,level.getGameTime());
+        if(result==stack)return;
+        if(slot!=null && owner instanceof net.minecraft.world.entity.LivingEntity living)living.setItemSlot(slot,result);
+        else if(owner instanceof net.minecraft.world.entity.player.Player player)for(int i=0;i<player.getInventory().getContainerSize();i++)if(player.getInventory().getItem(i)==stack){player.getInventory().setItem(i,result);break;}
+    }
+    public static ItemStack agedStack(ItemStack stack,long now) {
         var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
-        long now=level.getGameTime();
-        if(!tag.contains("kitchen_prepared")) {tag.putLong("kitchen_prepared",now);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));return;}
+        if(!tag.contains("kitchen_prepared")) {tag.putLong("kitchen_prepared",now);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));return stack;}
         long age=Math.max(0,now-tag.getLongOr("kitchen_prepared",now));
-        if(age>KitchenConfig.INSTANCE.spoiledDays*24000L && !tag.getBooleanOr("kitchen_spoiled",false)) {
-            stack.set(DataComponents.CUSTOM_NAME,Component.translatable("food.smoke_kitchen.spoiled",stack.getHoverName()));
-            stack.remove(DataComponents.FOOD);stack.remove(DataComponents.CONSUMABLE);
-            tag.putBoolean("kitchen_spoiled",true);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
-        } else if(age>KitchenConfig.INSTANCE.freshDays*24000L && !tag.getBooleanOr("kitchen_stale",false)) {
-            stack.set(DataComponents.CUSTOM_NAME,Component.translatable("food.smoke_kitchen.stale",stack.getHoverName()));
-            stack.set(DataComponents.FOOD,new FoodProperties.Builder().nutrition(Math.max(1,nutrition/2)).saturationModifier(.25f).build());
-            tag.putBoolean("kitchen_stale",true);tag.putInt("kitchen_quality",1);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
-        }
+        String state=age>KitchenConfig.INSTANCE.spoiledDays*24000L?"spoiled_":age>KitchenConfig.INSTANCE.freshDays*24000L?"stale_":"";
+        String target=state+ResourceStates.baseId(stack);
+        var item=KitchenContent.item(target);
+        if(item==Items.AIR || item==stack.getItem())return stack;
+        var result=stack.transmuteCopy(item);
+        if(!state.isEmpty())tag.putInt("kitchen_quality",1);
+        if(state.equals("spoiled_")){result.remove(DataComponents.FOOD);result.remove(DataComponents.CONSUMABLE);}
+        result.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
+        return result;
     }
 }

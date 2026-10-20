@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/braised_eggplant"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/stale_braised_eggplant_state"
+      }
+    ]
+  }
+}

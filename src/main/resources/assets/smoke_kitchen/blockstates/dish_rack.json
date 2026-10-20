@@ -38,30 +38,6 @@
     },
     {
       "when": {
-        "contents": "raw"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/contents_raw"
-      }
-    },
-    {
-      "when": {
-        "contents": "cooked"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/contents_cooked"
-      }
-    },
-    {
-      "when": {
-        "contents": "burnt"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/contents_burnt"
-      }
-    },
-    {
-      "when": {
         "lid": "true"
       },
       "apply": {

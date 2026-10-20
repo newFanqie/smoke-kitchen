@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/iron_spatula"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/broken_iron_spatula_state"
+      }
+    ]
+  }
+}

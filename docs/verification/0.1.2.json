@@ -1,0 +1,44 @@
+{
+  "loader": "0.19.2",
+  "releaseDownloadVerified": false,
+  "jarContainsTestCode": false,
+  "unitTests": {
+    "failed": 0,
+    "passed": 11
+  },
+  "date": "2026-10-20",
+  "gameTests": {
+    "builtinPassed": 1,
+    "failed": 0,
+    "customPassed": 20
+  },
+  "minecraft": "26.1.2",
+  "saveChecks": "Block entity serialization plus moving/remounting lidded cookware; full world reload remains pending",
+  "version": "0.1.2",
+  "clientChecks": {
+    "workflow": [
+      "creative tab coverage",
+      "place stoves",
+      "craft frying pan using normal workbench slots",
+      "mount cookware",
+      "coal and canister fuel",
+      "load raw chicken",
+      "wait 1100 normal ticks",
+      "render cooked chicken",
+      "retrieve cooked chicken",
+      "retrieve partial canister",
+      "fill tank and supply connected pipe"
+    ],
+    "vanillaPassed": true,
+    "missingModAssets": 0,
+    "knownShaderWarning": "Nonfatal fixedTaaCorrection uniform parsing warning in shader pack",
+    "irisPassed": true,
+    "iris": "1.11.4+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "shaderActuallyActive": true,
+    "sodium": "0.9.2+mc26.1.2"
+  },
+  "fabricApi": "0.149.1+26.1.2",
+  "sha256": "3efeb4356584871d878fc160b50655148371f8fec1311c502f15e40dcbcc6f68",
+  "itemDefinitions": 304
+}

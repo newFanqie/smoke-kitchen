@@ -43,6 +43,7 @@ public final class CookingBatch {
     public boolean add(String id, Cut cut, double resistance, boolean needsWater, boolean ready) {
         if (ingredients.size() >= capacity || remainingServings >= 0) return false;
         ingredients.add(new Portion(id, cut, Math.max(.25, resistance), needsWater, ready));
+        temperature=Math.max(20,temperature-8);
         return true;
     }
 
@@ -72,7 +73,7 @@ public final class CookingBatch {
                 case MINCE -> 1.5;
             };
             if (method == Method.MIX) continue;
-            if (p.needsWater && water <= 0) continue;
+            if ((p.needsWater || wetMethod) && water <= 0) continue;
             if (method == Method.FERMENT) continue;
             double effective = Math.max(0, temperature - 40);
             p.cooked += effective * cutFactor / (2800 * p.resistance);

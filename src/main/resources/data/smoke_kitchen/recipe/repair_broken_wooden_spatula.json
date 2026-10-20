@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:broken_wooden_spatula",
+    "minecraft:oak_planks"
+  ],
+  "result": {
+    "id": "smoke_kitchen:wooden_spatula",
+    "count": 1
+  }
+}

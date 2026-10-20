@@ -1,0 +1,15 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/cooked_boar"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "smoke_kitchen:item/stale_cooked_boar_state"
+      }
+    ]
+  }
+}

@@ -2,47 +2,11 @@
   "multipart": [
     {
       "when": {
-        "facing": "north"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/clay_stove",
-        "y": 0
-      }
-    },
-    {
-      "when": {
-        "facing": "east"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/clay_stove",
-        "y": 90
-      }
-    },
-    {
-      "when": {
-        "facing": "south"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/clay_stove",
-        "y": 180
-      }
-    },
-    {
-      "when": {
-        "facing": "west"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/clay_stove",
-        "y": 270
-      }
-    },
-    {
-      "when": {
         "facing": "north",
-        "fueled": "true"
+        "heat": "0"
       },
       "apply": {
-        "model": "smoke_kitchen:block/fuel_bed",
+        "model": "smoke_kitchen:block/clay_stove",
         "y": 0
       }
     },
@@ -52,17 +16,17 @@
         "heat": "1|2|3"
       },
       "apply": {
-        "model": "smoke_kitchen:block/firebox_lit",
+        "model": "smoke_kitchen:block/clay_stove_lit",
         "y": 0
       }
     },
     {
       "when": {
         "facing": "east",
-        "fueled": "true"
+        "heat": "0"
       },
       "apply": {
-        "model": "smoke_kitchen:block/fuel_bed",
+        "model": "smoke_kitchen:block/clay_stove",
         "y": 90
       }
     },
@@ -72,17 +36,17 @@
         "heat": "1|2|3"
       },
       "apply": {
-        "model": "smoke_kitchen:block/firebox_lit",
+        "model": "smoke_kitchen:block/clay_stove_lit",
         "y": 90
       }
     },
     {
       "when": {
         "facing": "south",
-        "fueled": "true"
+        "heat": "0"
       },
       "apply": {
-        "model": "smoke_kitchen:block/fuel_bed",
+        "model": "smoke_kitchen:block/clay_stove",
         "y": 180
       }
     },
@@ -92,17 +56,17 @@
         "heat": "1|2|3"
       },
       "apply": {
-        "model": "smoke_kitchen:block/firebox_lit",
+        "model": "smoke_kitchen:block/clay_stove_lit",
         "y": 180
       }
     },
     {
       "when": {
         "facing": "west",
-        "fueled": "true"
+        "heat": "0"
       },
       "apply": {
-        "model": "smoke_kitchen:block/fuel_bed",
+        "model": "smoke_kitchen:block/clay_stove",
         "y": 270
       }
     },
@@ -112,40 +76,8 @@
         "heat": "1|2|3"
       },
       "apply": {
-        "model": "smoke_kitchen:block/firebox_lit",
+        "model": "smoke_kitchen:block/clay_stove_lit",
         "y": 270
-      }
-    },
-    {
-      "when": {
-        "contents": "raw"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/contents_raw"
-      }
-    },
-    {
-      "when": {
-        "contents": "cooked"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/contents_cooked"
-      }
-    },
-    {
-      "when": {
-        "contents": "burnt"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/contents_burnt"
-      }
-    },
-    {
-      "when": {
-        "lid": "true"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/lid"
       }
     }
   ]

@@ -10,7 +10,7 @@
     "l": "minecraft:block/lime_concrete",
     "r": "minecraft:block/red_concrete",
     "p": "minecraft:block/pink_concrete",
-    "y": "minecraft:block/light_gray_concrete",
+    "y": "minecraft:block/orange_concrete",
     "a": "minecraft:block/orange_concrete",
     "b": "minecraft:block/blue_concrete",
     "c": "minecraft:block/cyan_concrete",
@@ -317,7 +317,7 @@
         7
       ],
       "to": [
-        9,
+        10,
         7,
         9
       ],
@@ -344,12 +344,12 @@
     },
     {
       "from": [
-        9,
+        10,
         6,
         7
       ],
       "to": [
-        11,
+        12,
         7,
         9
       ],
@@ -376,7 +376,7 @@
     },
     {
       "from": [
-        11,
+        12,
         6,
         7
       ],
@@ -477,7 +477,7 @@
         7
       ],
       "to": [
-        9,
+        10,
         6,
         9
       ],
@@ -504,39 +504,7 @@
     },
     {
       "from": [
-        9,
-        5,
-        7
-      ],
-      "to": [
-        11,
-        6,
-        9
-      ],
-      "faces": {
-        "north": {
-          "texture": "#a"
-        },
-        "south": {
-          "texture": "#a"
-        },
-        "east": {
-          "texture": "#a"
-        },
-        "west": {
-          "texture": "#a"
-        },
-        "up": {
-          "texture": "#a"
-        },
-        "down": {
-          "texture": "#a"
-        }
-      }
-    },
-    {
-      "from": [
-        11,
+        10,
         5,
         7
       ],
@@ -547,22 +515,22 @@
       ],
       "faces": {
         "north": {
-          "texture": "#y"
+          "texture": "#a"
         },
         "south": {
-          "texture": "#y"
+          "texture": "#a"
         },
         "east": {
-          "texture": "#y"
+          "texture": "#a"
         },
         "west": {
-          "texture": "#y"
+          "texture": "#a"
         },
         "up": {
-          "texture": "#y"
+          "texture": "#a"
         },
         "down": {
-          "texture": "#y"
+          "texture": "#a"
         }
       }
     },
@@ -760,12 +728,12 @@
     },
     {
       "from": [
-        4,
+        5,
         1,
         7
       ],
       "to": [
-        5,
+        6,
         2,
         9
       ],

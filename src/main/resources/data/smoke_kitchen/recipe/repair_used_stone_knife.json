@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:used_stone_knife",
+    "minecraft:cobblestone"
+  ],
+  "result": {
+    "id": "smoke_kitchen:stone_knife",
+    "count": 1
+  }
+}

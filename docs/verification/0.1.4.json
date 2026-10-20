@@ -60,5 +60,8 @@
     ],
     "exactGasPreserved": true
   },
-  "releaseDownloadVerified": false
+  "releaseDownloadVerified": true,
+  "codeCommit": "d0cfa7a7443c2d2e1e1e8d2da13d0901b723ec1c",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.4",
+  "downloadedBytes": 644921
 }

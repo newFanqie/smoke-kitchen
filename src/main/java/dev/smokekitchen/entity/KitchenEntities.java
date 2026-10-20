@@ -58,6 +58,11 @@ public final class KitchenEntities {
         SpawnPlacements.register(SHRIMP,SpawnPlacementTypes.IN_WATER,Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,(type,world,reason,pos,random)->world.getFluidState(pos).is(FluidTags.WATER));
         SpawnPlacements.register(CRAB,SpawnPlacementTypes.IN_WATER,Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,(type,world,reason,pos,random)->world.getFluidState(pos).is(FluidTags.WATER));
         registerBucket("shrimp_bucket",SHRIMP);registerBucket("crab_bucket",CRAB);
+        ALL.forEach((name,type)->{
+            var key=ResourceKey.create(Registries.ITEM,SmokeKitchen.id(name+"_spawn_egg"));
+            KitchenContent.ITEMS.put(name+"_spawn_egg",Registry.register(BuiltInRegistries.ITEM,key,
+                    new SpawnEggItem(new Item.Properties().setId(key).spawnEgg(type))));
+        });
         var wet=BiomeSelectors.includeByKey(Biomes.RIVER,Biomes.SWAMP,Biomes.MANGROVE_SWAMP);
         BiomeModifications.addSpawn(wet,MobCategory.CREATURE,DUCK,8,2,4);
         BiomeModifications.addSpawn(wet,MobCategory.CREATURE,GOOSE,4,2,3);

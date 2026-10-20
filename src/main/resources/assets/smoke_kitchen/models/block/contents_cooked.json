@@ -1,6 +1,7 @@
 {
   "textures": {
-    "base": "minecraft:block/yellow_terracotta"
+    "base": "minecraft:block/yellow_terracotta",
+    "particle": "minecraft:block/yellow_terracotta"
   },
   "elements": [
     {

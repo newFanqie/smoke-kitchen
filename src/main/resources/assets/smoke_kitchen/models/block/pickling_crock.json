@@ -1,11 +1,19 @@
 {
+  "parent": "minecraft:block/block",
   "textures": {
     "base": "minecraft:block/oak_planks",
     "metal": "minecraft:block/iron_block",
-    "dark": "minecraft:block/gray_concrete",
-    "stone": "minecraft:block/stone",
-    "clay": "minecraft:block/terracotta",
-    "particle": "minecraft:block/oak_planks"
+    "dark": "minecraft:block/black_concrete",
+    "stone": "minecraft:block/smooth_stone",
+    "clay": "minecraft:block/green_terracotta",
+    "particle": "minecraft:block/oak_planks",
+    "copper": "minecraft:block/copper_block",
+    "blue": "minecraft:block/blue_concrete",
+    "ice": "minecraft:block/light_blue_concrete",
+    "grain": "minecraft:block/yellow_concrete",
+    "leaf": "minecraft:block/green_concrete",
+    "salt": "minecraft:block/white_concrete",
+    "dirt": "minecraft:block/dirt"
   },
   "elements": [
     {
@@ -101,6 +109,38 @@
         },
         "down": {
           "texture": "#base"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaf"
+        },
+        "south": {
+          "texture": "#leaf"
+        },
+        "east": {
+          "texture": "#leaf"
+        },
+        "west": {
+          "texture": "#leaf"
+        },
+        "up": {
+          "texture": "#leaf"
+        },
+        "down": {
+          "texture": "#leaf"
         }
       }
     }

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    "CFC",
+    "ICI"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "C": "minecraft:copper_ingot",
+    "F": "minecraft:furnace"
+  },
+  "result": {
+    "id": "smoke_kitchen:gas_stove",
+    "count": 1
+  }
+}

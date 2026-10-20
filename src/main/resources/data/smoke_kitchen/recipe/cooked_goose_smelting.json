@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "ingredient": "smoke_kitchen:goose_meat",
+  "result": {
+    "id": "smoke_kitchen:cooked_goose"
+  },
+  "experience": 0.35,
+  "cookingtime": 200
+}

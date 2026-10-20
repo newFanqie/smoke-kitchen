@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IPI",
+    "IFI",
+    "CCC"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "P": "minecraft:iron_pickaxe",
+    "F": "minecraft:furnace",
+    "C": "minecraft:copper_ingot"
+  },
+  "result": {
+    "id": "smoke_kitchen:gas_extractor",
+    "count": 1
+  }
+}

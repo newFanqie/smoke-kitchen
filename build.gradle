@@ -41,6 +41,10 @@ java {
 test { useJUnitPlatform() }
 
 sourceSets {
+    clienttest {
+        compileClasspath += sourceSets.client.compileClasspath + sourceSets.main.output + sourceSets.client.output
+        runtimeClasspath += sourceSets.client.runtimeClasspath + sourceSets.main.output + sourceSets.client.output
+    }
     gametest {
         compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
         runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
@@ -50,8 +54,17 @@ sourceSets {
 loom {
     mods {
         smoke_kitchen_gametest { sourceSet sourceSets.gametest }
+        smoke_kitchen_clienttest { sourceSet sourceSets.clienttest }
     }
     runs {
+        clienttest {
+            client()
+            name 'Smoke Kitchen visual checks'
+            source sourceSets.clienttest
+            runDir 'build/clienttest'
+            vmArg '-Dfabric.client.gametest'
+            vmArg '-Dfabric.client.gametest.modid=smoke_kitchen_clienttest'
+        }
         gametest {
             server()
             name 'Smoke Kitchen Game Tests'

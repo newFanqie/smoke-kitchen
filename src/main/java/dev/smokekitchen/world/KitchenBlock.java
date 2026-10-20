@@ -20,6 +20,7 @@ public class KitchenBlock extends Block implements EntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty HEAT = IntegerProperty.create("heat",0,3);
     public static final BooleanProperty LID = BooleanProperty.create("lid");
+    public static final BooleanProperty FUELED = BooleanProperty.create("fueled");
     public static final EnumProperty<Contents> CONTENTS = EnumProperty.create("contents",Contents.class);
     public enum Contents implements net.minecraft.util.StringRepresentable {
         EMPTY, RAW, COOKED, BURNT;
@@ -29,14 +30,14 @@ public class KitchenBlock extends Block implements EntityBlock {
     public final String kind;
     public KitchenBlock(Properties props, String id, String kind) {
         super(props); this.id = id; this.kind = kind;
-        registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH).setValue(HEAT,0).setValue(LID,false).setValue(CONTENTS,Contents.EMPTY));
+        registerDefaultState(stateDefinition.any().setValue(FACING,Direction.NORTH).setValue(HEAT,0).setValue(LID,false).setValue(FUELED,false).setValue(CONTENTS,Contents.EMPTY));
     }
-    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder) { builder.add(FACING,HEAT,LID,CONTENTS); }
+    @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder) { builder.add(FACING,HEAT,LID,FUELED,CONTENTS); }
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) { return defaultBlockState().setValue(FACING,context.getHorizontalDirection().getOpposite()); }
     @Override protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
         if(hit.getDirection()==Direction.UP && stack.getItem() instanceof net.minecraft.world.item.BlockItem placed && placed.getBlock() instanceof KitchenBlock block
-                && java.util.Set.of("cook","board","plate").contains(block.kind) && java.util.Set.of("stove","storage").contains(kind)) return InteractionResult.PASS;
+                && java.util.Set.of("cook","board","plate").contains(block.kind) && java.util.Set.of("stove","gas_stove","storage").contains(kind)) return InteractionResult.PASS;
         if (level.isClientSide()) return InteractionResult.SUCCESS;
         return level.getBlockEntity(pos) instanceof KitchenBlockEntity station ? station.interact(player, stack, hit) : InteractionResult.PASS;
     }
@@ -56,6 +57,8 @@ public class KitchenBlock extends Block implements EntityBlock {
     @Override protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, CollisionContext context) {
         if(id.equals("oven"))return Shapes.block();
         return switch (kind) {
+            case "stove" -> Block.box(0,0,0,16,id.equals("clay_stove")?13:16,16);
+            case "gas_pipe" -> Block.box(6,0,6,10,16,10);
             case "board" -> Block.box(0,0,0,16,2,16);
             case "cook" -> Block.box(1,0,1,15,7,15);
             case "plate" -> Block.box(1,0,1,15,2,15);

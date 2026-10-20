@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "ingredient": "smoke_kitchen:raw_crab",
+  "result": {
+    "id": "smoke_kitchen:cooked_crab"
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}

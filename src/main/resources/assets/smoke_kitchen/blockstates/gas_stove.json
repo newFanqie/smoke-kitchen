@@ -1,0 +1,80 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/gas_stove",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/gas_stove",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/gas_stove",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/gas_stove",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "heat": "1|2|3"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/gas_flame"
+      }
+    },
+    {
+      "when": {
+        "contents": "raw"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/contents_raw"
+      }
+    },
+    {
+      "when": {
+        "contents": "cooked"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/contents_cooked"
+      }
+    },
+    {
+      "when": {
+        "contents": "burnt"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/contents_burnt"
+      }
+    },
+    {
+      "when": {
+        "lid": "true"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/lid"
+      }
+    }
+  ]
+}

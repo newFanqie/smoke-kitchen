@@ -42,6 +42,7 @@ public final class KitchenContent {
             var d = e.getAsJsonObject(); String name = ContentCatalog.str(d,"id");
             var props = BlockBehaviour.Properties.of().strength(2.5f).noOcclusion().sound(SoundType.WOOD)
                     .setId(ResourceKey.create(Registries.BLOCK, SmokeKitchen.id(name)));
+            if(ContentCatalog.str(d,"kind").equals("stove") || name.equals("gas_stove"))props.lightLevel(state->state.getValue(KitchenBlock.HEAT)>0?12:0).sound(SoundType.STONE);
             if(name.equals("double_stove"))props.pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK);
             Block block = Registry.register(BuiltInRegistries.BLOCK, SmokeKitchen.id(name), name.equals("double_stove")?new dev.smokekitchen.world.DoubleStoveBlock(props):new KitchenBlock(props, name, ContentCatalog.str(d,"kind")));
             BLOCKS.put(name,block); DEFINITIONS.put(name,d);
@@ -59,6 +60,15 @@ public final class KitchenContent {
         }
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(output -> BLOCKS.values().forEach(output::accept));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> ITEMS.values().forEach(output::accept));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(output -> ITEMS.values().stream().filter(i->i.getDefaultInstance().has(net.minecraft.core.component.DataComponents.FOOD)).forEach(output::accept));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.SPAWN_EGGS).register(output -> ITEMS.entrySet().stream().filter(e->e.getKey().endsWith("_spawn_egg")).forEach(e->output.accept(e.getValue())));
+    }
+    public static void registerCreativeTab() {
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB,SmokeKitchen.id("kitchen"),
+            net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab.builder()
+                .title(net.minecraft.network.chat.Component.translatable("itemGroup.smoke_kitchen"))
+                .icon(()->new ItemStack(item("brick_stove")))
+                .displayItems((parameters,output)->ITEMS.values().forEach(output::accept)).build());
     }
     private static void registerBlockItem(String name, Block block) {
         var key = ResourceKey.create(Registries.ITEM, SmokeKitchen.id(name));

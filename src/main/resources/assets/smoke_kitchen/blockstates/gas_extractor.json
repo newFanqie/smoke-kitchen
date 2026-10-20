@@ -1,0 +1,72 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/gas_extractor",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/gas_extractor",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/gas_extractor",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/gas_extractor",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "contents": "raw"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/contents_raw"
+      }
+    },
+    {
+      "when": {
+        "contents": "cooked"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/contents_cooked"
+      }
+    },
+    {
+      "when": {
+        "contents": "burnt"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/contents_burnt"
+      }
+    },
+    {
+      "when": {
+        "lid": "true"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/lid"
+      }
+    }
+  ]
+}

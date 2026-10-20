@@ -17,6 +17,7 @@ public final class SmokeKitchen implements ModInitializer {
         KitchenContent.register();
         dev.smokekitchen.entity.KitchenEntities.register();
         dev.smokekitchen.world.KitchenWorld.register();
+        KitchenContent.registerCreativeTab();
         dev.smokekitchen.world.KitchenInteractions.register();
         LOGGER.info("Smoke Kitchen: {} items, {} stations, {} recipes", KitchenContent.ITEMS.size(), KitchenContent.BLOCKS.size(), ContentCatalog.DISHES.size());
     }

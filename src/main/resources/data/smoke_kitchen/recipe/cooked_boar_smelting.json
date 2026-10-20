@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "ingredient": "smoke_kitchen:boar_meat",
+  "result": {
+    "id": "smoke_kitchen:cooked_boar"
+  },
+  "experience": 0.35,
+  "cookingtime": 200
+}

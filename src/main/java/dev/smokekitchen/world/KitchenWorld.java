@@ -24,6 +24,7 @@ public final class KitchenWorld {
         KitchenContent.ITEMS.put("salt_ore",Registry.register(BuiltInRegistries.ITEM,itemKey,new BlockItem(SALT_ORE,new Item.Properties().setId(itemKey).useBlockDescriptionPrefix())));
         var ore=ResourceKey.create(Registries.PLACED_FEATURE,SmokeKitchen.id("salt_ore"));
         BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(),GenerationStep.Decoration.UNDERGROUND_ORES,ore);
+        BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(),GenerationStep.Decoration.UNDERGROUND_ORES,ResourceKey.create(Registries.PLACED_FEATURE,SmokeKitchen.id("gas_deposit")));
         for(String name:BUILDINGS) {
             Registry.register(BuiltInRegistries.FEATURE,SmokeKitchen.id(name),new KitchenBuildingFeature(name));
             ResourceKey<PlacedFeature> key=ResourceKey.create(Registries.PLACED_FEATURE,SmokeKitchen.id(name));

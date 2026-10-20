@@ -44,7 +44,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     public boolean lastRedstone;
     private int tickCounter;
 
-    public KitchenBlockEntity(BlockPos pos, BlockState state) { super(KitchenContent.STATION_ENTITY,pos,state); if(state.getBlock() instanceof KitchenBlock b && b.kind.equals("cook")) batch.method=methods()[0]; }
+    public KitchenBlockEntity(BlockPos pos, BlockState state) { super(KitchenContent.STATION_ENTITY,pos,state); if(state.getBlock() instanceof KitchenBlock b) { if(b.kind.equals("cook")) batch.method=methods()[0]; if(b.kind.equals("gas_deposit"))fuelSeconds=2400; } }
     public KitchenBlock station() { return (KitchenBlock)getBlockState().getBlock(); }
     public String kind() { return station().kind; }
     private void say(Player p,String key,Object...args) { p.sendOverlayMessage(Component.translatable("message.smoke_kitchen."+key,args)); }
@@ -62,6 +62,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         String held = stack.isEmpty() ? "" : KitchenContent.name(stack.getItem());
         if (held.equals("recipe_book")) { RecipeGuide.show(p); return InteractionResult.SUCCESS; }
         if (held.equals("thermometer")) { showStatus(p); return InteractionResult.SUCCESS; }
+        if (kind().startsWith("gas_")) return gas(p,stack,held);
         if (kind().equals("stove")) return stove(p,stack);
         if (kind().equals("board")) return board(p,stack,held);
         if (kind().equals("cook")) return cook(p,stack,held);
@@ -108,10 +109,59 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if (stack.isEmpty()) { heat = (heat+1)%4; changed(); showStatus(p); return InteractionResult.SUCCESS; }
         int seconds = stack.is(Items.COAL_BLOCK) ? 720 : stack.is(Items.COAL) || stack.is(Items.CHARCOAL) ? 80 :
                 stack.is(Items.STICK) || stack.is(KitchenContent.item("rice_husk")) ? 5 : 0;
-        if (seconds <= 0) { say(p,"fuel"); return InteractionResult.SUCCESS; }
+        if (seconds <= 0) { say(p,"stove_help",heat,fuelSeconds); return InteractionResult.SUCCESS; }
         if (fuelSeconds >= 3600) { say(p,"full"); return InteractionResult.SUCCESS; }
-        fuelSeconds += seconds; take(p,stack); changed(); sound();
+        fuelSeconds += seconds; if(heat==0)heat=2; take(p,stack); changed(); sound(); showStatus(p);
         return InteractionResult.SUCCESS;
+    }
+
+    public boolean isBurner() { return kind().equals("stove") || kind().equals("gas_stove"); }
+    private InteractionResult gas(Player p,ItemStack stack,String held) {
+        if(kind().equals("gas_stove") && stack.isEmpty()) { heat=(heat+1)%4;changed();showStatus(p);return InteractionResult.SUCCESS; }
+        if(Set.of("gas_tank","gas_extractor").contains(kind()) && held.equals("gas_canister") && fuelSeconds<=6600) {
+            fuelSeconds+=600;replaceContainer(p,stack,KitchenContent.item("empty_gas_canister"));changed();showStatus(p);return InteractionResult.SUCCESS;
+        }
+        if(Set.of("gas_tank","gas_extractor").contains(kind()) && held.equals("empty_gas_canister") && fuelSeconds>=600) {
+            fuelSeconds-=600;replaceContainer(p,stack,KitchenContent.item("gas_canister"));changed();showStatus(p);return InteractionResult.SUCCESS;
+        }
+        showStatus(p);return InteractionResult.SUCCESS;
+    }
+    /** Pull conservatively from loaded, connected pipes. Each unit leaves its source once. */
+    public int pullGas(int wanted,Set<String> sourceKinds) {
+        if(level==null || wanted<=0)return 0;
+        var queue=new ArrayDeque<BlockPos>();var seen=new HashSet<BlockPos>();queue.add(worldPosition);seen.add(worldPosition);
+        int received=0;
+        while(!queue.isEmpty() && seen.size()<=64 && received<wanted) {
+            var current=queue.removeFirst();
+            for(var direction:Direction.values()) {
+                var next=current.relative(direction);
+                if(seen.contains(next) || !level.hasChunkAt(next) || seen.size()>=64)continue;
+                seen.add(next);
+                if(!(level.getBlockEntity(next) instanceof KitchenBlockEntity node))continue;
+                if(sourceKinds.contains(node.kind())) {
+                    int moved=Math.min(wanted-received,node.fuelSeconds);node.fuelSeconds-=moved;received+=moved;
+                    if(moved>0)node.changed();
+                }
+                if(Set.of("gas_pipe","gas_tank","gas_extractor").contains(node.kind()))queue.addLast(next);
+            }
+        }
+        return received;
+    }
+    private void tickGas() {
+        if(kind().equals("gas_extractor") && fuelSeconds<7200) {
+            for(var direction:Direction.values()) {
+                if(!(level.getBlockEntity(worldPosition.relative(direction)) instanceof KitchenBlockEntity deposit) || !deposit.kind().equals("gas_deposit"))continue;
+                int extracted=Math.min(60,Math.min(7200-fuelSeconds,deposit.fuelSeconds));
+                deposit.fuelSeconds-=extracted;fuelSeconds+=extracted;
+                if(extracted>0)deposit.changed();break;
+            }
+        } else if(kind().equals("gas_tank")) fuelSeconds+=pullGas(Math.min(60,7200-fuelSeconds),Set.of("gas_extractor"));
+        else if(kind().equals("gas_stove")) {
+            // An off burner must not drain the gas line.
+            if(heat>0)fuelSeconds+=pullGas(Math.max(0,heat*10-fuelSeconds),Set.of("gas_tank","gas_extractor"));
+            if(heat>0)fuelSeconds=Math.max(0,fuelSeconds-heat);
+        }
+        syncState();setChanged();broadcast();
     }
 
     private InteractionResult board(Player p,ItemStack stack,String held) {
@@ -296,12 +346,14 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     public void showStatus(Player p) {
         if (kind().equals("cook")) say(p,"cook_status",Math.round(batch.temperature),batch.ingredients.size(),batch.water > 0 ? String.format(java.util.Locale.ROOT,"%.1f",batch.water) : "0",batch.salt,batch.oil,
                 Component.translatable("state.smoke_kitchen."+batch.status()));
-        else if(kind().equals("stove")) say(p,"stove_status",heat,fuelSeconds);
+        else if(kind().startsWith("gas_")) say(p,"gas_status",fuelSeconds,heat);
+        else if(kind().equals("stove")) say(p,"stove_status",heat,fuelSeconds/Math.max(1,heat));
         else if(kind().equals("board")) say(p,"board_status",cut.name(),cutProgress);
         else say(p,"station_status",items.stream().filter(s->!s.isEmpty()).mapToInt(ItemStack::getCount).sum(),work,getBlockState().getValue(KitchenBlock.LID)?"✓":"×");
     }
     public void serverTick() {
         if (++tickCounter % 20 != 0) return;
+        if(kind().startsWith("gas_")) { tickGas();return; }
         if (kind().equals("stove")) {
             boolean powered=level.hasNeighborSignal(worldPosition);
             if(powered!=lastRedstone){heat=powered?2:0;lastRedstone=powered;}
@@ -311,7 +363,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         }
         if (kind().equals("cook")) {
             int sourceHeat=0;
-            if (level.getBlockEntity(worldPosition.below()) instanceof KitchenBlockEntity stove && stove.kind().equals("stove") && stove.fuelSeconds>0) sourceHeat=stove.heat;
+            if (level.getBlockEntity(worldPosition.below()) instanceof KitchenBlockEntity stove && stove.isBurner() && (stove.fuelSeconds>0 || stove.kind().equals("gas_stove") && stove.getBlockState().getValue(KitchenBlock.HEAT)>0)) sourceHeat=stove.heat;
             if(station().id.equals("oven") && fuelSeconds>0){sourceHeat=heat;fuelSeconds=Math.max(0,fuelSeconds-heat);}
             batch.tick(sourceHeat,getBlockState().getValue(KitchenBlock.LID));
             if(batch.temperature>90 && !batch.ingredients.isEmpty() && level instanceof net.minecraft.server.level.ServerLevel server) server.sendParticles(batch.burnt()?net.minecraft.core.particles.ParticleTypes.SMOKE:net.minecraft.core.particles.ParticleTypes.CLOUD,worldPosition.getX()+.5,worldPosition.getY()+.5,worldPosition.getZ()+.5,1,.1,.05,.1,.005);
@@ -414,8 +466,8 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if(level==null) return;
         BlockState current=getBlockState();
         var contents=KitchenBlock.Contents.valueOf(batch.status().toUpperCase(Locale.ROOT));
-        int visibleHeat=(kind().equals("stove") || station().id.equals("oven")) && fuelSeconds>0 ? heat : 0;
-        var next=current.setValue(KitchenBlock.HEAT,visibleHeat).setValue(KitchenBlock.CONTENTS,contents);
+        int visibleHeat=(isBurner() || station().id.equals("oven")) && fuelSeconds>0 ? heat : 0;
+        var next=current.setValue(KitchenBlock.HEAT,visibleHeat).setValue(KitchenBlock.FUELED,fuelSeconds>0).setValue(KitchenBlock.CONTENTS,contents);
         if(next!=current) level.setBlock(worldPosition,next,Block.UPDATE_CLIENTS);
     }
     private void changed() { syncState(); setChanged(); broadcast();if(level!=null)level.updateNeighbourForOutputSignal(worldPosition,getBlockState().getBlock()); }

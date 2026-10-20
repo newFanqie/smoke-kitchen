@@ -1,6 +1,7 @@
 {
   "textures": {
-    "base": "minecraft:block/pink_concrete"
+    "base": "minecraft:block/pink_concrete",
+    "particle": "minecraft:block/pink_concrete"
   },
   "elements": [
     {

@@ -1,6 +1,107 @@
 {
-  "parent": "minecraft:block/crop",
+  "parent": "minecraft:block/block",
   "textures": {
-    "crop": "minecraft:block/wheat_stage6"
-  }
+    "stem": "minecraft:block/green_concrete",
+    "leaf": "minecraft:block/green_concrete",
+    "fruit": "minecraft:block/lime_concrete",
+    "particle": "minecraft:block/green_concrete"
+  },
+  "elements": [
+    {
+      "from": [
+        6.8,
+        0,
+        7
+      ],
+      "to": [
+        8.8,
+        12.600000000000001,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaf"
+        },
+        "south": {
+          "texture": "#leaf"
+        },
+        "east": {
+          "texture": "#leaf"
+        },
+        "west": {
+          "texture": "#leaf"
+        },
+        "up": {
+          "texture": "#leaf"
+        },
+        "down": {
+          "texture": "#leaf"
+        }
+      }
+    },
+    {
+      "from": [
+        3.1599999999999993,
+        0,
+        3.3599999999999994
+      ],
+      "to": [
+        12.440000000000001,
+        7.960000000000001,
+        12.64
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fruit"
+        },
+        "south": {
+          "texture": "#fruit"
+        },
+        "east": {
+          "texture": "#fruit"
+        },
+        "west": {
+          "texture": "#fruit"
+        },
+        "up": {
+          "texture": "#fruit"
+        },
+        "down": {
+          "texture": "#fruit"
+        }
+      }
+    },
+    {
+      "from": [
+        2.8,
+        3.4800000000000004,
+        7
+      ],
+      "to": [
+        12.8,
+        4.48,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaf"
+        },
+        "south": {
+          "texture": "#leaf"
+        },
+        "east": {
+          "texture": "#leaf"
+        },
+        "west": {
+          "texture": "#leaf"
+        },
+        "up": {
+          "texture": "#leaf"
+        },
+        "down": {
+          "texture": "#leaf"
+        }
+      }
+    }
+  ]
 }

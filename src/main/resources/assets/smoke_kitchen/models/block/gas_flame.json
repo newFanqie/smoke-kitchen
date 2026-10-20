@@ -1,0 +1,136 @@
+{
+  "textures": {
+    "fire": "minecraft:block/light_blue_concrete",
+    "particle": "minecraft:block/light_blue_concrete"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        15,
+        4
+      ],
+      "to": [
+        5,
+        17,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fire"
+        },
+        "south": {
+          "texture": "#fire"
+        },
+        "east": {
+          "texture": "#fire"
+        },
+        "west": {
+          "texture": "#fire"
+        },
+        "up": {
+          "texture": "#fire"
+        },
+        "down": {
+          "texture": "#fire"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        15,
+        4
+      ],
+      "to": [
+        12,
+        17,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fire"
+        },
+        "south": {
+          "texture": "#fire"
+        },
+        "east": {
+          "texture": "#fire"
+        },
+        "west": {
+          "texture": "#fire"
+        },
+        "up": {
+          "texture": "#fire"
+        },
+        "down": {
+          "texture": "#fire"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        15,
+        4
+      ],
+      "to": [
+        11,
+        17,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fire"
+        },
+        "south": {
+          "texture": "#fire"
+        },
+        "east": {
+          "texture": "#fire"
+        },
+        "west": {
+          "texture": "#fire"
+        },
+        "up": {
+          "texture": "#fire"
+        },
+        "down": {
+          "texture": "#fire"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        15,
+        11
+      ],
+      "to": [
+        11,
+        17,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fire"
+        },
+        "south": {
+          "texture": "#fire"
+        },
+        "east": {
+          "texture": "#fire"
+        },
+        "west": {
+          "texture": "#fire"
+        },
+        "up": {
+          "texture": "#fire"
+        },
+        "down": {
+          "texture": "#fire"
+        }
+      }
+    }
+  ]
+}

@@ -13,6 +13,61 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void coalClickIgnitesAndRetainsFuel(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("brick_stove"));
+        var stove=test.getBlockEntity(p,KitchenBlockEntity.class);
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        var coal=new ItemStack(Items.COAL,2);
+        var hit=new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(test.absolutePos(p)),net.minecraft.core.Direction.NORTH,test.absolutePos(p),false);
+        stove.interact(player,coal,hit);
+        test.assertTrue(stove.fuelSeconds==80 && stove.heat==2 && coal.getCount()==1,"A coal click must consume one coal, store fuel, and ignite");
+        test.assertBlockProperty(p,dev.smokekitchen.world.KitchenBlock.HEAT,2);
+        test.assertBlockProperty(p,dev.smokekitchen.world.KitchenBlock.FUELED,true);
+        stove.lastAction=-100;stove.interact(player,new ItemStack(Items.CHICKEN),hit);
+        test.assertTrue(stove.fuelSeconds==80 && stove.heat==2,"Holding meat must not clear already loaded fuel");
+        test.succeed();
+    }
+    @GameTest public void allSpawnEggsPointToRegisteredAnimals(GameTestHelper test) {
+        KitchenEntities.ALL.forEach((id,type)->{
+            var egg=KitchenContent.item(id+"_spawn_egg");
+            test.assertTrue(egg instanceof net.minecraft.world.item.SpawnEggItem,"Missing spawn egg: "+id);
+            test.assertTrue(net.minecraft.world.item.SpawnEggItem.spawnsEntity(new ItemStack(egg),type),"Wrong entity in spawn egg: "+id);
+            test.assertTrue(type.create(test.getLevel(),EntitySpawnReason.SPAWN_ITEM_USE)!=null,"Entity cannot spawn: "+id);
+        });
+        test.succeed();
+    }
+    @GameTest public void connectedGasConservesFuelAndStopsWhenDisconnected(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);
+        test.setBlock(p,KitchenContent.BLOCKS.get("gas_tank"));
+        test.setBlock(p.east(),KitchenContent.BLOCKS.get("gas_pipe"));
+        test.setBlock(p.east(2),KitchenContent.BLOCKS.get("gas_stove"));
+        var tank=test.getBlockEntity(p,KitchenBlockEntity.class);tank.fuelSeconds=600;
+        var stove=test.getBlockEntity(p.east(2),KitchenBlockEntity.class);stove.heat=2;
+        for(int i=0;i<20;i++)stove.serverTick();
+        test.assertTrue(tank.fuelSeconds+stove.fuelSeconds==598,"Only exactly two gas units must burn, without duplication");
+        test.assertBlockProperty(p.east(2),dev.smokekitchen.world.KitchenBlock.HEAT,2);
+        test.getLevel().removeBlock(test.absolutePos(p.east()),false);
+        for(int i=0;i<220;i++)stove.serverTick();
+        test.assertTrue(tank.fuelSeconds==580 && stove.fuelSeconds==0,"Disconnected pipe must not supply more gas");
+        test.assertBlockProperty(p.east(2),dev.smokekitchen.world.KitchenBlock.HEAT,0);
+        test.succeed();
+    }
+    @GameTest public void gasExtractorDepletesDeposit(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("gas_deposit"));test.setBlock(p.above(),KitchenContent.BLOCKS.get("gas_extractor"));
+        var deposit=test.getBlockEntity(p,KitchenBlockEntity.class);var pump=test.getBlockEntity(p.above(),KitchenBlockEntity.class);
+        for(int i=0;i<20;i++)pump.serverTick();
+        test.assertTrue(deposit.fuelSeconds==2340 && pump.fuelSeconds==60,"Extraction must transfer finite gas from the rock");
+        deposit.fuelSeconds=0;for(int i=0;i<20;i++)pump.serverTick();
+        test.assertTrue(pump.fuelSeconds==60,"Depleted deposits must not generate free gas");test.succeed();
+    }
+    @GameTest(maxTicks=80) public void gasLineHeatsCookware(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("gas_tank"));test.setBlock(p.east(),KitchenContent.BLOCKS.get("gas_stove"));
+        test.setBlock(p.east().above(),KitchenContent.BLOCKS.get("soup_pot"));
+        var tank=test.getBlockEntity(p,KitchenBlockEntity.class);tank.fuelSeconds=600;
+        var stove=test.getBlockEntity(p.east(),KitchenBlockEntity.class);stove.heat=2;
+        var pot=test.getBlockEntity(p.east().above(),KitchenBlockEntity.class);pot.batch.water=6;
+        test.runAfterDelay(45,()->{test.assertTrue(pot.batch.temperature>20 && tank.fuelSeconds<600,"Connected gas burner must heat cookware while drawing actual gas");test.succeed();});
+    }
     @GameTest public void contentLoads(GameTestHelper test) {
         test.assertTrue(ContentCatalog.DISHES.size()==29,"All named dishes must be present");
         test.assertTrue(KitchenContent.CROPS.size()==17,"All crops must register");

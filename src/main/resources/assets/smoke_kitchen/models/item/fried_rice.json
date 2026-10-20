@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "smoke_kitchen:item/fried_rice"
+    "layer0": "smoke_kitchen:item/fried_rice",
+    "particle": "smoke_kitchen:item/fried_rice"
   }
 }

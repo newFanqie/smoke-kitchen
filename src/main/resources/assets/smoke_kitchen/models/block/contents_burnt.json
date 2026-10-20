@@ -1,6 +1,7 @@
 {
   "textures": {
-    "base": "minecraft:block/black_concrete"
+    "base": "minecraft:block/black_concrete",
+    "particle": "minecraft:block/black_concrete"
   },
   "elements": [
     {

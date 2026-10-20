@@ -5,7 +5,8 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../src/mai
 const ns='smoke_kitchen';
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8'));
 const catalog=read(`data/${ns}/catalog.json`);
-const allIds=[...catalog.items.map(x=>x.id),...catalog.stations.map(x=>x.id),...catalog.crops.map(x=>x.id+'_seeds'),'salt_ore','shrimp_bucket','crab_bucket'];
+const eggs=['duck','goose','boar','river_shrimp','river_crab','grain_raider','cellar_silverfish'].map(x=>x+'_spawn_egg');
+const allIds=[...catalog.items.map(x=>x.id),...catalog.stations.map(x=>x.id),...catalog.crops.map(x=>x.id+'_seeds'),'salt_ore','shrimp_bucket','crab_bucket',...eggs];
 const known=new Set(allIds),errors=[];
 if(known.size!==allIds.length)errors.push('Duplicate item registration.');
 const checkItem=(id,source)=>{if(typeof id==='string' && id.startsWith(ns+':')&&!known.has(id.slice(ns.length+1)))errors.push(`${source}: unknown item ${id}`);};
@@ -28,6 +29,21 @@ for(const file of files(root)){
  }
 }
 for(const id of known)if(!fs.existsSync(path.join(root,'assets',ns,'items',id+'.json')))errors.push(`Missing client item ${id}`);
+const iconSignatures=new Map();
+for(const id of known){
+ let model=read(`assets/${ns}/models/item/${id}.json`);
+ if(model.parent===`${ns}:block/${id}`)model=read(`assets/${ns}/models/block/${id}.json`);
+ if(model.elements && model.parent!=='minecraft:block/block')errors.push(`Missing 3D inventory transforms: ${id}`);
+ const signature=JSON.stringify(model);
+ if(iconSignatures.has(signature))errors.push(`Identical inventory art: ${id} and ${iconSignatures.get(signature)}`);
+ iconSignatures.set(signature,id);
+}
+for(const id of ['clay_stove','brick_stove','double_stove']){
+ const model=read(`assets/${ns}/models/block/${id}.json`);
+ if(model.parent!=='minecraft:block/block')errors.push(`Flat stove icon: ${id}`);
+ const state=read(`assets/${ns}/blockstates/${id}.json`);
+ if(!state.multipart.some(p=>p.when.fueled==='true'))errors.push(`No visible fuel bed: ${id}`);
+}
 const sprite=fs.readFileSync(path.join(root,'assets',ns,'textures','item','fried_rice.png'));
 if(sprite.readUInt32BE(16)!==64||sprite.readUInt32BE(20)!==64)errors.push('Fried rice export must be 64x64.');
 if(errors.length){console.error(errors.join('\n'));process.exit(1);}

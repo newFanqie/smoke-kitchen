@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "ingredient": "smoke_kitchen:raw_shrimp",
+  "result": {
+    "id": "smoke_kitchen:cooked_shrimp"
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}

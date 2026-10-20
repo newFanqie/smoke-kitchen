@@ -1,6 +1,107 @@
 {
-  "parent": "minecraft:block/crop",
+  "parent": "minecraft:block/block",
   "textures": {
-    "crop": "minecraft:block/wheat_stage4"
-  }
+    "stem": "minecraft:block/green_concrete",
+    "leaf": "minecraft:block/green_concrete",
+    "fruit": "minecraft:block/lime_concrete",
+    "particle": "minecraft:block/green_concrete"
+  },
+  "elements": [
+    {
+      "from": [
+        6.8,
+        0,
+        7
+      ],
+      "to": [
+        8.8,
+        9.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaf"
+        },
+        "south": {
+          "texture": "#leaf"
+        },
+        "east": {
+          "texture": "#leaf"
+        },
+        "west": {
+          "texture": "#leaf"
+        },
+        "up": {
+          "texture": "#leaf"
+        },
+        "down": {
+          "texture": "#leaf"
+        }
+      }
+    },
+    {
+      "from": [
+        4.4399999999999995,
+        0,
+        4.64
+      ],
+      "to": [
+        11.16,
+        6.04,
+        11.36
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fruit"
+        },
+        "south": {
+          "texture": "#fruit"
+        },
+        "east": {
+          "texture": "#fruit"
+        },
+        "west": {
+          "texture": "#fruit"
+        },
+        "up": {
+          "texture": "#fruit"
+        },
+        "down": {
+          "texture": "#fruit"
+        }
+      }
+    },
+    {
+      "from": [
+        2.8,
+        2.52,
+        7
+      ],
+      "to": [
+        12.8,
+        3.52,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaf"
+        },
+        "south": {
+          "texture": "#leaf"
+        },
+        "east": {
+          "texture": "#leaf"
+        },
+        "west": {
+          "texture": "#leaf"
+        },
+        "up": {
+          "texture": "#leaf"
+        },
+        "down": {
+          "texture": "#leaf"
+        }
+      }
+    }
+  ]
 }

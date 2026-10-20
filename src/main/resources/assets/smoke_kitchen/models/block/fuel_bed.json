@@ -1,0 +1,40 @@
+{
+  "textures": {
+    "coal": "minecraft:block/coal_block",
+    "particle": "minecraft:block/coal_block"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        2,
+        3
+      ],
+      "to": [
+        12,
+        4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#coal"
+        },
+        "south": {
+          "texture": "#coal"
+        },
+        "east": {
+          "texture": "#coal"
+        },
+        "west": {
+          "texture": "#coal"
+        },
+        "up": {
+          "texture": "#coal"
+        },
+        "down": {
+          "texture": "#coal"
+        }
+      }
+    }
+  ]
+}

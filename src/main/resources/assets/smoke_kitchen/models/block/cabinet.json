@@ -1,11 +1,19 @@
 {
+  "parent": "minecraft:block/block",
   "textures": {
-    "base": "minecraft:block/oak_planks",
+    "base": "minecraft:block/spruce_planks",
     "metal": "minecraft:block/iron_block",
-    "dark": "minecraft:block/gray_concrete",
-    "stone": "minecraft:block/stone",
+    "dark": "minecraft:block/black_concrete",
+    "stone": "minecraft:block/smooth_stone",
     "clay": "minecraft:block/terracotta",
-    "particle": "minecraft:block/oak_planks"
+    "particle": "minecraft:block/oak_planks",
+    "copper": "minecraft:block/copper_block",
+    "blue": "minecraft:block/blue_concrete",
+    "ice": "minecraft:block/light_blue_concrete",
+    "grain": "minecraft:block/yellow_concrete",
+    "leaf": "minecraft:block/green_concrete",
+    "salt": "minecraft:block/white_concrete",
+    "dirt": "minecraft:block/dirt"
   },
   "elements": [
     {

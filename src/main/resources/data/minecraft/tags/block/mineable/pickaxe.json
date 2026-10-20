@@ -12,6 +12,11 @@
     "smoke_kitchen:steamer",
     "smoke_kitchen:baking_tray",
     "smoke_kitchen:mixing_bowl",
+    "smoke_kitchen:gas_stove",
+    "smoke_kitchen:gas_tank",
+    "smoke_kitchen:gas_pipe",
+    "smoke_kitchen:gas_extractor",
+    "smoke_kitchen:gas_deposit",
     "smoke_kitchen:salt_ore"
   ]
 }

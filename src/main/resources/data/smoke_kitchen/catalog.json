@@ -210,6 +210,7 @@
       "name": "鸭肉",
       "texture": "chicken",
       "ingredient": "duck",
+      "nutrition": 2,
       "resistance": 1.6
     },
     {
@@ -217,6 +218,7 @@
       "name": "鹅肉",
       "texture": "chicken",
       "ingredient": "goose",
+      "nutrition": 2,
       "resistance": 1.6
     },
     {
@@ -224,6 +226,7 @@
       "name": "野猪肉",
       "texture": "porkchop",
       "ingredient": "pork",
+      "nutrition": 2,
       "resistance": 1.6
     },
     {
@@ -231,6 +234,7 @@
       "name": "河虾",
       "texture": "salmon",
       "ingredient": "shrimp",
+      "nutrition": 2,
       "resistance": 1.6
     },
     {
@@ -238,6 +242,7 @@
       "name": "虾仁",
       "texture": "salmon",
       "ingredient": "shrimp",
+      "nutrition": 2,
       "resistance": 1.6
     },
     {
@@ -245,6 +250,7 @@
       "name": "河蟹",
       "texture": "salmon",
       "ingredient": "crab",
+      "nutrition": 2,
       "resistance": 1.6
     },
     {
@@ -252,6 +258,7 @@
       "name": "鸭蛋",
       "texture": "egg",
       "ingredient": "egg",
+      "nutrition": 0,
       "resistance": 1
     },
     {
@@ -259,7 +266,60 @@
       "name": "鹅蛋",
       "texture": "egg",
       "ingredient": "egg",
+      "nutrition": 0,
       "resistance": 1
+    },
+    {
+      "id": "cooked_duck",
+      "name": "熟鸭肉",
+      "texture": "cooked_chicken",
+      "ingredient": "duck",
+      "nutrition": 6,
+      "ready": true
+    },
+    {
+      "id": "cooked_goose",
+      "name": "熟鹅肉",
+      "texture": "cooked_chicken",
+      "ingredient": "goose",
+      "nutrition": 6,
+      "ready": true
+    },
+    {
+      "id": "cooked_boar",
+      "name": "熟野猪肉",
+      "texture": "cooked_chicken",
+      "ingredient": "pork",
+      "nutrition": 6,
+      "ready": true
+    },
+    {
+      "id": "cooked_shrimp",
+      "name": "熟河虾",
+      "texture": "cooked_chicken",
+      "ingredient": "shrimp",
+      "nutrition": 6,
+      "ready": true
+    },
+    {
+      "id": "cooked_crab",
+      "name": "熟河蟹",
+      "texture": "cooked_chicken",
+      "ingredient": "crab",
+      "nutrition": 6,
+      "ready": true
+    },
+    {
+      "id": "empty_gas_canister",
+      "name": "空燃气罐",
+      "texture": "bucket",
+      "unstackable": true
+    },
+    {
+      "id": "gas_canister",
+      "name": "天然气罐",
+      "texture": "bucket",
+      "unstackable": true
     },
     {
       "id": "dried_chili",
@@ -941,6 +1001,36 @@
       "name": "烟道",
       "kind": "decor",
       "model": "chimney"
+    },
+    {
+      "id": "gas_stove",
+      "name": "天然气灶",
+      "kind": "gas_stove",
+      "model": "cabinet"
+    },
+    {
+      "id": "gas_tank",
+      "name": "储气罐",
+      "kind": "gas_tank",
+      "model": "cabinet"
+    },
+    {
+      "id": "gas_pipe",
+      "name": "燃气管道",
+      "kind": "gas_pipe",
+      "model": "cabinet"
+    },
+    {
+      "id": "gas_extractor",
+      "name": "天然气开采机",
+      "kind": "gas_extractor",
+      "model": "cabinet"
+    },
+    {
+      "id": "gas_deposit",
+      "name": "含气岩层",
+      "kind": "gas_deposit",
+      "model": "cabinet"
     }
   ],
   "crops": [

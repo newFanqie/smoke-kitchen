@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "smoke_kitchen:double_stove"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "smoke_kitchen:double_stove",
+          "properties": {
+            "secondary": "false"
+          }
+        }
+      ]
+    }
+  ]
+}

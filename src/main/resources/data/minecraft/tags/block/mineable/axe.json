@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "smoke_kitchen:cutting_board",
+    "smoke_kitchen:counter",
+    "smoke_kitchen:mixing_table",
+    "smoke_kitchen:sink",
+    "smoke_kitchen:hand_mill",
+    "smoke_kitchen:oil_press",
+    "smoke_kitchen:fermentation_crock",
+    "smoke_kitchen:pickling_crock",
+    "smoke_kitchen:drying_rack",
+    "smoke_kitchen:cabinet",
+    "smoke_kitchen:grain_bin",
+    "smoke_kitchen:icebox",
+    "smoke_kitchen:spice_rack",
+    "smoke_kitchen:dish_rack",
+    "smoke_kitchen:salt_pan",
+    "smoke_kitchen:spice_trellis",
+    "smoke_kitchen:dining_table",
+    "smoke_kitchen:chair",
+    "smoke_kitchen:serving_plate",
+    "smoke_kitchen:soup_tureen",
+    "smoke_kitchen:cookbook_stand",
+    "smoke_kitchen:compost_bin",
+    "smoke_kitchen:range_hood",
+    "smoke_kitchen:chimney"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " I",
+    "I ",
+    "S "
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "smoke_kitchen:iron_knife",
+    "count": 1
+  }
+}

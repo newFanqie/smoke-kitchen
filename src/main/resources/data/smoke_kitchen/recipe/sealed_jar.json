@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:empty_jar",
+    "smoke_kitchen:wooden_lid"
+  ],
+  "result": {
+    "id": "smoke_kitchen:sealed_jar",
+    "count": 1
+  }
+}

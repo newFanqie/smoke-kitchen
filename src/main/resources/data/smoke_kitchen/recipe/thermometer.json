@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:copper_ingot",
+    "minecraft:copper_ingot",
+    "minecraft:glass",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "id": "smoke_kitchen:thermometer",
+    "count": 1
+  }
+}

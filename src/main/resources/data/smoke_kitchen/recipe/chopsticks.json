@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:stick",
+    "minecraft:stick"
+  ],
+  "result": {
+    "id": "smoke_kitchen:chopsticks",
+    "count": 1
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "smoke_kitchen:block/rapeseed_0"
+    },
+    "age=1": {
+      "model": "smoke_kitchen:block/rapeseed_1"
+    },
+    "age=2": {
+      "model": "smoke_kitchen:block/rapeseed_2"
+    },
+    "age=3": {
+      "model": "smoke_kitchen:block/rapeseed_3"
+    },
+    "age=4": {
+      "model": "smoke_kitchen:block/rapeseed_4"
+    },
+    "age=5": {
+      "model": "smoke_kitchen:block/rapeseed_5"
+    },
+    "age=6": {
+      "model": "smoke_kitchen:block/rapeseed_6"
+    },
+    "age=7": {
+      "model": "smoke_kitchen:block/rapeseed_7"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "textures": {
+    "base": "minecraft:block/oak_planks",
+    "metal": "minecraft:block/iron_block",
+    "dark": "minecraft:block/gray_concrete",
+    "stone": "minecraft:block/stone",
+    "clay": "minecraft:block/terracotta",
+    "particle": "minecraft:block/oak_planks"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        1,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#clay"
+        },
+        "south": {
+          "texture": "#clay"
+        },
+        "east": {
+          "texture": "#clay"
+        },
+        "west": {
+          "texture": "#clay"
+        },
+        "up": {
+          "texture": "#clay"
+        },
+        "down": {
+          "texture": "#clay"
+        }
+      }
+    }
+  ]
+}

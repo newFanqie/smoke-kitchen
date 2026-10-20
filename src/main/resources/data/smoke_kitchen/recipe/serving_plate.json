@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:ceramic_plate"
+  ],
+  "result": {
+    "id": "smoke_kitchen:serving_plate",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " C",
+    "C ",
+    "S "
+  ],
+  "key": {
+    "C": "minecraft:cobblestone",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "smoke_kitchen:stone_knife",
+    "count": 1
+  }
+}

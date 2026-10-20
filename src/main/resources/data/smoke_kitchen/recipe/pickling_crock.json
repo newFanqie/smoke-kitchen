@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:terracotta",
+    "minecraft:terracotta",
+    "smoke_kitchen:wooden_lid"
+  ],
+  "result": {
+    "id": "smoke_kitchen:pickling_crock",
+    "count": 1
+  }
+}

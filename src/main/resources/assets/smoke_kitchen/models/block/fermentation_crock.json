@@ -1,0 +1,108 @@
+{
+  "textures": {
+    "base": "minecraft:block/oak_planks",
+    "metal": "minecraft:block/iron_block",
+    "dark": "minecraft:block/gray_concrete",
+    "stone": "minecraft:block/stone",
+    "clay": "minecraft:block/terracotta",
+    "particle": "minecraft:block/oak_planks"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        1,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#clay"
+        },
+        "south": {
+          "texture": "#clay"
+        },
+        "east": {
+          "texture": "#clay"
+        },
+        "west": {
+          "texture": "#clay"
+        },
+        "up": {
+          "texture": "#clay"
+        },
+        "down": {
+          "texture": "#clay"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        1,
+        1
+      ],
+      "to": [
+        15,
+        13,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#clay"
+        },
+        "south": {
+          "texture": "#clay"
+        },
+        "east": {
+          "texture": "#clay"
+        },
+        "west": {
+          "texture": "#clay"
+        },
+        "up": {
+          "texture": "#clay"
+        },
+        "down": {
+          "texture": "#clay"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        13,
+        2
+      ],
+      "to": [
+        14,
+        14,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#base"
+        },
+        "south": {
+          "texture": "#base"
+        },
+        "east": {
+          "texture": "#base"
+        },
+        "west": {
+          "texture": "#base"
+        },
+        "up": {
+          "texture": "#base"
+        },
+        "down": {
+          "texture": "#base"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:book",
+    "minecraft:wheat_seeds"
+  ],
+  "result": {
+    "id": "smoke_kitchen:recipe_book",
+    "count": 1
+  }
+}

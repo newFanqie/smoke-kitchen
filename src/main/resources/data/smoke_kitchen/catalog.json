@@ -1,0 +1,1736 @@
+{
+  "items": [
+    {
+      "id": "rice_paddy",
+      "name": "稻谷",
+      "texture": "wheat",
+      "nutrition": 0,
+      "ingredient": "rice"
+    },
+    {
+      "id": "tomato",
+      "name": "番茄",
+      "texture": "apple",
+      "nutrition": 2,
+      "ingredient": "tomato"
+    },
+    {
+      "id": "chili",
+      "name": "辣椒",
+      "texture": "sweet_berries",
+      "nutrition": 0,
+      "ingredient": "chili"
+    },
+    {
+      "id": "soybean",
+      "name": "大豆",
+      "texture": "wheat_seeds",
+      "nutrition": 0,
+      "ingredient": "soybean"
+    },
+    {
+      "id": "rapeseed",
+      "name": "油菜籽",
+      "texture": "melon_seeds",
+      "nutrition": 0
+    },
+    {
+      "id": "scallion",
+      "name": "葱",
+      "texture": "sugar_cane",
+      "nutrition": 0,
+      "ingredient": "scallion"
+    },
+    {
+      "id": "ginger",
+      "name": "姜",
+      "texture": "potato",
+      "nutrition": 0,
+      "ingredient": "ginger"
+    },
+    {
+      "id": "garlic",
+      "name": "蒜",
+      "texture": "beetroot",
+      "nutrition": 0,
+      "ingredient": "garlic"
+    },
+    {
+      "id": "cucumber",
+      "name": "黄瓜",
+      "texture": "sea_pickle",
+      "nutrition": 2,
+      "ingredient": "cucumber"
+    },
+    {
+      "id": "cabbage",
+      "name": "白菜",
+      "texture": "kelp",
+      "nutrition": 2,
+      "ingredient": "cabbage"
+    },
+    {
+      "id": "onion",
+      "name": "洋葱",
+      "texture": "beetroot",
+      "nutrition": 0,
+      "ingredient": "onion"
+    },
+    {
+      "id": "eggplant",
+      "name": "茄子",
+      "texture": "chorus_fruit",
+      "nutrition": 0,
+      "ingredient": "eggplant"
+    },
+    {
+      "id": "sesame",
+      "name": "芝麻",
+      "texture": "pumpkin_seeds",
+      "nutrition": 0
+    },
+    {
+      "id": "sichuan_pepper",
+      "name": "花椒",
+      "texture": "sweet_berries",
+      "nutrition": 0
+    },
+    {
+      "id": "black_pepper",
+      "name": "胡椒",
+      "texture": "melon_seeds",
+      "nutrition": 0
+    },
+    {
+      "id": "cumin",
+      "name": "孜然",
+      "texture": "wheat_seeds",
+      "nutrition": 0
+    },
+    {
+      "id": "shiitake",
+      "name": "香菇",
+      "texture": "brown_mushroom",
+      "nutrition": 0,
+      "ingredient": "mushroom"
+    },
+    {
+      "id": "rice",
+      "name": "米",
+      "texture": "sugar",
+      "ingredient": "rice",
+      "needs_water": true
+    },
+    {
+      "id": "milk_portion",
+      "name": "牛奶份",
+      "texture": "milk_bucket",
+      "ingredient": "milk",
+      "ready": true
+    },
+    {
+      "id": "salt_crystals",
+      "name": "盐晶",
+      "texture": "quartz"
+    },
+    {
+      "id": "empty_water_jug",
+      "name": "空水壶",
+      "texture": "bucket"
+    },
+    {
+      "id": "saltwater_bucket",
+      "name": "盐水桶",
+      "texture": "water_bucket",
+      "unstackable": true
+    },
+    {
+      "id": "fermented_dough",
+      "name": "发酵面团",
+      "texture": "clay_ball",
+      "ingredient": "dough_fermented"
+    },
+    {
+      "id": "raw_dumplings",
+      "name": "生饺子",
+      "texture": "clay_ball",
+      "ingredient": "dumplings",
+      "needs_water": true
+    },
+    {
+      "id": "raw_skewers",
+      "name": "生肉串",
+      "texture": "porkchop",
+      "ingredient": "skewers",
+      "resistance": 1.6
+    },
+    {
+      "id": "raw_apple_pie",
+      "name": "生苹果派",
+      "texture": "apple",
+      "ingredient": "pie"
+    },
+    {
+      "id": "rice_husk",
+      "name": "谷壳",
+      "texture": "wheat"
+    },
+    {
+      "id": "flour",
+      "name": "面粉",
+      "texture": "sugar"
+    },
+    {
+      "id": "dough",
+      "name": "面团",
+      "texture": "clay_ball",
+      "ingredient": "dough",
+      "needs_water": false
+    },
+    {
+      "id": "starter",
+      "name": "发酵引子",
+      "texture": "glowstone_dust"
+    },
+    {
+      "id": "vinegar_starter",
+      "name": "醋引子",
+      "texture": "glowstone_dust"
+    },
+    {
+      "id": "tofu",
+      "name": "豆腐",
+      "texture": "snowball",
+      "ingredient": "tofu",
+      "ready": true,
+      "nutrition": 3
+    },
+    {
+      "id": "duck_meat",
+      "name": "鸭肉",
+      "texture": "chicken",
+      "ingredient": "duck",
+      "resistance": 1.6
+    },
+    {
+      "id": "goose_meat",
+      "name": "鹅肉",
+      "texture": "chicken",
+      "ingredient": "goose",
+      "resistance": 1.6
+    },
+    {
+      "id": "boar_meat",
+      "name": "野猪肉",
+      "texture": "porkchop",
+      "ingredient": "pork",
+      "resistance": 1.6
+    },
+    {
+      "id": "raw_shrimp",
+      "name": "河虾",
+      "texture": "salmon",
+      "ingredient": "shrimp",
+      "resistance": 1.6
+    },
+    {
+      "id": "shrimp_meat",
+      "name": "虾仁",
+      "texture": "salmon",
+      "ingredient": "shrimp",
+      "resistance": 1.6
+    },
+    {
+      "id": "raw_crab",
+      "name": "河蟹",
+      "texture": "salmon",
+      "ingredient": "crab",
+      "resistance": 1.6
+    },
+    {
+      "id": "duck_egg",
+      "name": "鸭蛋",
+      "texture": "egg",
+      "ingredient": "egg",
+      "resistance": 1
+    },
+    {
+      "id": "goose_egg",
+      "name": "鹅蛋",
+      "texture": "egg",
+      "ingredient": "egg",
+      "resistance": 1
+    },
+    {
+      "id": "dried_chili",
+      "name": "干辣椒",
+      "texture": "sweet_berries"
+    },
+    {
+      "id": "dried_shiitake",
+      "name": "干香菇",
+      "texture": "brown_mushroom"
+    },
+    {
+      "id": "oil_cake",
+      "name": "油渣饲料",
+      "texture": "wheat"
+    },
+    {
+      "id": "salt_ore_chunk",
+      "name": "盐矿石",
+      "texture": "quartz"
+    },
+    {
+      "id": "rendered_fat",
+      "name": "动物脂",
+      "texture": "honeycomb"
+    },
+    {
+      "id": "salt",
+      "name": "盐罐",
+      "texture": "sugar",
+      "seasoning": "salt",
+      "uses": 16
+    },
+    {
+      "id": "rapeseed_oil",
+      "name": "菜籽油",
+      "texture": "honey_bottle",
+      "seasoning": "oil",
+      "uses": 8
+    },
+    {
+      "id": "sesame_oil",
+      "name": "芝麻油",
+      "texture": "honey_bottle",
+      "seasoning": "oil",
+      "uses": 8
+    },
+    {
+      "id": "soy_sauce",
+      "name": "酱油",
+      "texture": "glass_bottle",
+      "seasoning": "soy",
+      "uses": 8
+    },
+    {
+      "id": "rice_vinegar",
+      "name": "米醋",
+      "texture": "glass_bottle",
+      "seasoning": "vinegar",
+      "uses": 8
+    },
+    {
+      "id": "chili_powder",
+      "name": "辣椒粉",
+      "texture": "redstone",
+      "seasoning": "spice",
+      "uses": 16
+    },
+    {
+      "id": "pepper_powder",
+      "name": "胡椒粉",
+      "texture": "gunpowder",
+      "seasoning": "spice",
+      "uses": 16
+    },
+    {
+      "id": "cumin_powder",
+      "name": "孜然粉",
+      "texture": "glowstone_dust",
+      "seasoning": "spice",
+      "uses": 16
+    },
+    {
+      "id": "mushroom_powder",
+      "name": "菌菇鲜粉",
+      "texture": "sugar",
+      "seasoning": "spice",
+      "uses": 16
+    },
+    {
+      "id": "stone_knife",
+      "name": "石厨刀",
+      "texture": "stone_sword",
+      "uses": 96
+    },
+    {
+      "id": "iron_knife",
+      "name": "铁厨刀",
+      "texture": "iron_sword",
+      "uses": 256
+    },
+    {
+      "id": "refined_knife",
+      "name": "精制厨刀",
+      "texture": "iron_sword",
+      "uses": 512
+    },
+    {
+      "id": "wooden_spatula",
+      "name": "木铲",
+      "texture": "wooden_shovel",
+      "uses": 128
+    },
+    {
+      "id": "iron_spatula",
+      "name": "铁锅铲",
+      "texture": "iron_shovel",
+      "uses": 384
+    },
+    {
+      "id": "ladle",
+      "name": "汤勺",
+      "texture": "iron_shovel",
+      "uses": 384
+    },
+    {
+      "id": "tongs",
+      "name": "夹子",
+      "texture": "shears",
+      "uses": 256
+    },
+    {
+      "id": "chopsticks",
+      "name": "长筷",
+      "texture": "stick",
+      "uses": 128
+    },
+    {
+      "id": "rolling_pin",
+      "name": "擀面杖",
+      "texture": "stick",
+      "uses": 256
+    },
+    {
+      "id": "water_jug",
+      "name": "水壶",
+      "texture": "bucket",
+      "uses": 8
+    },
+    {
+      "id": "heat_cloth",
+      "name": "隔热布",
+      "texture": "paper",
+      "uses": 128
+    },
+    {
+      "id": "wooden_lid",
+      "name": "木盖",
+      "texture": "oak_trapdoor",
+      "unstackable": false
+    },
+    {
+      "id": "pot_lid",
+      "name": "铁锅盖",
+      "texture": "iron_ingot",
+      "unstackable": false
+    },
+    {
+      "id": "empty_jar",
+      "name": "空调料罐",
+      "texture": "glass_bottle",
+      "unstackable": false
+    },
+    {
+      "id": "ceramic_plate",
+      "name": "陶盘",
+      "texture": "bowl",
+      "unstackable": false
+    },
+    {
+      "id": "ceramic_bowl",
+      "name": "陶碗",
+      "texture": "bowl",
+      "unstackable": false
+    },
+    {
+      "id": "thermometer",
+      "name": "温度计",
+      "texture": "clock",
+      "unstackable": false
+    },
+    {
+      "id": "recipe_book",
+      "name": "厨师食谱",
+      "texture": "book",
+      "unstackable": true
+    },
+    {
+      "id": "sealed_jar",
+      "name": "密封罐",
+      "texture": "glass_bottle",
+      "unstackable": false
+    },
+    {
+      "id": "food_basket",
+      "name": "食物篮",
+      "texture": "bundle",
+      "unstackable": false
+    },
+    {
+      "id": "sieve",
+      "name": "筛子",
+      "texture": "string",
+      "unstackable": false
+    },
+    {
+      "id": "cooked_rice",
+      "name": "米饭",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true,
+      "ingredient": "rice_cooked",
+      "ready": true
+    },
+    {
+      "id": "rice_porridge",
+      "name": "白粥",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "fried_rice",
+      "name": "蛋炒饭",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "tomato_eggs",
+      "name": "番茄炒蛋",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "sour_spicy_potato",
+      "name": "酸辣土豆丝",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "garlic_greens",
+      "name": "蒜蓉青菜",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "scallion_omelette",
+      "name": "葱花煎蛋",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "pan_fried_fish",
+      "name": "煎鱼",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "steamed_fish",
+      "name": "姜葱蒸鱼",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "boiled_shrimp",
+      "name": "白灼虾",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "steamed_crab",
+      "name": "蒸河蟹",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "mushroom_soup",
+      "name": "菌菇汤",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "tomato_egg_soup",
+      "name": "番茄蛋汤",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "carrot_meat_stew",
+      "name": "萝卜炖肉",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "beef_potato_stew",
+      "name": "土豆炖牛肉",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "pumpkin_soup",
+      "name": "南瓜浓汤",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "braised_pork",
+      "name": "红烧肉",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "braised_eggplant",
+      "name": "烧茄子",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "mapo_tofu",
+      "name": "麻婆豆腐",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "cucumber_salad",
+      "name": "凉拌黄瓜",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "pickled_cabbage",
+      "name": "泡菜",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "meat_skewers",
+      "name": "烤肉串",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "honey_roast_duck",
+      "name": "蜂蜜烤鸭",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "roast_potatoes",
+      "name": "烤土豆",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "noodle_soup",
+      "name": "手擀汤面",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "pork_dumplings",
+      "name": "猪肉白菜饺子",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "steamed_buns",
+      "name": "馒头",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "homestyle_bread",
+      "name": "家常面包",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "apple_pie",
+      "name": "苹果派",
+      "texture": "bowl",
+      "nutrition": 6,
+      "saturation": 0.5,
+      "meal": true
+    },
+    {
+      "id": "mixed_stir_fry",
+      "name": "家常杂炒",
+      "texture": "bowl",
+      "nutrition": 5,
+      "meal": true
+    },
+    {
+      "id": "mixed_stew",
+      "name": "家常炖汤",
+      "texture": "bowl",
+      "nutrition": 5,
+      "meal": true
+    },
+    {
+      "id": "burnt_food",
+      "name": "焦黑食物",
+      "texture": "charcoal",
+      "nutrition": 1,
+      "meal": true
+    }
+  ],
+  "stations": [
+    {
+      "id": "clay_stove",
+      "name": "简易泥灶",
+      "kind": "stove",
+      "model": "stove"
+    },
+    {
+      "id": "brick_stove",
+      "name": "砖砌灶台",
+      "kind": "stove",
+      "model": "stove"
+    },
+    {
+      "id": "double_stove",
+      "name": "双眼灶台",
+      "kind": "stove",
+      "model": "stove"
+    },
+    {
+      "id": "oven",
+      "name": "烤炉",
+      "kind": "cook",
+      "model": "oven"
+    },
+    {
+      "id": "cutting_board",
+      "name": "砧板",
+      "kind": "board",
+      "model": "board"
+    },
+    {
+      "id": "clay_pot",
+      "name": "陶锅",
+      "kind": "cook",
+      "model": "pot"
+    },
+    {
+      "id": "soup_pot",
+      "name": "铁汤锅",
+      "kind": "cook",
+      "model": "pot"
+    },
+    {
+      "id": "wok",
+      "name": "炒锅",
+      "kind": "cook",
+      "model": "wok"
+    },
+    {
+      "id": "frying_pan",
+      "name": "平底锅",
+      "kind": "cook",
+      "model": "pan"
+    },
+    {
+      "id": "steamer",
+      "name": "蒸笼",
+      "kind": "cook",
+      "model": "steamer"
+    },
+    {
+      "id": "baking_tray",
+      "name": "烤盘",
+      "kind": "cook",
+      "model": "pan"
+    },
+    {
+      "id": "mixing_bowl",
+      "name": "调理碗",
+      "kind": "cook",
+      "model": "pot"
+    },
+    {
+      "id": "counter",
+      "name": "工作台面",
+      "kind": "storage",
+      "model": "counter"
+    },
+    {
+      "id": "mixing_table",
+      "name": "调理台",
+      "kind": "mix",
+      "model": "counter"
+    },
+    {
+      "id": "sink",
+      "name": "洗涤槽",
+      "kind": "storage",
+      "model": "sink"
+    },
+    {
+      "id": "hand_mill",
+      "name": "手磨",
+      "kind": "mill",
+      "model": "mill"
+    },
+    {
+      "id": "oil_press",
+      "name": "压榨机",
+      "kind": "press",
+      "model": "press"
+    },
+    {
+      "id": "fermentation_crock",
+      "name": "发酵缸",
+      "kind": "ferment",
+      "model": "crock"
+    },
+    {
+      "id": "pickling_crock",
+      "name": "腌菜缸",
+      "kind": "pickle",
+      "model": "crock"
+    },
+    {
+      "id": "drying_rack",
+      "name": "晾晒架",
+      "kind": "dry",
+      "model": "rack"
+    },
+    {
+      "id": "cabinet",
+      "name": "储物柜",
+      "kind": "storage",
+      "model": "cabinet"
+    },
+    {
+      "id": "grain_bin",
+      "name": "谷仓箱",
+      "kind": "storage",
+      "model": "cabinet"
+    },
+    {
+      "id": "icebox",
+      "name": "冰柜",
+      "kind": "storage",
+      "model": "cabinet"
+    },
+    {
+      "id": "spice_rack",
+      "name": "调料架",
+      "kind": "rack",
+      "model": "rack"
+    },
+    {
+      "id": "dish_rack",
+      "name": "碗盘架",
+      "kind": "rack",
+      "model": "rack"
+    },
+    {
+      "id": "salt_pan",
+      "name": "盐水蒸发盘",
+      "kind": "evaporate",
+      "model": "pan"
+    },
+    {
+      "id": "spice_trellis",
+      "name": "香料种植架",
+      "kind": "rack",
+      "model": "rack"
+    },
+    {
+      "id": "dining_table",
+      "name": "餐桌",
+      "kind": "storage",
+      "model": "table"
+    },
+    {
+      "id": "chair",
+      "name": "餐椅",
+      "kind": "storage",
+      "model": "chair"
+    },
+    {
+      "id": "serving_plate",
+      "name": "共享菜盘",
+      "kind": "plate",
+      "model": "plate"
+    },
+    {
+      "id": "soup_tureen",
+      "name": "共享汤盆",
+      "kind": "plate",
+      "model": "pot"
+    },
+    {
+      "id": "cookbook_stand",
+      "name": "食谱架",
+      "kind": "rack",
+      "model": "stand"
+    },
+    {
+      "id": "compost_bin",
+      "name": "厨余桶",
+      "kind": "compost",
+      "model": "crock"
+    },
+    {
+      "id": "range_hood",
+      "name": "排烟罩",
+      "kind": "decor",
+      "model": "hood"
+    },
+    {
+      "id": "chimney",
+      "name": "烟道",
+      "kind": "decor",
+      "model": "chimney"
+    }
+  ],
+  "crops": [
+    {
+      "id": "rice_paddy",
+      "name": "稻谷"
+    },
+    {
+      "id": "tomato",
+      "name": "番茄"
+    },
+    {
+      "id": "chili",
+      "name": "辣椒"
+    },
+    {
+      "id": "soybean",
+      "name": "大豆"
+    },
+    {
+      "id": "rapeseed",
+      "name": "油菜籽"
+    },
+    {
+      "id": "scallion",
+      "name": "葱"
+    },
+    {
+      "id": "ginger",
+      "name": "姜"
+    },
+    {
+      "id": "garlic",
+      "name": "蒜"
+    },
+    {
+      "id": "cucumber",
+      "name": "黄瓜"
+    },
+    {
+      "id": "cabbage",
+      "name": "白菜"
+    },
+    {
+      "id": "onion",
+      "name": "洋葱"
+    },
+    {
+      "id": "eggplant",
+      "name": "茄子"
+    },
+    {
+      "id": "sesame",
+      "name": "芝麻"
+    },
+    {
+      "id": "sichuan_pepper",
+      "name": "花椒"
+    },
+    {
+      "id": "black_pepper",
+      "name": "胡椒"
+    },
+    {
+      "id": "cumin",
+      "name": "孜然"
+    },
+    {
+      "id": "shiitake",
+      "name": "香菇"
+    }
+  ],
+  "dishes": [
+    {
+      "id": "cooked_rice",
+      "name": "米饭",
+      "ingredients": {
+        "rice": 1
+      },
+      "methods": [
+        "BOIL"
+      ],
+      "servings": 2,
+      "guide": "米×1，加水；煮沸后小火加盖。"
+    },
+    {
+      "id": "rice_porridge",
+      "name": "白粥",
+      "ingredients": {
+        "rice": 1
+      },
+      "methods": [
+        "STEW"
+      ],
+      "servings": 3,
+      "guide": "米×1、较多水，小火搅拌。"
+    },
+    {
+      "id": "fried_rice",
+      "name": "蛋炒饭",
+      "ingredients": {
+        "rice_cooked": 2,
+        "egg": 1,
+        "scallion": 1
+      },
+      "methods": [
+        "STIR_FRY"
+      ],
+      "servings": 2,
+      "guide": "米饭×2、蛋×1、葱×1；热油先炒蛋，再下饭，少盐翻炒。",
+      "oil": true,
+      "salt": true
+    },
+    {
+      "id": "tomato_eggs",
+      "name": "番茄炒蛋",
+      "ingredients": {
+        "tomato": 2,
+        "egg": 2
+      },
+      "methods": [
+        "STIR_FRY"
+      ],
+      "servings": 2,
+      "guide": "番茄×2、蛋×2；油盐适量，蛋先炒，番茄后下。",
+      "oil": true,
+      "salt": true
+    },
+    {
+      "id": "sour_spicy_potato",
+      "name": "酸辣土豆丝",
+      "ingredients": {
+        "potato": 2,
+        "chili": 1,
+        "garlic": 1
+      },
+      "methods": [
+        "STIR_FRY"
+      ],
+      "servings": 2,
+      "guide": "切丝土豆×2、辣椒×1、蒜×1；热油快炒，出锅前加醋。",
+      "oil": true,
+      "salt": true,
+      "vinegar": true
+    },
+    {
+      "id": "garlic_greens",
+      "name": "蒜蓉青菜",
+      "ingredients": {
+        "cabbage": 2,
+        "garlic": 1
+      },
+      "methods": [
+        "STIR_FRY"
+      ],
+      "servings": 2,
+      "guide": "白菜×2、蒜×1；少油爆香再下菜。",
+      "oil": true,
+      "salt": true
+    },
+    {
+      "id": "scallion_omelette",
+      "name": "葱花煎蛋",
+      "ingredients": {
+        "egg": 2,
+        "scallion": 1
+      },
+      "methods": [
+        "FRY"
+      ],
+      "servings": 2,
+      "guide": "蛋×2、葱×1；平底锅煎制并翻面。",
+      "oil": true,
+      "salt": true
+    },
+    {
+      "id": "pan_fried_fish",
+      "name": "煎鱼",
+      "ingredients": {
+        "fish": 2
+      },
+      "methods": [
+        "FRY"
+      ],
+      "servings": 2,
+      "guide": "鱼×2；热油下锅，盐与胡椒调味，及时翻面。",
+      "oil": true,
+      "salt": true
+    },
+    {
+      "id": "steamed_fish",
+      "name": "姜葱蒸鱼",
+      "ingredients": {
+        "fish": 2,
+        "ginger": 1,
+        "scallion": 1
+      },
+      "methods": [
+        "STEAM"
+      ],
+      "servings": 2,
+      "guide": "鱼×2、姜×1、葱×1；蒸熟后淋酱油。",
+      "salt": true,
+      "soy": true
+    },
+    {
+      "id": "boiled_shrimp",
+      "name": "白灼虾",
+      "ingredients": {
+        "shrimp": 3,
+        "ginger": 1
+      },
+      "methods": [
+        "BOIL"
+      ],
+      "servings": 2,
+      "guide": "河虾×3、姜×1；水沸后下虾。",
+      "salt": true
+    },
+    {
+      "id": "steamed_crab",
+      "name": "蒸河蟹",
+      "ingredients": {
+        "crab": 2,
+        "ginger": 1
+      },
+      "methods": [
+        "STEAM"
+      ],
+      "servings": 2,
+      "guide": "河蟹×2、姜×1；加水蒸制，配醋。",
+      "vinegar": true
+    },
+    {
+      "id": "mushroom_soup",
+      "name": "菌菇汤",
+      "ingredients": {
+        "mushroom": 3
+      },
+      "methods": [
+        "BOIL",
+        "STEW"
+      ],
+      "servings": 3,
+      "guide": "可食菌菇×3；水、盐，小火煮。",
+      "salt": true
+    },
+    {
+      "id": "tomato_egg_soup",
+      "name": "番茄蛋汤",
+      "ingredients": {
+        "tomato": 2,
+        "egg": 1
+      },
+      "methods": [
+        "BOIL"
+      ],
+      "servings": 3,
+      "guide": "番茄×2、蛋×1；先煮番茄再下蛋。",
+      "salt": true
+    },
+    {
+      "id": "carrot_meat_stew",
+      "name": "萝卜炖肉",
+      "ingredients": {
+        "carrot": 2,
+        "pork": 2,
+        "ginger": 1
+      },
+      "methods": [
+        "STEW"
+      ],
+      "servings": 3,
+      "guide": "胡萝卜×2、肉×2、姜×1；加水小火炖。",
+      "salt": true
+    },
+    {
+      "id": "beef_potato_stew",
+      "name": "土豆炖牛肉",
+      "ingredients": {
+        "potato": 2,
+        "beef": 2,
+        "onion": 1
+      },
+      "methods": [
+        "STEW"
+      ],
+      "servings": 3,
+      "guide": "土豆×2、牛肉×2、洋葱×1；先炖牛肉。",
+      "salt": true
+    },
+    {
+      "id": "pumpkin_soup",
+      "name": "南瓜浓汤",
+      "ingredients": {
+        "pumpkin": 2,
+        "milk": 1
+      },
+      "methods": [
+        "BOIL",
+        "STEW"
+      ],
+      "servings": 3,
+      "guide": "南瓜×2、牛奶×1；煮软后混合。",
+      "salt": true
+    },
+    {
+      "id": "braised_pork",
+      "name": "红烧肉",
+      "ingredients": {
+        "pork": 3,
+        "ginger": 1
+      },
+      "methods": [
+        "STEW"
+      ],
+      "servings": 3,
+      "guide": "猪肉×3、姜×1；糖色、酱油、加水炖。",
+      "soy": true
+    },
+    {
+      "id": "braised_eggplant",
+      "name": "烧茄子",
+      "ingredients": {
+        "eggplant": 3,
+        "garlic": 1
+      },
+      "methods": [
+        "STIR_FRY"
+      ],
+      "servings": 2,
+      "guide": "茄子×3、蒜×1；油、酱油与少量糖。",
+      "oil": true,
+      "soy": true
+    },
+    {
+      "id": "mapo_tofu",
+      "name": "麻婆豆腐",
+      "ingredients": {
+        "tofu": 2,
+        "pork": 1,
+        "chili": 1
+      },
+      "methods": [
+        "STIR_FRY"
+      ],
+      "servings": 2,
+      "guide": "豆腐×2、肉末×1、辣椒×1；花椒、酱油，轻推。",
+      "oil": true,
+      "soy": true
+    },
+    {
+      "id": "cucumber_salad",
+      "name": "凉拌黄瓜",
+      "ingredients": {
+        "cucumber": 2,
+        "garlic": 1
+      },
+      "methods": [
+        "MIX"
+      ],
+      "servings": 2,
+      "guide": "黄瓜×2、蒜×1；盐、醋、芝麻油拌匀。",
+      "oil": true,
+      "salt": true,
+      "vinegar": true
+    },
+    {
+      "id": "pickled_cabbage",
+      "name": "泡菜",
+      "ingredients": {
+        "cabbage": 3,
+        "chili": 1,
+        "garlic": 1
+      },
+      "methods": [
+        "FERMENT"
+      ],
+      "servings": 4,
+      "guide": "白菜×3、辣椒×1、蒜×1；盐水密封等待。",
+      "salt": true
+    },
+    {
+      "id": "meat_skewers",
+      "name": "烤肉串",
+      "ingredients": {
+        "skewers": 3
+      },
+      "methods": [
+        "BAKE"
+      ],
+      "servings": 3,
+      "guide": "调理台用肉×3、洋葱×1制成生肉串×3；盐、孜然，烤制翻面。",
+      "salt": true
+    },
+    {
+      "id": "honey_roast_duck",
+      "name": "蜂蜜烤鸭",
+      "ingredients": {
+        "duck": 3
+      },
+      "methods": [
+        "BAKE"
+      ],
+      "servings": 3,
+      "guide": "鸭肉×3；蜂蜜、盐、酱油，刷料烤制。",
+      "salt": true,
+      "soy": true
+    },
+    {
+      "id": "roast_potatoes",
+      "name": "烤土豆",
+      "ingredients": {
+        "potato": 3
+      },
+      "methods": [
+        "BAKE"
+      ],
+      "servings": 3,
+      "guide": "土豆×3；少量油盐，烤至松软。",
+      "oil": true,
+      "salt": true
+    },
+    {
+      "id": "noodle_soup",
+      "name": "手擀汤面",
+      "ingredients": {
+        "dough": 2,
+        "cabbage": 1
+      },
+      "methods": [
+        "BOIL"
+      ],
+      "servings": 2,
+      "guide": "面团×2擀切，青菜×1；加水煮。",
+      "salt": true
+    },
+    {
+      "id": "pork_dumplings",
+      "name": "猪肉白菜饺子",
+      "ingredients": {
+        "dumplings": 2
+      },
+      "methods": [
+        "BOIL",
+        "STEAM"
+      ],
+      "servings": 2,
+      "guide": "调理台用面团×2、肉末×1、白菜×1包成生饺子×2；盐水煮或蒸。",
+      "salt": true
+    },
+    {
+      "id": "steamed_buns",
+      "name": "馒头",
+      "ingredients": {
+        "dough_fermented": 2
+      },
+      "methods": [
+        "STEAM"
+      ],
+      "servings": 2,
+      "guide": "面团×2与引子在发酵缸发酵后蒸熟。"
+    },
+    {
+      "id": "homestyle_bread",
+      "name": "家常面包",
+      "ingredients": {
+        "dough_fermented": 2
+      },
+      "methods": [
+        "BAKE"
+      ],
+      "servings": 2,
+      "guide": "发酵面团×2、少量糖，在烤盘上烘烤。"
+    },
+    {
+      "id": "apple_pie",
+      "name": "苹果派",
+      "ingredients": {
+        "pie": 1
+      },
+      "methods": [
+        "BAKE"
+      ],
+      "servings": 3,
+      "guide": "调理台用面团×2、苹果×2、糖装馅，生苹果派放烤盘烤熟。"
+    }
+  ],
+  "processes": [
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:rice_paddy": 1
+      },
+      "outputs": {
+        "smoke_kitchen:rice": 1,
+        "smoke_kitchen:rice_husk": 1
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "minecraft:wheat": 1
+      },
+      "outputs": {
+        "smoke_kitchen:flour": 1
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:salt_ore_chunk": 1
+      },
+      "outputs": {
+        "smoke_kitchen:salt_crystals": 4
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:salt_crystals": 16,
+        "smoke_kitchen:empty_jar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:salt": 1
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:dried_chili": 1
+      },
+      "outputs": {
+        "smoke_kitchen:chili_powder": 1
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:black_pepper": 1
+      },
+      "outputs": {
+        "smoke_kitchen:pepper_powder": 1
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:cumin": 1
+      },
+      "outputs": {
+        "smoke_kitchen:cumin_powder": 1
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:dried_shiitake": 1
+      },
+      "outputs": {
+        "smoke_kitchen:mushroom_powder": 1
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "press",
+      "inputs": {
+        "smoke_kitchen:rapeseed": 8,
+        "minecraft:glass_bottle": 1
+      },
+      "outputs": {
+        "smoke_kitchen:rapeseed_oil": 1,
+        "smoke_kitchen:oil_cake": 2
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "press",
+      "inputs": {
+        "smoke_kitchen:sesame": 16,
+        "minecraft:glass_bottle": 1
+      },
+      "outputs": {
+        "smoke_kitchen:sesame_oil": 1,
+        "smoke_kitchen:oil_cake": 2
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "mix",
+      "inputs": {
+        "smoke_kitchen:flour": 2
+      },
+      "outputs": {
+        "smoke_kitchen:dough": 2
+      },
+      "seconds": 5,
+      "water": 1
+    },
+    {
+      "station": "mix",
+      "inputs": {
+        "minecraft:book": 1
+      },
+      "outputs": {
+        "smoke_kitchen:recipe_book": 1
+      },
+      "seconds": 5,
+      "water": 0
+    },
+    {
+      "station": "mix",
+      "inputs": {
+        "smoke_kitchen:dough": 2,
+        "minecraft:porkchop": 1,
+        "smoke_kitchen:cabbage": 1
+      },
+      "outputs": {
+        "smoke_kitchen:raw_dumplings": 2
+      },
+      "seconds": 10,
+      "water": 0
+    },
+    {
+      "station": "mix",
+      "inputs": {
+        "minecraft:porkchop": 3,
+        "smoke_kitchen:onion": 1
+      },
+      "outputs": {
+        "smoke_kitchen:raw_skewers": 3
+      },
+      "seconds": 10,
+      "water": 0
+    },
+    {
+      "station": "mix",
+      "inputs": {
+        "smoke_kitchen:dough": 2,
+        "minecraft:apple": 2,
+        "minecraft:sugar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:raw_apple_pie": 1
+      },
+      "seconds": 10,
+      "water": 0
+    },
+    {
+      "station": "ferment",
+      "inputs": {
+        "smoke_kitchen:dough": 2,
+        "smoke_kitchen:starter": 1
+      },
+      "outputs": {
+        "smoke_kitchen:fermented_dough": 2,
+        "smoke_kitchen:starter": 1
+      },
+      "seconds": 120,
+      "water": 0
+    },
+    {
+      "station": "dry",
+      "inputs": {
+        "smoke_kitchen:chili": 1
+      },
+      "outputs": {
+        "smoke_kitchen:dried_chili": 1
+      },
+      "seconds": 120,
+      "water": 0
+    },
+    {
+      "station": "dry",
+      "inputs": {
+        "smoke_kitchen:shiitake": 1
+      },
+      "outputs": {
+        "smoke_kitchen:dried_shiitake": 1
+      },
+      "seconds": 120,
+      "water": 0
+    },
+    {
+      "station": "ferment",
+      "inputs": {
+        "smoke_kitchen:cooked_rice": 1,
+        "smoke_kitchen:shiitake": 1,
+        "minecraft:sugar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:starter": 2
+      },
+      "seconds": 1200,
+      "water": 0
+    },
+    {
+      "station": "ferment",
+      "inputs": {
+        "smoke_kitchen:cooked_rice": 1,
+        "minecraft:apple": 1
+      },
+      "outputs": {
+        "smoke_kitchen:vinegar_starter": 2
+      },
+      "seconds": 1200,
+      "water": 1
+    },
+    {
+      "station": "ferment",
+      "inputs": {
+        "smoke_kitchen:soybean": 4,
+        "smoke_kitchen:flour": 2,
+        "smoke_kitchen:salt": 2,
+        "smoke_kitchen:starter": 1,
+        "minecraft:glass_bottle": 1
+      },
+      "outputs": {
+        "smoke_kitchen:soy_sauce": 1,
+        "smoke_kitchen:starter": 1
+      },
+      "seconds": 2400,
+      "water": 1
+    },
+    {
+      "station": "ferment",
+      "inputs": {
+        "smoke_kitchen:cooked_rice": 4,
+        "smoke_kitchen:vinegar_starter": 1,
+        "minecraft:glass_bottle": 1
+      },
+      "outputs": {
+        "smoke_kitchen:rice_vinegar": 1,
+        "smoke_kitchen:vinegar_starter": 1
+      },
+      "seconds": 2400,
+      "water": 1
+    },
+    {
+      "station": "mix",
+      "inputs": {
+        "smoke_kitchen:soybean": 4,
+        "smoke_kitchen:rice_vinegar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:tofu": 2
+      },
+      "seconds": 20,
+      "water": 1
+    },
+    {
+      "station": "pickle",
+      "inputs": {
+        "smoke_kitchen:cabbage": 3,
+        "smoke_kitchen:chili": 1,
+        "smoke_kitchen:garlic": 1,
+        "smoke_kitchen:salt": 2
+      },
+      "outputs": {
+        "smoke_kitchen:pickled_cabbage": 4
+      },
+      "seconds": 1200,
+      "water": 1
+    },
+    {
+      "station": "evaporate",
+      "inputs": {},
+      "outputs": {
+        "smoke_kitchen:salt_crystals": 4
+      },
+      "seconds": 120,
+      "water": 6,
+      "saltwater": true
+    }
+  ]
+}

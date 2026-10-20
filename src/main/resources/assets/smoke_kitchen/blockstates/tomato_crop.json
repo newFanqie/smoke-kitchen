@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "smoke_kitchen:block/tomato_0"
+    },
+    "age=1": {
+      "model": "smoke_kitchen:block/tomato_1"
+    },
+    "age=2": {
+      "model": "smoke_kitchen:block/tomato_2"
+    },
+    "age=3": {
+      "model": "smoke_kitchen:block/tomato_3"
+    },
+    "age=4": {
+      "model": "smoke_kitchen:block/tomato_4"
+    },
+    "age=5": {
+      "model": "smoke_kitchen:block/tomato_5"
+    },
+    "age=6": {
+      "model": "smoke_kitchen:block/tomato_6"
+    },
+    "age=7": {
+      "model": "smoke_kitchen:block/tomato_7"
+    }
+  }
+}

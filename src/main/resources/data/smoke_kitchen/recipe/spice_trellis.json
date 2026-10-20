@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:stick",
+    "minecraft:stick",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "smoke_kitchen:spice_trellis",
+    "count": 1
+  }
+}

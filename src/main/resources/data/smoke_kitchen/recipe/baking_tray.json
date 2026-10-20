@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III"
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "smoke_kitchen:baking_tray",
+    "count": 1
+  }
+}

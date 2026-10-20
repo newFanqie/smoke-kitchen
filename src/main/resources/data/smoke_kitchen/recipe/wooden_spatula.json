@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " P",
+    " S",
+    "S "
+  ],
+  "key": {
+    "P": "minecraft:oak_planks",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "smoke_kitchen:wooden_spatula",
+    "count": 1
+  }
+}

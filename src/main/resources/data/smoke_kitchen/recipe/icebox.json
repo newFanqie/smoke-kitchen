@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:chest",
+    "minecraft:ice",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "smoke_kitchen:icebox",
+    "count": 1
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BIB",
+    "BFB",
+    "BIB"
+  ],
+  "key": {
+    "B": "minecraft:brick",
+    "I": "minecraft:iron_ingot",
+    "F": "minecraft:furnace"
+  },
+  "result": {
+    "id": "smoke_kitchen:brick_stove",
+    "count": 1
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:counter",
+    "minecraft:bowl",
+    "smoke_kitchen:rolling_pin"
+  ],
+  "result": {
+    "id": "smoke_kitchen:mixing_table",
+    "count": 1
+  }
+}

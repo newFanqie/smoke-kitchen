@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PIP",
+    "PVP",
+    "PPP"
+  ],
+  "key": {
+    "P": "minecraft:oak_planks",
+    "I": "minecraft:iron_ingot",
+    "V": "minecraft:piston"
+  },
+  "result": {
+    "id": "smoke_kitchen:oil_press",
+    "count": 1
+  }
+}

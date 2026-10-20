@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "id": "smoke_kitchen_gametest",
+  "version": "1.0.0",
+  "name": "Smoke Kitchen integration tests",
+  "environment": "server",
+  "entrypoints": { "fabric-gametest": ["dev.smokekitchen.test.KitchenGameTests"] },
+  "depends": { "smoke_kitchen": "*", "fabric-gametest-api-v1": "*" }
+}

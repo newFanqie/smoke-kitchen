@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "smoke_kitchen:block/cumin_0"
+    },
+    "age=1": {
+      "model": "smoke_kitchen:block/cumin_1"
+    },
+    "age=2": {
+      "model": "smoke_kitchen:block/cumin_2"
+    },
+    "age=3": {
+      "model": "smoke_kitchen:block/cumin_3"
+    },
+    "age=4": {
+      "model": "smoke_kitchen:block/cumin_4"
+    },
+    "age=5": {
+      "model": "smoke_kitchen:block/cumin_5"
+    },
+    "age=6": {
+      "model": "smoke_kitchen:block/cumin_6"
+    },
+    "age=7": {
+      "model": "smoke_kitchen:block/cumin_7"
+    }
+  }
+}

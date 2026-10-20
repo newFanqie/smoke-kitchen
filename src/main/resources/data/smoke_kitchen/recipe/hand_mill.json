@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " S ",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "S": "minecraft:stick",
+    "C": "minecraft:cobblestone"
+  },
+  "result": {
+    "id": "smoke_kitchen:hand_mill",
+    "count": 1
+  }
+}

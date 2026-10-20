@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:iron_ingot",
+    "minecraft:iron_ingot",
+    "minecraft:glass"
+  ],
+  "result": {
+    "id": "smoke_kitchen:range_hood",
+    "count": 1
+  }
+}

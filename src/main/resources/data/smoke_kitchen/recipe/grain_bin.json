@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:chest",
+    "minecraft:hay_block"
+  ],
+  "result": {
+    "id": "smoke_kitchen:grain_bin",
+    "count": 1
+  }
+}

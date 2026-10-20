@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    " S "
+  ],
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "smoke_kitchen:frying_pan",
+    "count": 1
+  }
+}

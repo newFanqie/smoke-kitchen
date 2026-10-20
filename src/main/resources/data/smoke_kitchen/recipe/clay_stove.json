@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CMC",
+    "CLC",
+    "SSS"
+  ],
+  "key": {
+    "C": "minecraft:clay_ball",
+    "M": "minecraft:stick",
+    "L": "minecraft:cobblestone",
+    "S": "minecraft:cobblestone"
+  },
+  "result": {
+    "id": "smoke_kitchen:clay_stove",
+    "count": 1
+  }
+}

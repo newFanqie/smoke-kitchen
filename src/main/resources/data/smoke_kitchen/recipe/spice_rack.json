@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:oak_planks",
+    "minecraft:stick",
+    "minecraft:glass"
+  ],
+  "result": {
+    "id": "smoke_kitchen:spice_rack",
+    "count": 1
+  }
+}

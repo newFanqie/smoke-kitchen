@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BIB",
+    "GFG",
+    "BIB"
+  ],
+  "key": {
+    "B": "minecraft:brick",
+    "I": "minecraft:iron_ingot",
+    "G": "minecraft:glass",
+    "F": "minecraft:furnace"
+  },
+  "result": {
+    "id": "smoke_kitchen:oven",
+    "count": 1
+  }
+}

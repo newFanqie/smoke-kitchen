@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:recipe_book",
+    "minecraft:oak_planks"
+  ],
+  "result": {
+    "id": "smoke_kitchen:cookbook_stand",
+    "count": 1
+  }
+}

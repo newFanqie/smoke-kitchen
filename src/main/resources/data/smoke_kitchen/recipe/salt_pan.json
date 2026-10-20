@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:terracotta",
+    "minecraft:terracotta",
+    "minecraft:iron_nugget"
+  ],
+  "result": {
+    "id": "smoke_kitchen:salt_pan",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "smoke_kitchen:clay_stove",
+    "smoke_kitchen:brick_stove",
+    "smoke_kitchen:double_stove",
+    "smoke_kitchen:oven",
+    "smoke_kitchen:clay_pot",
+    "smoke_kitchen:soup_pot",
+    "smoke_kitchen:wok",
+    "smoke_kitchen:frying_pan",
+    "smoke_kitchen:steamer",
+    "smoke_kitchen:baking_tray",
+    "smoke_kitchen:mixing_bowl",
+    "smoke_kitchen:salt_ore"
+  ]
+}

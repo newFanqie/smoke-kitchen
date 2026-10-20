@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:composter",
+    "minecraft:oak_planks"
+  ],
+  "result": {
+    "id": "smoke_kitchen:compost_bin",
+    "count": 1
+  }
+}

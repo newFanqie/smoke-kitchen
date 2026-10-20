@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:counter",
+    "minecraft:iron_ingot",
+    "minecraft:bucket"
+  ],
+  "result": {
+    "id": "smoke_kitchen:sink",
+    "count": 1
+  }
+}

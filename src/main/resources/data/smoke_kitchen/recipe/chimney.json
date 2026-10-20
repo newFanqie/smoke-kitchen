@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:brick",
+    "minecraft:brick"
+  ],
+  "result": {
+    "id": "smoke_kitchen:chimney",
+    "count": 1
+  }
+}

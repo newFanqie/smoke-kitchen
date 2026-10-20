@@ -1,0 +1,34 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../src/main/resources');
+const ns='smoke_kitchen';
+const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8'));
+const catalog=read(`data/${ns}/catalog.json`);
+const allIds=[...catalog.items.map(x=>x.id),...catalog.stations.map(x=>x.id),...catalog.crops.map(x=>x.id+'_seeds'),'salt_ore','shrimp_bucket','crab_bucket'];
+const known=new Set(allIds),errors=[];
+if(known.size!==allIds.length)errors.push('Duplicate item registration.');
+const checkItem=(id,source)=>{if(typeof id==='string' && id.startsWith(ns+':')&&!known.has(id.slice(ns.length+1)))errors.push(`${source}: unknown item ${id}`);};
+for(const r of catalog.processes){Object.keys(r.inputs).forEach(id=>checkItem(id,'processing input'));Object.keys(r.outputs).forEach(id=>checkItem(id,'processing output'));}
+for(const r of catalog.dishes){if(!known.has(r.id))errors.push(`Dish ${r.id} has no item`);if(r.servings<1||r.servings>24)errors.push(`Invalid yield ${r.id}`);}
+function* files(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())yield*files(p);else if(e.name.endsWith('.json'))yield p;}}
+const shapeless=new Map();
+for(const file of files(root)){
+ let json;try{json=JSON.parse(fs.readFileSync(file,'utf8'));}catch(e){errors.push(`${file}: ${e.message}`);continue;}
+ if(json.type==='minecraft:crafting_shapeless'){
+  const key=JSON.stringify([...json.ingredients].sort());
+  if(shapeless.has(key))errors.push(`Conflicting shapeless recipes: ${shapeless.get(key)} and ${file}`);
+  shapeless.set(key,file);
+ }
+ if(json.type==='minecraft:crafting_shaped'||json.type==='minecraft:crafting_shapeless'){
+  const ingredients=json.ingredients||Object.values(json.key);ingredients.forEach(id=>checkItem(id,file));checkItem(json.result.id,file);
+ }
+ if(file.includes(path.join('assets',ns,'models'))){
+  for(const texture of Object.values(json.textures||{}))if(texture.startsWith(ns+':')&&!fs.existsSync(path.join(root,'assets',ns,'textures',texture.slice(ns.length+1)+'.png')))errors.push(`Missing texture ${texture}`);
+ }
+}
+for(const id of known)if(!fs.existsSync(path.join(root,'assets',ns,'items',id+'.json')))errors.push(`Missing client item ${id}`);
+const sprite=fs.readFileSync(path.join(root,'assets',ns,'textures','item','fried_rice.png'));
+if(sprite.readUInt32BE(16)!==64||sprite.readUInt32BE(20)!==64)errors.push('Fried rice export must be 64x64.');
+if(errors.length){console.error(errors.join('\n'));process.exit(1);}
+console.log(`Validated ${known.size} item definitions, all local item references, recipes, JSON and custom texture dimensions.`);

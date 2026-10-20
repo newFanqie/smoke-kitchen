@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:clay_ball",
+    "minecraft:clay_ball"
+  ],
+  "result": {
+    "id": "smoke_kitchen:ceramic_bowl",
+    "count": 2
+  }
+}

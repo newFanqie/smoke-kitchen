@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "smoke_kitchen",
+  "version": "${version}",
+  "name": "烟火厨房 / Smoke Kitchen",
+  "icon": "assets/smoke_kitchen/textures/item/fried_rice.png",
+  "description": "A hands-on, in-world cooking and farming mod.",
+  "authors": ["newFanqie"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.smokekitchen.SmokeKitchen"],
+    "client": ["dev.smokekitchen.client.SmokeKitchenClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.2",
+    "minecraft": "26.1.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

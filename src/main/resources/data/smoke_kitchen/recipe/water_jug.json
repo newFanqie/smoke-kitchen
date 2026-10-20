@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:empty_water_jug",
+    "minecraft:water_bucket"
+  ],
+  "result": {
+    "id": "smoke_kitchen:water_jug",
+    "count": 1
+  }
+}

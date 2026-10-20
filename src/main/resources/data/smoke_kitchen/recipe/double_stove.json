@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:brick_stove",
+    "smoke_kitchen:brick_stove",
+    "minecraft:iron_ingot",
+    "minecraft:iron_ingot"
+  ],
+  "result": {
+    "id": "smoke_kitchen:double_stove",
+    "count": 1
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:glass",
+    "minecraft:glass",
+    "minecraft:glass",
+    "minecraft:oak_planks"
+  ],
+  "result": {
+    "id": "smoke_kitchen:empty_jar",
+    "count": 4
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:oak_planks",
+    "minecraft:oak_planks",
+    "minecraft:oak_planks",
+    "minecraft:stick"
+  ],
+  "result": {
+    "id": "smoke_kitchen:chair",
+    "count": 1
+  }
+}

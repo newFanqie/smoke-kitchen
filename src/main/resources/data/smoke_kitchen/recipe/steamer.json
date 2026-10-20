@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BBB",
+    "S S",
+    "BBB"
+  ],
+  "key": {
+    "B": "minecraft:bamboo",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "smoke_kitchen:steamer",
+    "count": 1
+  }
+}

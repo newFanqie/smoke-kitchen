@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:oak_planks",
+    "minecraft:oak_planks",
+    "minecraft:smooth_stone"
+  ],
+  "result": {
+    "id": "smoke_kitchen:counter",
+    "count": 1
+  }
+}

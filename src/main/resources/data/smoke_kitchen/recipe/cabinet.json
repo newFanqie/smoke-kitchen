@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:chest",
+    "minecraft:oak_planks"
+  ],
+  "result": {
+    "id": "smoke_kitchen:cabinet",
+    "count": 1
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "smoke_kitchen:block/sichuan_pepper_0"
+    },
+    "age=1": {
+      "model": "smoke_kitchen:block/sichuan_pepper_1"
+    },
+    "age=2": {
+      "model": "smoke_kitchen:block/sichuan_pepper_2"
+    },
+    "age=3": {
+      "model": "smoke_kitchen:block/sichuan_pepper_3"
+    },
+    "age=4": {
+      "model": "smoke_kitchen:block/sichuan_pepper_4"
+    },
+    "age=5": {
+      "model": "smoke_kitchen:block/sichuan_pepper_5"
+    },
+    "age=6": {
+      "model": "smoke_kitchen:block/sichuan_pepper_6"
+    },
+    "age=7": {
+      "model": "smoke_kitchen:block/sichuan_pepper_7"
+    }
+  }
+}

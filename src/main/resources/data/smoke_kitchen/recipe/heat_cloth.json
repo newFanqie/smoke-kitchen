@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:white_wool",
+    "minecraft:string",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "smoke_kitchen:heat_cloth",
+    "count": 1
+  }
+}

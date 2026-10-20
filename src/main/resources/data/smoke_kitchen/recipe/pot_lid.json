@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:iron_ingot",
+    "minecraft:iron_ingot",
+    "minecraft:iron_nugget"
+  ],
+  "result": {
+    "id": "smoke_kitchen:pot_lid",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:stick",
+    "minecraft:stick",
+    "minecraft:stick",
+    "minecraft:string",
+    "minecraft:string",
+    "minecraft:oak_planks"
+  ],
+  "result": {
+    "id": "smoke_kitchen:drying_rack",
+    "count": 1
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "smoke_kitchen:block/sesame_0"
+    },
+    "age=1": {
+      "model": "smoke_kitchen:block/sesame_1"
+    },
+    "age=2": {
+      "model": "smoke_kitchen:block/sesame_2"
+    },
+    "age=3": {
+      "model": "smoke_kitchen:block/sesame_3"
+    },
+    "age=4": {
+      "model": "smoke_kitchen:block/sesame_4"
+    },
+    "age=5": {
+      "model": "smoke_kitchen:block/sesame_5"
+    },
+    "age=6": {
+      "model": "smoke_kitchen:block/sesame_6"
+    },
+    "age=7": {
+      "model": "smoke_kitchen:block/sesame_7"
+    }
+  }
+}

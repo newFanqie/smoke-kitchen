@@ -74,5 +74,8 @@
     "Asset close-ups temporarily disable optional storage world labels; full gameplay retains default settings. Cooking-surface labels are removed in production, with targeted sneak contents replacing them.",
     "Initial raw ingredients and platform are fixtures. Complete uncheated survival acquisition, all-dish client coverage and multiplayer concurrency remain in the finite backlog."
   ],
-  "releaseDownloadVerified": false
+  "releaseDownloadVerified": true,
+  "codeCommit": "992ab9575b7b0648e4c60896fd178a593453396b",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.6",
+  "downloadedBytes": 659639
 }

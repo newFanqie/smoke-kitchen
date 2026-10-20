@@ -48,3 +48,9 @@ Minecraft Java 26.1.2 / Fabric Loader 0.19.2 / Fabric API 0.149.1+26.1.2。每�
 ![继续过热后烧黑](images/burnt-sugar-iris-0.1.6.png)
 
 详细结果与发布文件摘要见[验证记录](verification/0.1.6.json)。更多生态、独立建筑、经营、正式美术和多人验收继续按[有限待办](WORK-QUEUE.md)推进。
+
+## 发布核对
+
+[0.1.6开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.6)已发布，源码提交992ab9575b7b0648e4c60896fd178a593453396b。实际从GitHub资产接口下载smoke-kitchen-0.1.6.jar（659639字节），与本地构建和服务器摘要一致。移出旧版JAR，保留对应Fabric API。
+
+SHA256：e640dd8c51d3f00a0caef0398127148b079f118b6880cfbf3addcf7c94b4a863

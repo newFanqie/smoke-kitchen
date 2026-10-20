@@ -106,7 +106,7 @@
     "modelParents": 31,
     "missing": []
   },
-  "downloadVerified": false,
+  "downloadVerified": true,
   "knownRemaining": [
     "Unassisted natural survival first meal",
     "Dedicated paddy soil and functional spice trellis",
@@ -116,5 +116,12 @@
     "Multiplayer, long-term storage and chunk-unloaded aging"
   ],
   "sourceTestingNote": "Full three-workflow native/Iris regression preceded the localized mud allowlist addition; the final soil change was rechecked with all server/unit tests and complete ecology flow in both renderers.",
-  "finalHeadlessLog": ".tools/ecology-final-headless.log"
+  "finalHeadlessLog": ".tools/ecology-final-headless.log",
+  "sourceCommit": "852dc808bfa940874c4411bee7f645963853377c",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.9",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.9/smoke-kitchen-0.1.9.jar",
+  "githubActions": {
+    "sourceBuildPassed": true,
+    "url": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39510413243"
+  }
 }

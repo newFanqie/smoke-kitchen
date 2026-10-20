@@ -35,7 +35,7 @@ public final class WetRecipeFlowTest implements FabricClientGameTest {
             equip(context,server,"smoke_kitchen:soup_pot");click(context,SOUP,Direction.UP);equip(context,server,"smoke_kitchen:steamer");click(context,STEAM,Direction.UP);
             equip(context,server,"smoke_kitchen:cutting_board");click(context,BOARD.below(),Direction.UP);
             for(var p:new BlockPos[]{SOUP,STEAM}){equip(context,server,"minecraft:water_bucket");click(context,p,Direction.UP);}
-            server.runCommand("tp @a 1 100 -1 0 48");context.waitTicks(5);context.takeScreenshot("wet-visible-water-0.1.7");server.runCommand("tp @a 1 100 -3 0 20");context.waitTicks(5);
+            server.runCommand("tp @a 1 100 -1 0 48");context.waitTicks(5);context.takeScreenshot("wet-visible-water-0.1.8");server.runCommand("tp @a 1 100 -3 0 20");context.waitTicks(5);
             cut(context,server,"ginger",CookingBatch.Cut.SLICE);select(context,KitchenContent.item("ginger"));click(context,STEAM,Direction.UP);
             cut(context,server,"scallion",CookingBatch.Cut.DICE);select(context,KitchenContent.item("scallion"));click(context,STEAM,Direction.UP);
             for(int i=0;i<2;i++){equip(context,server,"minecraft:cod");click(context,STEAM,Direction.UP);cut(context,server,"tomato",CookingBatch.Cut.DICE);select(context,KitchenContent.item("tomato"));click(context,SOUP,Direction.UP);}
@@ -44,11 +44,11 @@ public final class WetRecipeFlowTest implements FabricClientGameTest {
             equip(context,server,"minecraft:air");context.waitTicks(700);
             server.runOnServer(game->check(station(game,SOUP).batch.ingredients.stream().filter(p->p.id.equals("tomato")).allMatch(p->p.cooked>=.5),"Tomato must actually cook to the required stage before adding egg"));
             equip(context,server,"minecraft:egg");click(context,SOUP,Direction.UP);server.runOnServer(game->check(station(game,SOUP).batch.ingredients.getLast().cooked<.1,"A late egg must start with its own raw cookedness"));
-            context.takeScreenshot("wet-late-egg-and-steam-0.1.7");equip(context,server,"minecraft:air");context.waitTicks(1600);
+            context.takeScreenshot("wet-late-egg-and-steam-0.1.8");equip(context,server,"minecraft:air");context.waitTicks(1600);
             server.runOnServer(game->{check(station(game,STEAM).batch.ready(),"Covered steam must really cook the fish");check(station(game,SOUP).batch.ready(),"The egg soup must really finish cooking");});
             equip(context,server,"smoke_kitchen:soy_sauce");click(context,STEAM,Direction.UP);
             server.runOnServer(game->{for(String id:new String[]{"steamed_fish","tomato_egg_soup"}){var recipe=ContentCatalog.DISHES.stream().filter(r->r.id().equals(id)).findFirst().orElseThrow();check(recipe.matches(station(game,id.equals("steamed_fish")?STEAM:SOUP).batch),"Actual player preparation must satisfy "+id+": "+recipe.problem(station(game,id.equals("steamed_fish")?STEAM:SOUP).batch));}});
-            equip(context,server,"minecraft:air");click(context,STEAM,Direction.UP);context.takeScreenshot("wet-cooked-fish-and-soup-0.1.7");
+            equip(context,server,"minecraft:air");click(context,STEAM,Direction.UP);context.takeScreenshot("wet-cooked-fish-and-soup-0.1.8");
             for(var p:new BlockPos[]{SOUP,STEAM}){equip(context,server,"minecraft:bowl");click(context,p,Direction.UP);equip(context,server,"minecraft:air");click(context,p,Direction.NORTH);click(context,p,Direction.NORTH);}
             select(context,KitchenContent.item("steamed_fish"));server.runOnServer(game->game.getPlayerList().getPlayers().getFirst().getFoodData().setFoodLevel(8));
             context.runOnClient(client->client.player.setXRot(-70));context.getInput().holdKey(options->options.keyUse);context.waitTicks(40);context.getInput().releaseKey(options->options.keyUse);context.waitTicks(5);
@@ -56,7 +56,7 @@ public final class WetRecipeFlowTest implements FabricClientGameTest {
         }
         try(var world=save.open()) {
             context.waitTicks(10);world.getServer().runOnServer(game->{for(int i=0;i<2;i++){var stove=station(game,i==0?SOUP:STEAM);check(stove.batch.lockedDish.equals(i==0?"tomato_egg_soup":"steamed_fish")&&stove.batch.remainingServings==(i==0?2:1),"Actual world reopening must preserve the soup/fish and remaining servings");check(ResourceStates.gasUnits(stove.items.get(26))==gas[i]&&Math.abs(stove.batch.water-water[i])<.001,"Reopening must preserve exact fuel and water");}check(station(game,STEAM).batch.ingredients.getFirst().coveredCookingSeconds>=15,"Covered-cooking evidence must survive reopening");});
-            world.getServer().runCommand("tp @a 1 100 -2 0 35");context.waitTicks(5);context.takeScreenshot("wet-after-world-reload-0.1.7");
+            world.getServer().runCommand("tp @a 1 100 -2 0 35");context.waitTicks(5);context.takeScreenshot("wet-after-world-reload-0.1.8");
             equip(context,world.getServer(),"smoke_kitchen:heat_cloth");context.getInput().holdKey(options->options.keyShift);context.waitTicks(5);click(context,SOUP,Direction.UP);context.getInput().releaseKey(options->options.keyShift);context.waitTicks(5);
             world.getServer().runOnServer(game->check(station(game,SOUP).mountedCookware.isEmpty(),"A real sneaking player must be able to lift cookware with heat cloth"));
             select(context,KitchenContent.item("soup_pot"));click(context,SOUP,Direction.UP);

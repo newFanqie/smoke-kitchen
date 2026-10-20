@@ -1,0 +1,82 @@
+{
+  "version": "0.1.8",
+  "date": "2026-10-21",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "itemDefinitions": 309,
+  "jarContainsTestCode": false,
+  "sha256": "19a4e9443cdb9564deef2eb19d508a387fb0020a085e65d6793d954e1214569e",
+  "unitTests": {
+    "passed": 74,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 56,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "vanillaScope": [
+      "AcquisitionFlowTest",
+      "KitchenVisualTest",
+      "StapleFlowTest",
+      "StapleAssetVisualTest (including actual guide navigation)"
+    ],
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "irisPassed": true,
+    "shaderActuallyActive": true,
+    "irisScope": [
+      "dev.smokekitchen.test.AcquisitionFlowTest",
+      "dev.smokekitchen.test.QualityFlowTest",
+      "dev.smokekitchen.test.FinishingFlowTest",
+      "dev.smokekitchen.test.KitchenVisualTest",
+      "dev.smokekitchen.test.RecipeFlowTest",
+      "dev.smokekitchen.test.WetRecipeFlowTest",
+      "dev.smokekitchen.test.StapleFlowTest",
+      "dev.smokekitchen.test.StapleAssetVisualTest"
+    ],
+    "finalNativeTextureReferences": 37,
+    "finalNativeModelParents": 21,
+    "missingNativeReferences": 0,
+    "workflow": [
+      "actual survival pickaxe mining of two fixture salt ores, four ore chunks, sixteen crystals and one full salt jar",
+      "actual ocean-water sampling and native campfire evaporation into four crystals with the original bucket retained",
+      "eight rapeseed and one glass bottle pressed into eight oil uses and two oil cakes",
+      "actual vanilla pig attacks and ordinary loot plus three fat portions",
+      "cold clay pot with three fat portions, real low heat, no added oil or water; one full and one half jar plus three cracklings",
+      "consume four actual half-jar oil measures into a mixing vessel and retain one empty jar",
+      "refill an empty jug from real water and pour eight exact measures into two vessels, retaining one empty jug",
+      "actual grain dehusking produces one rice and one husk; actual covered low-heat cooking finishes the rice",
+      "retrieve actual loose cooked rice and put it in another cold dry wok; cookedness, peak temperature and covered/low-heat history survive while new-pot order starts fresh",
+      "close and reopen the actual world; all products, exact uses, returned jars/jug, measured water/oil and converted rice history persist",
+      "normal creative category, workbench crafting, coal/gas cooking and connected pipes regression",
+      "normal noodles, dough fermentation, bread/buns, eating, world reopening and tray lift/remount regression",
+      "open the held recipe book and use its real next-page buttons to reach the rendering and container instructions; screenshots checked"
+    ],
+    "knownShaderWarning": "Nonfatal fixedTaaCorrection parsing warning in the shader pack",
+    "screenshotsVisuallyChecked": true,
+    "missingModAssets": 0
+  },
+  "saveChecks": {
+    "actualWorldReopenPassed": true,
+    "convertedRiceHistoryPreserved": true,
+    "exactLardAndContainerQuantitiesPreserved": true,
+    "measuredLiquidsPreserved": true
+  },
+  "testScopeNotes": [
+    "The acquisition scene provides raw sources, pigs without AI, equipment materials and a platform; actions use ordinary survival client packets. This is not the uncheated natural-world first meal.",
+    "Cooking progress, charring and rendering are never injected in the client workflow; it waits for real game ticks and observes the server.",
+    "The client workflow exposed split milling outputs; production insertion now merges compatible stacks before filling empty slots. Movement confirmation and explicitly switching back to empty hands are test-driver fixes, without relaxing production reach or action intervals.",
+    "The first-starter test waits 24100 real headless server ticks using actual sealed-crock processing, with no old starter and exactly one returned bowl; it is not a twenty-minute client acquisition demonstration.",
+    "The product comparison is a test presentation of actual produced stacks, not a new gameplay screen. New art uses distinct small native cuboid meshes and vanilla model/material references; other prototype art remains on the finite queue.",
+    "Wild crop ecology, a complete natural survival route, soybean pre-cooking/filtering, buildings, animals, professions, multiplayer and long-term preservation remain unfinished.",
+    "Loose transfer retains food preparation and heat history; original batch liquids and seasoning remain in the pot. Per-food flavor attachment, reheating and quality inheritance still require audit; whole-pot transport preserves the complete batch."
+  ],
+  "releaseDownloadVerified": false,
+  "codeCommit": null,
+  "release": null
+}

@@ -89,7 +89,7 @@ public final class CookingBatch {
     /** Loose food retains its preparation evidence; liquids and seasoning stay in the pot. */
     public void restorePortion(int index,Portion saved) {
         var fresh=ingredients.get(index);
-        if(saved==null||!fresh.id.equals(saved.id))return;
+        if(saved==null||!(fresh.id.equals(saved.id)||fresh.id.equals("rice_cooked")&&saved.id.equals("rice")&&saved.cooked>=1))return;
         fresh.cooked=Math.max(fresh.cooked,saved.cooked);fresh.charred=saved.charred;
         fresh.maximumTemperature=Math.max(fresh.maximumTemperature,Math.max(saved.maximumTemperature,saved.temperatureOnAdd));
         fresh.turnedAfterSetting=saved.turnedAfterSetting;fresh.cookedAtTurn=saved.cookedAtTurn;
@@ -140,7 +140,7 @@ public final class CookingBatch {
         boolean fermenting=method==Method.FERMENT&&lid&&water>=1&&salt>=2&&temperature<60;
         if(fermenting)fermentationSeconds++;
         boolean marinating=temperature<60&&seasoningCounts.getOrDefault("honey",-1)>=ingredients.size()&&seasoningCounts.getOrDefault("soy",-1)>=ingredients.size();
-        boolean wetMethod = method == Method.BOIL || method == Method.STEAM || method == Method.STEW;
+        boolean wetMethod = (method == Method.BOIL || method == Method.STEAM || method == Method.STEW)&&!renderingFat();
         for (Portion p : ingredients) {
             p.maximumTemperature=Math.max(p.maximumTemperature,temperature);
             if(marinating&&p.cooked<.1)p.marinatedSeconds++;
@@ -172,6 +172,7 @@ public final class CookingBatch {
     public boolean ready() {
         return !ingredients.isEmpty() && ingredients.stream().allMatch(p -> p.cooked >= 1);
     }
+    public boolean renderingFat(){return !ingredients.isEmpty()&&count("fat")==ingredients.size()&&water<=0&&oil+salt+soy+vinegar+spice+sugar==0&&method!=Method.STEAM&&method!=Method.MIX&&method!=Method.FERMENT;}
     public boolean burnt() {
         return ingredients.stream().anyMatch(p -> p.charred >= .75);
     }

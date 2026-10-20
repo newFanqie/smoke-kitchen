@@ -9,7 +9,7 @@ const items=[],stations=[],crops=[],dishes=[],processes=[],lang={},en={};
 function item(id,name,texture,extra={}) {items.push({id,name,texture,...extra});lang[`item.${ns}.${id}`]=name;en[`item.${ns}.${id}`]=id.replace(/_/g,' ');}
 function station(id,name,kind,model='cabinet') {stations.push({id,name,kind,model});lang[`block.${ns}.${id}`]=name;en[`block.${ns}.${id}`]=id.replace(/_/g,' ');}
 const plantRows=[
- ['rice_paddy','稻谷','wheat','rice',true],['tomato','番茄','apple','tomato'],['chili','辣椒','sweet_berries','chili'],
+ ['rice_paddy','稻谷','wheat',null],['tomato','番茄','apple','tomato'],['chili','辣椒','sweet_berries','chili'],
  ['soybean','大豆','wheat_seeds','soybean'],['rapeseed','油菜籽','melon_seeds',null],['scallion','葱','sugar_cane','scallion'],
  ['ginger','姜','potato','ginger'],['garlic','蒜','beetroot','garlic'],['cucumber','黄瓜','pickle','cucumber'],
  ['cabbage','白菜','kelp','cabbage'],['onion','洋葱','beetroot','onion'],['eggplant','茄子','chorus_fruit','eggplant'],
@@ -39,7 +39,8 @@ for(const [id,name,ingredient] of [['duck','熟鸭肉','duck'],['goose','熟鹅�
 item('empty_gas_canister','煤气罐（0%）','bucket',{unstackable:true});
 item('gas_canister','煤气罐（100%）','bucket',{unstackable:true});
 item('partial_gas_canister','煤气罐（50%）','bucket',{unstackable:true});
-for(const [id,name,texture] of [['dried_chili','干辣椒','sweet_berries'],['dried_shiitake','干香菇','brown_mushroom'],['oil_cake','油渣饲料','wheat'],['salt_ore_chunk','盐矿石','quartz'],['rendered_fat','动物脂','honeycomb']]) item(id,name,texture);
+for(const [id,name,texture] of [['dried_chili','干辣椒','sweet_berries'],['dried_shiitake','干香菇','brown_mushroom'],['oil_cake','油渣饲料','wheat'],['salt_ore_chunk','盐矿石','quartz']]) item(id,name,texture);
+item('rendered_fat','生动物脂','honeycomb',{ingredient:'fat'});
 for(const [id,name,texture,seasoning,uses] of [
  ['salt','盐罐','sugar','salt',16],['rapeseed_oil','菜籽油','honey_bottle','oil',8],['sesame_oil','芝麻油','honey_bottle','oil',8],
  ['soy_sauce','酱油','glass_bottle','soy',8],['rice_vinegar','米醋','glass_bottle','vinegar',8],
@@ -194,6 +195,8 @@ process('pickle',{cabbage:3,chili:1,garlic:1,salt:2},{pickled_cabbage:4},1200,1)
 Object.assign(processes[processes.length-1],{cuts:{[q('cabbage')]:['SHRED'],[q('chili')]:['SLICE','DICE'],[q('garlic')]:['MINCE']}});
 process('evaporate',{}, {salt_crystals:4},120,6);processes[processes.length-1].saltwater=true;
 
+item('fat_cracklings','油渣','cooked_porkchop',{nutrition:2});
+item('lard','猪油罐','glass_bottle',{seasoning:'oil',uses:8});
 for(const original of [...items]) {
  if(original.uses>0){
   item('used_'+original.id,original.name+(original.seasoning||original.id==='water_jug'?'（50%）':'（已使用）'),original.texture,{...original,id:'used_'+original.id,name:original.name+'（已使用）',variant_of:original.id,state:'used'});
@@ -205,7 +208,7 @@ for(const original of [...items]) {
  }
 }
 write(`data/${ns}/catalog.json`,{items,stations,crops,dishes,processes});
-const vanillaTools={stone_knife:'stone_sword',iron_knife:'iron_sword',refined_knife:'netherite_sword',wooden_spatula:'wooden_shovel',iron_spatula:'iron_hoe',ladle:'iron_shovel',tongs:'shears',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',sieve:'cobweb',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle',pan_fried_fish:'cooked_cod',roast_potatoes:'baked_potato'};
+const vanillaTools={rice_paddy:'wheat',stone_knife:'stone_sword',iron_knife:'iron_sword',refined_knife:'netherite_sword',wooden_spatula:'wooden_shovel',iron_spatula:'iron_hoe',ladle:'iron_shovel',tongs:'shears',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',sieve:'cobweb',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle',pan_fried_fish:'cooked_cod',roast_potatoes:'baked_potato'};
 write(`assets/${ns}/models/item/pot_water.json`,{parent:'minecraft:block/block',textures:{water:'minecraft:block/water_still'},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#water',tintindex:0,uv:[0,0,16,16]}}}]});
 write(`assets/${ns}/items/pot_water.json`,{model:{type:'minecraft:model',model:`${ns}:item/pot_water`,tints:[{type:'minecraft:constant',value:-12618012}]}});
 for(const[id,texture]of Object.entries({pot_oil:'honey_block_top',pot_caramel:'brown_concrete',pot_burnt_sugar:'black_concrete'})){
@@ -230,6 +233,9 @@ for(const it of items){
   write(`assets/${ns}/items/${it.id}.json`,{model:{type:'minecraft:composite',models:[{type:'minecraft:model',model:`${ns}:item/${it.variant_of}`},{type:'minecraft:model',model:`${ns}:item/${it.id}_state`}]}});
  }
  if(it.id.includes('gas_canister'))model={parent:'minecraft:block/block',textures:{base:'minecraft:block/'+(it.id==='empty_gas_canister'?'gray':it.id==='partial_gas_canister'?'yellow':'green')+'_concrete',metal:'minecraft:block/iron_block',dark:'minecraft:block/black_concrete',valve:'minecraft:block/copper_block'},elements:[box([4,1,4],[12,3,12],'#dark'),box([3,3,3],[13,11,13]),box([5,11,5],[11,13,11]),box([7,13,7],[9,15,9],'#valve'),box([5,14,7],[11,15,9],'#dark'),box([5,6,2.9],[11,9,3],'#metal')]};
+ if(it.id==='lard')model={parent:'minecraft:block/block',textures:{base:'minecraft:block/white_concrete',rim:'minecraft:block/light_gray_concrete',lid:'minecraft:block/oak_planks'},elements:[box([3,2,3],[13,11,13]),box([2,2,2],[14,3,14],'#rim'),box([2,11,2],[14,13,14],'#lid'),box([5,5,2.9],[11,8,3],'#rim')]};
+ if(it.id==='rendered_fat')model={parent:'minecraft:block/block',textures:{base:'minecraft:block/white_concrete',skin:'minecraft:block/pink_concrete'},elements:[box([2,3,3],[14,6,13],'#skin'),box([2,6,3],[14,10,13]),box([4,10,4],[12,12,12])]};
+ if(it.id==='fat_cracklings')model={parent:'minecraft:block/block',textures:{base:'minecraft:block/terracotta',gold:'minecraft:block/yellow_terracotta'},elements:[box([1,2,3],[7,5,9]),box([2,5,4],[6,6,8],'#gold'),box([9,3,6],[15,7,12]),box([10,7,7],[14,8,11],'#gold'),box([4,7,9],[10,10,15]),box([5,10,10],[9,11,14],'#gold')]};
  write(`assets/${ns}/models/item/${it.id}.json`,model);
  if(it.id==='pot_lid')write(`assets/${ns}/models/item/${it.id}.json`,{parent:`${ns}:block/lid`});
 }
@@ -364,6 +370,7 @@ Object.assign(problems,{turn:'%s需要成形后三成半熟再翻面，并继续
 Object.assign(messages,{softening:'软烂',softening_progress:'软烂进度 %s%%',caramel_progress:'糖色 %s/3秒（未焦%s）',contents:'食材：',open_first:'请先空手打开缸盖，再加入材料；重新加料会重计时间。'});
 messages.burner_status='%s｜%s°C｜进度 %s%%｜燃料 %s%s';
 Object.assign(messages,{quality_grade:'品质：%s（%s/3）',hot_hands:'锅面很烫！请用碗盘盛菜、隔热布搬锅，或冷却到80°C以下再徒手操作。'});
+Object.assign(messages,{render_help:'炼油：只放生动物脂，不加水油调料；泥灶或平底锅用小火，完全熬出油后持空罐收取。2份脂肪装满1罐，1份装半罐。',render_wait:'动物脂尚未熬透（%s%%），请继续小火加热。',render_burnt:'动物脂已过热或焦化，不能装成合格食用油；下次请从冷锅用小火。',render_done:'已装%s份猪油，并取回%s份油渣。',render_status:'炼油 %s°C｜进度 %s%%｜动物脂 %s份｜小火熬透后持空罐收取'});
 for(const[key,value]of Object.entries({0:'失败',1:'欠佳',2:'家常',3:'用心烹制'}))lang[`quality.${ns}.${key}`]=value;
 lang[`quality_reason.${ns}.strong`]='口味偏重：盐量稍多，补充一些无盐食材再拌匀可改善。';
 for(const[key,value]of Object.entries({raw:'夹生：还有食材未熟。',burnt:'焦黑：食材已经烧坏，补水不能恢复。',salty:'过咸：盐或酱油比例过高，下次盛出前补充无盐食材。',bland:'偏淡：缺少适量盐或酱油。',overcooked:'过熟：加热过久，应及时关火盛出。',scorched:'焦底：局部受热过久，调低火力并及时翻动。',uneven:'受热或调味不匀：最后投料后再翻炒；煎物凝固后翻面并继续加热。',stale:'存放时间较久，新鲜度已经下降。'}))lang[`quality_reason.${ns}.${key}`]=value;

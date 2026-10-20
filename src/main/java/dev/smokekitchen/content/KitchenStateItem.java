@@ -25,6 +25,7 @@ public final class KitchenStateItem extends Item {
         String id=KitchenContent.name(stack.getItem());
         if(id.contains("gas_canister"))lines.accept(Component.translatable("message.smoke_kitchen.gas_amount",ResourceStates.gasUnits(stack),600));
         else if(stack.isDamageableItem())lines.accept(Component.translatable("message.smoke_kitchen.uses_left",stack.getMaxDamage()-stack.getDamageValue(),stack.getMaxDamage()));
+        if(ResourceStates.baseId(stack).equals("rendered_fat"))lines.accept(Component.translatable("message.smoke_kitchen.render_help"));
         var tag=stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag();
         if(tag.getBooleanOr("kitchen_rolled",false))lines.accept(Component.translatable("message.smoke_kitchen.rolled"));
     }

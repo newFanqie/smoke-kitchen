@@ -58,7 +58,7 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         state.height=entity.isBurner()?(entity.mountedCookware.isEmpty()?.89f:switch(entity.mountedCookware){case "frying_pan","baking_tray"->.965f;case "wok"->.99f;default->1.07f;}):switch(entity.kind()) { case "board" -> .13f; case "cook","plate" -> .23f; default -> 1.015f; };
         if(state.oven)state.height=.47f;
         state.vessel=null;state.lid=null;state.gas=null;state.water=null;
-        if(!entity.isOven()&&(entity.batch.water>0||entity.batch.oil>0) && (entity.isBurner()&&!entity.mountedCookware.isEmpty() || entity.kind().equals("cook"))) {
+        if(!entity.isOven()&&(entity.batch.water>0||entity.batch.oil>0||entity.batch.ingredients.stream().anyMatch(p->p.id.equals("fat")&&p.cooked>=.4)) && (entity.isBurner()&&!entity.mountedCookware.isEmpty() || entity.kind().equals("cook"))) {
             var stack=new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.PAPER);
             String liquid=entity.batch.water>0?"pot_water":entity.batch.burntSugarSeconds>=5?"pot_burnt_sugar":entity.batch.caramelSeconds>=3?"pot_caramel":"pot_oil";
             stack.set(net.minecraft.core.component.DataComponents.ITEM_MODEL,dev.smokekitchen.SmokeKitchen.id(liquid));state.water=resolve(stack,entity);

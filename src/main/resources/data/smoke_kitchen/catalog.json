@@ -4,8 +4,7 @@
       "id": "rice_paddy",
       "name": "稻谷",
       "texture": "wheat",
-      "nutrition": 0,
-      "ingredient": "rice"
+      "nutrition": 0
     },
     {
       "id": "tomato",
@@ -349,8 +348,9 @@
     },
     {
       "id": "rendered_fat",
-      "name": "动物脂",
-      "texture": "honeycomb"
+      "name": "生动物脂",
+      "texture": "honeycomb",
+      "ingredient": "fat"
     },
     {
       "id": "salt",
@@ -795,6 +795,19 @@
       "texture": "charcoal",
       "nutrition": 1,
       "meal": true
+    },
+    {
+      "id": "fat_cracklings",
+      "name": "油渣",
+      "texture": "cooked_porkchop",
+      "nutrition": 2
+    },
+    {
+      "id": "lard",
+      "name": "猪油罐",
+      "texture": "glass_bottle",
+      "seasoning": "oil",
+      "uses": 8
     },
     {
       "id": "stale_tomato",
@@ -1958,6 +1971,31 @@
       "meal": true,
       "variant_of": "mixed_stew",
       "state": "spoiled"
+    },
+    {
+      "id": "stale_fat_cracklings",
+      "name": "不新鲜的油渣",
+      "texture": "cooked_porkchop",
+      "nutrition": 1,
+      "variant_of": "fat_cracklings",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_fat_cracklings",
+      "name": "变质的油渣",
+      "texture": "cooked_porkchop",
+      "nutrition": 0,
+      "variant_of": "fat_cracklings",
+      "state": "spoiled"
+    },
+    {
+      "id": "used_lard",
+      "name": "猪油罐（已使用）",
+      "texture": "glass_bottle",
+      "seasoning": "oil",
+      "uses": 8,
+      "variant_of": "lard",
+      "state": "used"
     }
   ],
   "stations": [

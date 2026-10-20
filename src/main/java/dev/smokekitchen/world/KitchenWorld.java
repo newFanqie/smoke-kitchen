@@ -18,6 +18,10 @@ public final class KitchenWorld {
     public static Block SALT_ORE;
     public static final List<String> BUILDINGS=List.of("village_kitchen","farmstead","spice_stall","mushroom_cabin","fishing_hut","saltworks","old_inn","abandoned_granary","raider_camp");
     public static void register() {
+        net.fabricmc.fabric.api.loot.v3.LootTableEvents.MODIFY.register((key,table,source,registries)->{
+            if(source.isBuiltin()&&key.identifier().equals(net.minecraft.resources.Identifier.withDefaultNamespace("entities/pig")))table.withPool(net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                .add(net.minecraft.world.level.storage.loot.entries.LootItem.lootTableItem(KitchenContent.item("rendered_fat"))));
+        });
         var blockKey=ResourceKey.create(Registries.BLOCK,SmokeKitchen.id("salt_ore"));
         SALT_ORE=Registry.register(BuiltInRegistries.BLOCK,blockKey,new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COAL_ORE).setId(blockKey)));
         var itemKey=ResourceKey.create(Registries.ITEM,SmokeKitchen.id("salt_ore"));

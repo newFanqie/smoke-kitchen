@@ -42,7 +42,7 @@ public final class RecipeFlowTest implements FabricClientGameTest {
             server.runOnServer(game->check(game.getPlayerList().getPlayers().getFirst().getInventory().contains(stack->stack.is(KitchenContent.item("scallion"))&&stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag().getStringOr("kitchen_cut","").equals("DICE")),"Actual board use must return cut scallion"));
             equip(context,server,"minecraft:air");context.waitTicks(400);click(context,POT,Direction.NORTH);click(context,POT,Direction.NORTH);click(context,POT,Direction.NORTH);context.waitTicks(1200);
             server.runOnServer(game->check(((KitchenBlockEntity)game.overworld().getBlockEntity(POT)).batch.ready(),"Raw rice and water must really cook before being used for fried rice"));
-            context.takeScreenshot("recipe-boiled-rice-0.1.7");
+            context.takeScreenshot("recipe-boiled-rice-0.1.8");
             for(int i=0;i<2;i++){equip(context,server,"minecraft:bowl");click(context,POT,Direction.UP);}
             equip(context,server,"minecraft:air");click(context,POT,Direction.NORTH);click(context,POT,Direction.NORTH);
             equip(context,server,"smoke_kitchen:gas_canister");click(context,WOK,Direction.NORTH);
@@ -53,7 +53,7 @@ public final class RecipeFlowTest implements FabricClientGameTest {
             equip(context,server,"smoke_kitchen:salt");click(context,WOK,Direction.UP);
             for(int i=0;i<3;i++){stir(context,server,1);context.waitTicks(140);}
             server.runOnServer(game->{var stove=(KitchenBlockEntity)game.overworld().getBlockEntity(WOK);check(stove.batch.ready()&&!stove.batch.burnt(),"The complete meal must actually cook without burning");check(ContentCatalog.DISHES.stream().filter(r->r.id().equals("fried_rice")).findFirst().orElseThrow().matches(stove.batch),"Actual preheating, egg first, cooked rice, cut scallion and stirring must satisfy the named recipe");});
-            context.takeScreenshot("recipe-fried-rice-ready-0.1.7");
+            context.takeScreenshot("recipe-fried-rice-ready-0.1.8");
             equip(context,server,"minecraft:bowl");click(context,WOK,Direction.UP);
             equip(context,server,"minecraft:air");click(context,WOK,Direction.NORTH);click(context,WOK,Direction.NORTH);
             select(context,KitchenContent.item("fried_rice"));
@@ -63,7 +63,7 @@ public final class RecipeFlowTest implements FabricClientGameTest {
         }
         try(var reopened=savedWorld.open()) {
             context.waitTicks(10);reopened.getServer().runOnServer(game->{var stove=(KitchenBlockEntity)game.overworld().getBlockEntity(WOK);check(stove.batch.remainingServings==1&&stove.batch.lockedDish.equals("fried_rice"),"Closing and reopening the actual world must retain the last meal portion");check(ResourceStates.gasUnits(stove.items.get(26))==savedGas[0],"Reopening must retain exact remaining gas without offline fuel loss");check(ContentCatalog.DISHES.stream().filter(r->r.id().equals("fried_rice")).findFirst().orElseThrow().matches(stove.batch),"Preparation evidence must survive an actual world reload");});
-            reopened.getServer().runCommand("tp @a 1 100 -3 0 20");context.waitTicks(5);context.takeScreenshot("recipe-after-world-reload-0.1.7");
+            reopened.getServer().runCommand("tp @a 1 100 -3 0 20");context.waitTicks(5);context.takeScreenshot("recipe-after-world-reload-0.1.8");
             equip(context,reopened.getServer(),"minecraft:bowl");click(context,WOK,Direction.UP);
             reopened.getServer().runOnServer(game->check(((KitchenBlockEntity)game.overworld().getBlockEntity(WOK)).batch.ingredients.isEmpty(),"The last saved portion must remain retrievable after reopening"));
         }

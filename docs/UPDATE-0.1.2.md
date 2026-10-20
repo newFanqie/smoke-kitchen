@@ -53,3 +53,11 @@ Minecraft Java 26.1.2 / Fabric Loader 0.19.2 / Fabric API 0.149.1+26.1.2。移�
 ## 尚未完成
 
 本版主要处理用户反馈的基础厨房问题。严格菜谱切法与投料阶段、其他原料/菜肴图标、独立生物外观、地区生态、九类建筑独立蓝图、村民职业、订单、宴席和食谱收藏继续按已确认设计实施。完整无作弊生存闭环、双客户端并发、整世界存档迁移与长期性能仍需后续专门验收，不以本次测试替代。
+
+## 发布文件核对
+
+开发版：[smoke-kitchen-0.1.2.jar](https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.2/smoke-kitchen-0.1.2.jar)，629026字节。发布后实际下载核对，本地、GitHub资产摘要与下载文件SHA256一致：
+
+```text
+3efeb4356584871d878fc160b50655148371f8fec1311c502f15e40dcbcc6f68
+```

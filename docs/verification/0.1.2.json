@@ -1,6 +1,6 @@
 {
   "loader": "0.19.2",
-  "releaseDownloadVerified": false,
+  "releaseDownloadVerified": true,
   "jarContainsTestCode": false,
   "unitTests": {
     "failed": 0,
@@ -40,5 +40,8 @@
   },
   "fabricApi": "0.149.1+26.1.2",
   "sha256": "3efeb4356584871d878fc160b50655148371f8fec1311c502f15e40dcbcc6f68",
-  "itemDefinitions": 304
+  "itemDefinitions": 304,
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.2",
+  "codeCommit": "0176e6d8c4924895ef679c3a3195fe31be5b105e",
+  "downloadedBytes": 629026
 }

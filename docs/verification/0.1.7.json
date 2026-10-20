@@ -76,5 +76,8 @@
     "First-meal acquisition dependencies were inspected and documented only. A complete uncheated survival route, animal-fat rendering, crop ecology and the remaining finite design scope are not marked complete.",
     "After the full Iris run, a focused quality-only correction exempts plain rice, dough and pie from mandatory salt/soy. Final native and Iris finishing flows recook porridge and explicitly assert its real served quality; this changes no heating, fuel, cut or recipe-stage logic."
   ],
-  "releaseDownloadVerified": false
+  "releaseDownloadVerified": true,
+  "codeCommit": "5e689cdced9b38cb716e395eecb8b7b653c2562f",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.7",
+  "downloadedBytes": 663033
 }

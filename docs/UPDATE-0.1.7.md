@@ -41,3 +41,9 @@ Iris全部七组流程与画面已经通过；最后补充的主食例外另在�
 ![Iris关闭重开后的剩余食物](images/quality-reload-iris-0.1.7.png)
 
 测试提供原料与平台；品质对照页读取实际做出的菜和普通物品提示，只是测试展示页，不是新增生产界面。第一餐获取依赖已整理到[获取路线](FIRST-MEAL-ROUTE.md)，完整无作弊生存验收仍未完成。其他生态、美术、建筑与经营待办继续保留。
+
+## 发布核对
+
+[0.1.7开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.7)已发布，源码提交5e689cdced9b38cb716e395eecb8b7b653c2562f。实际从GitHub资产接口下载smoke-kitchen-0.1.7.jar（663033字节），本地、服务器与下载文件摘要一致。移出旧版JAR，保留对应Fabric API。
+
+SHA256：f8c9cee8a5f3804ec15e309c41e621c77d9f91a8e5d261c0bcb8abdfe2ab130b

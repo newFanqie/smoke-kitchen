@@ -12,6 +12,18 @@ if(known.size!==allIds.length)errors.push('Duplicate item registration.');
 const checkItem=(id,source)=>{if(typeof id==='string' && id.startsWith(ns+':')&&!known.has(id.slice(ns.length+1)))errors.push(`${source}: unknown item ${id}`);};
 for(const r of catalog.processes){Object.keys(r.inputs).forEach(id=>checkItem(id,'processing input'));Object.keys(r.outputs).forEach(id=>checkItem(id,'processing output'));}
 for(const r of catalog.dishes){if(!known.has(r.id))errors.push(`Dish ${r.id} has no item`);if(r.servings<1||r.servings>24)errors.push(`Invalid yield ${r.id}`);}
+for(const r of catalog.dishes){
+ for(const [id,cuts]of Object.entries(r.cuts||{}))if(!r.ingredients[id]||!cuts.length||cuts.some(c=>!['WHOLE','SLICE','DICE','SHRED','MINCE'].includes(c)))errors.push(`Invalid preparation cut in ${r.id}: ${id}`);
+ const edges=new Map();
+ for(const step of r.steps||[]){
+  if(!r.ingredients[step.ingredient]||step.after&&!r.ingredients[step.after]||step.ingredient===step.after||(step.temperature||0)<0||(step.temperature||0)>250||(step.cooked||0)<0||(step.cooked||0)>1)errors.push(`Invalid preparation step in ${r.id}`);
+  if(step.after){if(!edges.has(step.ingredient))edges.set(step.ingredient,[]);edges.get(step.ingredient).push(step.after);}
+ }
+ const visit=(id,trail=new Set())=>{if(trail.has(id))return false;return(edges.get(id)||[]).every(next=>visit(next,new Set([...trail,id])));};
+ if([...edges.keys()].some(id=>!visit(id)))errors.push(`Impossible circular preparation order in ${r.id}`);
+ for(const [id,progress]of Object.entries(r.finish_seasonings||{}))if(!r[id]||progress<0||progress>1)errors.push(`Invalid finishing seasoning in ${r.id}`);
+ if((r.stirs||0)<0||(r.stirs||0)>10)errors.push(`Invalid stirring count in ${r.id}`);
+}
 function* files(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())yield*files(p);else if(e.name.endsWith('.json'))yield p;}}
 const shapeless=new Map();
 for(const file of files(root)){

@@ -2,6 +2,8 @@ package dev.smokekitchen.cooking;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /** Server-owned, deterministic cooking simulation. One ingredient entry is one portion. */
 public final class CookingBatch {
@@ -14,6 +16,11 @@ public final class CookingBatch {
         public Cut cut;
         public double resistance;
         public boolean needsWater;
+        public boolean additionRecorded;
+        public double temperatureOnAdd;
+        public int oilOnAdd;
+        public Map<String,Integer> priorCounts = new HashMap<>();
+        public Map<String,Double> priorCooked = new HashMap<>();
         public Portion(String id, Cut cut, double resistance, boolean needsWater, boolean ready) {
             this.id = id;
             this.cut = cut;
@@ -36,15 +43,26 @@ public final class CookingBatch {
     public int seconds;
     public int lastStir;
     public int stirs;
+    public int stirsAtLastAddition;
+    public Map<String,Double> seasoningProgress = new HashMap<>();
+    public Map<String,Integer> seasoningCounts = new HashMap<>();
     public int remainingServings = -1;
     public String lockedDish = "";
     public int capacity = 6;
 
     public boolean add(String id, Cut cut, double resistance, boolean needsWater, boolean ready) {
         if (ingredients.size() >= capacity || remainingServings >= 0) return false;
-        ingredients.add(new Portion(id, cut, Math.max(.25, resistance), needsWater, ready));
+        var portion=new Portion(id,cut,Math.max(.25,resistance),needsWater,ready);
+        portion.additionRecorded=true;portion.temperatureOnAdd=temperature;portion.oilOnAdd=oil;
+        for(var previous:ingredients){portion.priorCounts.merge(previous.id,1,Integer::sum);portion.priorCooked.merge(previous.id,previous.cooked,Math::min);}
+        ingredients.add(portion);stirsAtLastAddition=stirs;
         temperature=Math.max(20,temperature-8);
         return true;
+    }
+
+    public void season(String seasoning) {
+        seasoningProgress.put(seasoning,ingredients.stream().mapToDouble(p->p.cooked).min().orElse(-1));
+        seasoningCounts.put(seasoning,ingredients.size());
     }
 
     public void stir() {
@@ -122,10 +140,14 @@ public final class CookingBatch {
         if (ingredients == null) ingredients = new ArrayList<>();
         if (method == null) method = Method.STIR_FRY;
         if (lockedDish == null) lockedDish = "";
+        if(seasoningProgress==null)seasoningProgress=new HashMap<>();
+        if(seasoningCounts==null)seasoningCounts=new HashMap<>();
         ingredients.removeIf(p -> p == null || p.id == null || p.id.isBlank());
         ingredients = new ArrayList<>(ingredients.subList(0, Math.min(12, ingredients.size())));
         for (Portion p : ingredients) {
             if (p.cut == null) p.cut = Cut.WHOLE;
+            if(p.priorCounts==null)p.priorCounts=new HashMap<>();
+            if(p.priorCooked==null)p.priorCooked=new HashMap<>();
             p.resistance = Math.clamp(Double.isFinite(p.resistance) ? p.resistance : 1, .25, 5);
             p.cooked = Math.clamp(Double.isFinite(p.cooked) ? p.cooked : 0, 0, 100);
             p.charred = Math.clamp(Double.isFinite(p.charred) ? p.charred : 0, 0, 100);

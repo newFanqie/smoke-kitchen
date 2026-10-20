@@ -21,7 +21,7 @@ public final class RecipeBookScreen extends Screen {
         pages.add(new Page("燃料与天然气厨房","普通灶台：右键加煤后自动点火，并显示剩余燃料；空手右键侧面在关火、小火、中火和大火间切换。炉口使用原版燃烧动画。持锅右键灶台会嵌入灶面，食材点顶部投放；潜行空手点顶部取回熟食。\n\n天然气：在新生成的区块地下0至48层寻找含气岩层；将开采机紧贴岩层，燃气管道连接开采机、储气罐和天然气灶。空手点侧面调火。也可把气罐直接接到气灶；潜行空手点侧面拆罐。满罐100%、使用中50%图标、空罐0%，实际余量看提示。断气会停止供热。开采机与储气罐可用空燃气罐装气，也可用装满的气罐补充。岩层的气量有限，每罐600单位。\n\n创造模式：在烟火厨房分类找到全部设备、食材和7种刷怪蛋。鸭鹅野猪及水产死亡会掉落原料，生肉和水产也可用熔炉或烟熏炉加工。"));
         for(var e:ContentCatalog.DATA.getAsJsonArray("dishes")) {
             var r=e.getAsJsonObject();
-            pages.add(new Page(ContentCatalog.str(r,"name"),ContentCatalog.str(r,"guide")+"\n\n建议产量："+ContentCatalog.num(r,"servings",1)+"份。\n\n食材保留各自熟度；最后加入的生食材仍需煮熟。过量盐可以在装盘前通过补充原料稀释。"));
+            pages.add(new Page(ContentCatalog.str(r,"name"),ContentCatalog.str(r,"guide")+"\n\n建议产量："+ContentCatalog.num(r,"servings",1)+"份。"+(ContentCatalog.num(r,"stirs",0)>0?"最后一次投料后至少翻动"+ContentCatalog.num(r,"stirs",0)+"次。":"")+"\n\n食材保留各自熟度；最后加入的生食材仍需煮熟。过量盐可以在装盘前通过补充原料稀释。"));
         }
     }
     @Override protected void init() {

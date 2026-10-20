@@ -13,6 +13,11 @@ import net.minecraft.world.item.component.CustomData;
 public final class KitchenFoodItem extends Item {
     private final int nutrition;
     public KitchenFoodItem(Properties props,int nutrition) {super(props);this.nutrition=nutrition;}
+    @Override public void appendHoverText(ItemStack stack,TooltipContext context,net.minecraft.world.item.component.TooltipDisplay display,java.util.function.Consumer<Component> lines,TooltipFlag flag) {
+        super.appendHoverText(stack,context,display,lines,flag);
+        var data=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
+        if(data.contains("kitchen_quality"))lines.accept(Component.translatable("message.smoke_kitchen.quality",data.getIntOr("kitchen_quality",0)));
+    }
     @Override public void inventoryTick(ItemStack stack,ServerLevel level,Entity owner,EquipmentSlot slot) {
         super.inventoryTick(stack,level,owner,slot);
         if(level.getGameTime()%100!=0 || !KitchenConfig.INSTANCE.spoilage)return;

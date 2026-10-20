@@ -2283,7 +2283,8 @@
         "BOIL"
       ],
       "servings": 2,
-      "guide": "米×1，加水；煮沸后小火加盖。"
+      "guide": "米×1，加水；煮沸后小火加盖。",
+      "stirs": 0
     },
     {
       "id": "rice_porridge",
@@ -2295,7 +2296,8 @@
         "STEW"
       ],
       "servings": 3,
-      "guide": "米×1、较多水，小火搅拌。"
+      "guide": "米×1、较多水，小火搅拌。",
+      "stirs": 0
     },
     {
       "id": "fried_rice",
@@ -2309,9 +2311,34 @@
         "STIR_FRY"
       ],
       "servings": 2,
-      "guide": "米饭×2、蛋×1、葱×1；热油先炒蛋，再下饭，少盐翻炒。",
+      "guide": "米饭×2、蛋×1、切碎的葱×1。先放油，把锅预热到110°C，再下蛋炒至至少四成熟；再加两份米饭，最后下葱。全部加完后翻炒至少3次，加盐，熟透后装盘。生米须先加水煮成米饭。",
       "oil": true,
-      "salt": true
+      "salt": true,
+      "cuts": {
+        "scallion": [
+          "DICE",
+          "SHRED",
+          "MINCE"
+        ]
+      },
+      "steps": [
+        {
+          "ingredient": "egg",
+          "temperature": 110,
+          "hot_oil": true
+        },
+        {
+          "ingredient": "rice_cooked",
+          "after": "egg",
+          "cooked": 0.4
+        },
+        {
+          "ingredient": "scallion",
+          "after": "rice_cooked",
+          "cooked": 0
+        }
+      ],
+      "stirs": 3
     },
     {
       "id": "tomato_eggs",
@@ -2324,9 +2351,22 @@
         "STIR_FRY"
       ],
       "servings": 2,
-      "guide": "番茄×2、蛋×2；油盐适量，蛋先炒，番茄后下。",
+      "guide": "番茄×2、蛋×2。放油，锅温至少110°C再下两份蛋；蛋至少四成熟再下番茄，油盐适量，全部加完后翻炒至少3次，熟透装盘。",
       "oil": true,
-      "salt": true
+      "salt": true,
+      "steps": [
+        {
+          "ingredient": "egg",
+          "temperature": 110,
+          "hot_oil": true
+        },
+        {
+          "ingredient": "tomato",
+          "after": "egg",
+          "cooked": 0.4
+        }
+      ],
+      "stirs": 3
     },
     {
       "id": "sour_spicy_potato",
@@ -2340,10 +2380,30 @@
         "STIR_FRY"
       ],
       "servings": 2,
-      "guide": "切丝土豆×2、辣椒×1、蒜×1；热油快炒，出锅前加醋。",
+      "guide": "土豆丝×2、辣椒×1、蒜末×1。砧板切法：土豆切丝、蒜剁碎。先下蒜，油锅至少100°C再下土豆丝和辣椒；翻炒至少3次，七成熟后淋醋，加盐，熟透装盘。",
       "oil": true,
       "salt": true,
-      "vinegar": true
+      "vinegar": true,
+      "cuts": {
+        "potato": [
+          "SHRED"
+        ],
+        "garlic": [
+          "MINCE"
+        ]
+      },
+      "steps": [
+        {
+          "ingredient": "potato",
+          "after": "garlic",
+          "temperature": 100,
+          "hot_oil": true
+        }
+      ],
+      "finish_seasonings": {
+        "vinegar": 0.7
+      },
+      "stirs": 3
     },
     {
       "id": "garlic_greens",
@@ -2358,7 +2418,8 @@
       "servings": 2,
       "guide": "白菜×2、蒜×1；少油爆香再下菜。",
       "oil": true,
-      "salt": true
+      "salt": true,
+      "stirs": 3
     },
     {
       "id": "scallion_omelette",
@@ -2373,7 +2434,8 @@
       "servings": 2,
       "guide": "蛋×2、葱×1；平底锅煎制并翻面。",
       "oil": true,
-      "salt": true
+      "salt": true,
+      "stirs": 1
     },
     {
       "id": "pan_fried_fish",
@@ -2387,7 +2449,8 @@
       "servings": 2,
       "guide": "鱼×2；热油下锅，盐与胡椒调味，及时翻面。",
       "oil": true,
-      "salt": true
+      "salt": true,
+      "stirs": 1
     },
     {
       "id": "steamed_fish",
@@ -2403,7 +2466,8 @@
       "servings": 2,
       "guide": "鱼×2、姜×1、葱×1；蒸熟后淋酱油。",
       "salt": true,
-      "soy": true
+      "soy": true,
+      "stirs": 0
     },
     {
       "id": "boiled_shrimp",
@@ -2417,7 +2481,8 @@
       ],
       "servings": 2,
       "guide": "河虾×3、姜×1；水沸后下虾。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "steamed_crab",
@@ -2431,7 +2496,8 @@
       ],
       "servings": 2,
       "guide": "河蟹×2、姜×1；加水蒸制，配醋。",
-      "vinegar": true
+      "vinegar": true,
+      "stirs": 0
     },
     {
       "id": "mushroom_soup",
@@ -2445,7 +2511,8 @@
       ],
       "servings": 3,
       "guide": "可食菌菇×3；水、盐，小火煮。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "tomato_egg_soup",
@@ -2459,7 +2526,8 @@
       ],
       "servings": 3,
       "guide": "番茄×2、蛋×1；先煮番茄再下蛋。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "carrot_meat_stew",
@@ -2474,7 +2542,8 @@
       ],
       "servings": 3,
       "guide": "胡萝卜×2、肉×2、姜×1；加水小火炖。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "beef_potato_stew",
@@ -2489,7 +2558,8 @@
       ],
       "servings": 3,
       "guide": "土豆×2、牛肉×2、洋葱×1；先炖牛肉。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "pumpkin_soup",
@@ -2504,7 +2574,8 @@
       ],
       "servings": 3,
       "guide": "南瓜×2、牛奶×1；煮软后混合。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "braised_pork",
@@ -2518,7 +2589,8 @@
       ],
       "servings": 3,
       "guide": "猪肉×3、姜×1；糖色、酱油、加水炖。",
-      "soy": true
+      "soy": true,
+      "stirs": 0
     },
     {
       "id": "braised_eggplant",
@@ -2533,7 +2605,8 @@
       "servings": 2,
       "guide": "茄子×3、蒜×1；油、酱油与少量糖。",
       "oil": true,
-      "soy": true
+      "soy": true,
+      "stirs": 3
     },
     {
       "id": "mapo_tofu",
@@ -2547,9 +2620,30 @@
         "STIR_FRY"
       ],
       "servings": 2,
-      "guide": "豆腐×2、肉末×1、辣椒×1；花椒、酱油，轻推。",
+      "guide": "豆腐块×2、猪肉末×1、辣椒×1。砧板将猪肉剁碎、豆腐切块。油锅至少100°C下肉末，炒至至少六成熟再下豆腐；加辣椒、酱油，全部加完后轻推至少3次，熟透装盘。",
       "oil": true,
-      "soy": true
+      "soy": true,
+      "cuts": {
+        "pork": [
+          "MINCE"
+        ],
+        "tofu": [
+          "DICE"
+        ]
+      },
+      "steps": [
+        {
+          "ingredient": "pork",
+          "temperature": 100,
+          "hot_oil": true
+        },
+        {
+          "ingredient": "tofu",
+          "after": "pork",
+          "cooked": 0.6
+        }
+      ],
+      "stirs": 3
     },
     {
       "id": "cucumber_salad",
@@ -2565,7 +2659,8 @@
       "guide": "黄瓜×2、蒜×1；盐、醋、芝麻油拌匀。",
       "oil": true,
       "salt": true,
-      "vinegar": true
+      "vinegar": true,
+      "stirs": 1
     },
     {
       "id": "pickled_cabbage",
@@ -2580,7 +2675,8 @@
       ],
       "servings": 4,
       "guide": "白菜×3、辣椒×1、蒜×1；盐水密封等待。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "meat_skewers",
@@ -2593,7 +2689,8 @@
       ],
       "servings": 3,
       "guide": "调理台用肉×3、洋葱×1制成生肉串×3；盐、孜然，烤制翻面。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "honey_roast_duck",
@@ -2607,7 +2704,8 @@
       "servings": 3,
       "guide": "鸭肉×3；蜂蜜、盐、酱油，刷料烤制。",
       "salt": true,
-      "soy": true
+      "soy": true,
+      "stirs": 0
     },
     {
       "id": "roast_potatoes",
@@ -2621,7 +2719,8 @@
       "servings": 3,
       "guide": "土豆×3；少量油盐，烤至松软。",
       "oil": true,
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "noodle_soup",
@@ -2635,7 +2734,8 @@
       ],
       "servings": 2,
       "guide": "面团×2擀切，青菜×1；加水煮。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "pork_dumplings",
@@ -2649,7 +2749,8 @@
       ],
       "servings": 2,
       "guide": "调理台用面团×2、肉末×1、白菜×1包成生饺子×2；盐水煮或蒸。",
-      "salt": true
+      "salt": true,
+      "stirs": 0
     },
     {
       "id": "steamed_buns",
@@ -2661,7 +2762,8 @@
         "STEAM"
       ],
       "servings": 2,
-      "guide": "面团×2与引子在发酵缸发酵后蒸熟。"
+      "guide": "面团×2与引子在发酵缸发酵后蒸熟。",
+      "stirs": 0
     },
     {
       "id": "homestyle_bread",
@@ -2673,7 +2775,8 @@
         "BAKE"
       ],
       "servings": 2,
-      "guide": "发酵面团×2、少量糖，在烤盘上烘烤。"
+      "guide": "发酵面团×2、少量糖，在烤盘上烘烤。",
+      "stirs": 0
     },
     {
       "id": "apple_pie",
@@ -2685,7 +2788,8 @@
         "BAKE"
       ],
       "servings": 3,
-      "guide": "调理台用面团×2、苹果×2、糖装馅，生苹果派放烤盘烤熟。"
+      "guide": "调理台用面团×2、苹果×2、糖装馅，生苹果派放烤盘烤熟。",
+      "stirs": 0
     }
   ],
   "processes": [

@@ -6,6 +6,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 public final class SmokeKitchenClient implements ClientModInitializer {
     @Override public void onInitializeClient() {
+        net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.register((stack,context,flag,lines)->{
+            var data=stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag();
+            if(data.contains("kitchen_cut"))lines.add(net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.cut",net.minecraft.network.chat.Component.translatable("cut.smoke_kitchen."+data.getStringOr("kitchen_cut","WHOLE"))));
+        });
         net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.AFTER_INIT.register((client,screen,width,height)->{
             if(firstCreativeOpen && screen instanceof net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen) {
                 var tab=net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB.getValue(dev.smokekitchen.SmokeKitchen.id("kitchen"));

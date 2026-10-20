@@ -13,6 +13,24 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void decantingCookedRiceReturnsExactlyOneBowl(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("wok"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,p,player,new ItemStack(KitchenContent.item("cooked_rice")),net.minecraft.core.Direction.UP);
+        var wok=test.getBlockEntity(p,KitchenBlockEntity.class);
+        test.assertTrue(player.getInventory().countItem(Items.BOWL)==1&&!wok.items.getFirst().has(net.minecraft.core.component.DataComponents.USE_REMAINDER),"Pouring rice into a wok returns its bowl once, and the loose rice must not carry another bowl");test.succeed();
+    }
+    @GameTest public void recookingAPortionDoesNotCarryAnotherPotsOrderEvidence(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("wok"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        var source=new CookingBatch();source.add("egg",CookingBatch.Cut.WHOLE,1,false,true);source.add("rice_cooked",CookingBatch.Cut.WHOLE,1,false,true);
+        var rice=new ItemStack(KitchenContent.item("cooked_rice"));KitchenBlockEntity.applyPortion(rice,source.ingredients.getLast());use(test,p,player,rice,net.minecraft.core.Direction.UP);
+        var portion=test.getBlockEntity(p,KitchenBlockEntity.class).batch.ingredients.getFirst();test.assertTrue(portion.cooked==1&&portion.priorCounts.isEmpty(),"A loose portion keeps its cookedness but must record the new pot's actual order");test.succeed();
+    }
+    @GameTest public void preparationEvidenceSurvivesBlockEntitySave(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("wok"));var wok=test.getBlockEntity(p,KitchenBlockEntity.class);
+        wok.batch.temperature=130;wok.batch.oil=1;wok.batch.add("egg",CookingBatch.Cut.WHOLE,1,false,false);wok.batch.ingredients.getFirst().cooked=.6;wok.batch.add("rice_cooked",CookingBatch.Cut.WHOLE,1,false,true);wok.batch.season("vinegar");
+        var loaded=(KitchenBlockEntity)BlockEntity.loadStatic(p,wok.getBlockState(),wok.saveWithFullMetadata(test.getLevel().registryAccess()),test.getLevel().registryAccess());
+        test.assertTrue(loaded!=null&&loaded.batch.ingredients.getFirst().temperatureOnAdd==130&&loaded.batch.ingredients.getLast().priorCooked.get("egg")==.6&&loaded.batch.seasoningCounts.get("vinegar")==2,"Save data must preserve the evidence used to validate order, heat and finishing seasonings");test.succeed();
+    }
     @GameTest public void liftingAndRemountingPreservesPotWithoutMovingItsGasCanister(GameTestHelper test) {
         var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("gas_stove"));
         var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);

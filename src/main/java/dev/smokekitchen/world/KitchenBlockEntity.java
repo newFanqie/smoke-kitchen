@@ -196,7 +196,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
 
     private InteractionResult board(Player p,ItemStack stack,String held) {
         if (held.contains("knife")) {
-            if (p.isShiftKeyDown()) { cut = CookingBatch.Cut.values()[(cut.ordinal()+1)%CookingBatch.Cut.values().length]; say(p,"cut",cut.name()); changed(); return InteractionResult.SUCCESS; }
+            if (p.isShiftKeyDown()) { cut = CookingBatch.Cut.values()[(cut.ordinal()+1)%CookingBatch.Cut.values().length]; say(p,"cut",Component.translatable("cut.smoke_kitchen."+cut.name())); changed(); return InteractionResult.SUCCESS; }
             if (items.getFirst().isEmpty()) { say(p,"ingredient"); return InteractionResult.SUCCESS; }
             cutProgress++;
             sound();
@@ -256,7 +256,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
                 case "vinegar" -> { if(batch.vinegar>=16) yield false; batch.vinegar++; yield true; }
                 default -> { if(batch.spice>=16) yield false; batch.spice++; yield true; }
             };
-            if (accepted) { wear(p,stack,seasoning.equals("salt") || seasoning.equals("spice") ? KitchenContent.item("empty_jar") : Items.GLASS_BOTTLE); changed(); }
+            if (accepted) { batch.season(seasoning);wear(p,stack,seasoning.equals("salt") || seasoning.equals("spice") ? KitchenContent.item("empty_jar") : Items.GLASS_BOTTLE); changed(); }
             else say(p,"full");
             showStatus(p); return InteractionResult.SUCCESS;
         }
@@ -275,13 +275,19 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             int index = batch.ingredients.size()-1;
             if (data.contains("kitchen_portion")) {
                 try { var saved = GSON.fromJson(data.getStringOr("kitchen_portion",""),CookingBatch.Portion.class);
-                    if (saved != null && saved.id.equals(s.id)) batch.ingredients.set(index,saved);
+                    if (saved != null && saved.id.equals(s.id)) {
+                        var current=batch.ingredients.get(index);current.cooked=saved.cooked;current.charred=saved.charred;
+                    }
                 } catch (RuntimeException ignored) {}
                 batch.normalize();
             }
-            items.set(index,stack.is(Items.MILK_BUCKET)?new ItemStack(KitchenContent.item("milk_portion")):stack.copyWithCount(1));
-            if(stack.is(Items.MILK_BUCKET)) replaceContainer(p,stack,Items.BUCKET); else take(p,stack);
-            changed(); sound();
+            var stored=stack.is(Items.MILK_BUCKET)?new ItemStack(KitchenContent.item("milk_portion")):stack.copyWithCount(1);
+            var remainder=stack.get(DataComponents.USE_REMAINDER);
+            if(remainder!=null)stored.remove(DataComponents.USE_REMAINDER);
+            items.set(index,stored);
+            if(stack.is(Items.MILK_BUCKET)) replaceContainer(p,stack,Items.BUCKET);
+            else {take(p,stack);if(!p.isCreative()&&remainder!=null)give(p,remainder.convertInto().create());}
+            changed(); sound();showRecipeHint(p);
         } else say(p,"full");
         return InteractionResult.SUCCESS;
     }
@@ -329,12 +335,19 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     }
     private void serve(Player p,ItemStack container) {
         if (!batch.ready() && !batch.burnt()) { say(p,"not_ready"); return; }
-        String dish = batch.burnt() ? "burnt_food" : "mixed_stir_fry";
+        String dish = batch.burnt() ? "burnt_food" : Set.of(CookingBatch.Method.BOIL,CookingBatch.Method.STEW,CookingBatch.Method.STEAM).contains(batch.method)?"mixed_stew":"mixed_stir_fry";
+        boolean named=false;
         int servings = Math.max(1,batch.ingredients.size()/2);
-        for (var r : ContentCatalog.DISHES) if (r.matches(batch)) { dish=r.id(); servings=r.servings(); break; }
+        for (var r : ContentCatalog.DISHES) if (r.matches(batch)) { dish=r.id(); servings=r.servings();named=true; break; }
         if (batch.burnt()) dish="burnt_food";
         if (batch.remainingServings >= 0 && !batch.burnt()) dish=batch.lockedDish;
         int quality = batch.quality();
+        if(!named&&!batch.burnt()&&batch.remainingServings<0) {
+            var closest=closestRecipe();
+            var fallback=new ItemStack(KitchenContent.item(dish)).getHoverName();
+            if(closest==null)p.sendSystemMessage(Component.translatable("message.smoke_kitchen.recipe_generic",fallback));
+            else closest.problem(batch).ifPresent(problem->p.sendSystemMessage(Component.translatable("message.smoke_kitchen.recipe_fallback",fallback,new ItemStack(KitchenContent.item(closest.id())).getHoverName(),recipeProblem(problem))));
+        }
         if (!batch.serve(dish,servings)) { say(p,"empty"); return; }
         var result = new ItemStack(KitchenContent.item(dish));
         result.set(DataComponents.USE_REMAINDER,new net.minecraft.world.item.component.UseRemainder(net.minecraft.world.item.ItemStackTemplate.fromNonEmptyStack(container.copyWithCount(1))));
@@ -346,6 +359,22 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             batch=new CookingBatch();batch.method=methods()[0];
         }
         changed(); sound();
+    }
+    private dev.smokekitchen.cooking.DishRecipe closestRecipe() {
+        var exact=ContentCatalog.DISHES.stream().filter(r->r.distance(batch)==0).min(Comparator.comparingInt(r->r.methods().contains(batch.method)?0:1));
+        if(exact.isPresent())return exact.get();
+        return ContentCatalog.DISHES.stream().filter(r->r.methods().contains(batch.method)&&r.ingredients().keySet().stream().anyMatch(id->batch.count(id)>0)).min(Comparator.comparingInt(r->r.distance(batch))).filter(r->r.distance(batch)<=3).orElse(null);
+    }
+    private Component recipeProblem(dev.smokekitchen.cooking.DishRecipe.Problem problem) {
+        Component ingredient=Component.translatable("ingredient.smoke_kitchen."+problem.ingredient());
+        Component related=problem.key().equals("cut")?Component.translatable("cut.smoke_kitchen."+problem.related()):Component.translatable("ingredient.smoke_kitchen."+problem.related());
+        if(problem.key().equals("preheat")||problem.key().equals("missing"))return Component.translatable("recipe_problem.smoke_kitchen."+problem.key(),ingredient,problem.related());
+        if(problem.key().equals("stir"))return Component.translatable("recipe_problem.smoke_kitchen.stir",problem.related());
+        return Component.translatable("recipe_problem.smoke_kitchen."+problem.key(),ingredient,related);
+    }
+    private void showRecipeHint(Player player) {
+        var closest=closestRecipe();if(closest==null)return;
+        closest.problem(batch).ifPresent(problem->player.sendOverlayMessage(Component.translatable("message.smoke_kitchen.recipe_hint",new ItemStack(KitchenContent.item(closest.id())).getHoverName(),recipeProblem(problem))));
     }
     private void movePot(Player p) {
         var result=new ItemStack(getBlockState().getBlock());

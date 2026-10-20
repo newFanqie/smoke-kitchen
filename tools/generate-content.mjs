@@ -97,6 +97,17 @@ dish('pork_dumplings','猪肉白菜饺子',{dumplings:2},'BOIL,STEAM',2,'调理�
 dish('steamed_buns','馒头',{dough_fermented:2},'STEAM',2,'面团×2与引子在发酵缸发酵后蒸熟。');
 dish('homestyle_bread','家常面包',{dough_fermented:2},'BAKE',2,'发酵面团×2、少量糖，在烤盘上烘烤。');
 dish('apple_pie','苹果派',{pie:1},'BAKE',3,'调理台用面团×2、苹果×2、糖装馅，生苹果派放烤盘烤熟。');
+const preparation={
+ fried_rice:{cuts:{scallion:['DICE','SHRED','MINCE']},steps:[{ingredient:'egg',temperature:110,hot_oil:true},{ingredient:'rice_cooked',after:'egg',cooked:.4},{ingredient:'scallion',after:'rice_cooked',cooked:0}]},
+ tomato_eggs:{steps:[{ingredient:'egg',temperature:110,hot_oil:true},{ingredient:'tomato',after:'egg',cooked:.4}]},
+ sour_spicy_potato:{cuts:{potato:['SHRED'],garlic:['MINCE']},steps:[{ingredient:'potato',after:'garlic',temperature:100,hot_oil:true}],finish_seasonings:{vinegar:.7}},
+ mapo_tofu:{cuts:{pork:['MINCE'],tofu:['DICE']},steps:[{ingredient:'pork',temperature:100,hot_oil:true},{ingredient:'tofu',after:'pork',cooked:.6}]}
+};
+for(const recipe of dishes){Object.assign(recipe,preparation[recipe.id]||{});recipe.stirs=recipe.methods.includes('STIR_FRY')?3:recipe.methods.includes('FRY')||recipe.methods.includes('MIX')?1:0;}
+dishes.find(r=>r.id==='fried_rice').guide='米饭×2、蛋×1、切碎的葱×1。先放油，把锅预热到110°C，再下蛋炒至至少四成熟；再加两份米饭，最后下葱。全部加完后翻炒至少3次，加盐，熟透后装盘。生米须先加水煮成米饭。';
+dishes.find(r=>r.id==='sour_spicy_potato').guide='土豆丝×2、辣椒×1、蒜末×1。砧板切法：土豆切丝、蒜剁碎。先下蒜，油锅至少100°C再下土豆丝和辣椒；翻炒至少3次，七成熟后淋醋，加盐，熟透装盘。';
+dishes.find(r=>r.id==='mapo_tofu').guide='豆腐块×2、猪肉末×1、辣椒×1。砧板将猪肉剁碎、豆腐切块。油锅至少100°C下肉末，炒至至少六成熟再下豆腐；加辣椒、酱油，全部加完后轻推至少3次，熟透装盘。';
+dishes.find(r=>r.id==='tomato_eggs').guide='番茄×2、蛋×2。放油，锅温至少110°C再下两份蛋；蛋至少四成熟再下番茄，油盐适量，全部加完后翻炒至少3次，熟透装盘。';
 item('mixed_stir_fry','家常杂炒','bowl',{nutrition:5,meal:true});item('mixed_stew','家常炖汤','bowl',{nutrition:5,meal:true});item('burnt_food','焦黑食物','charcoal',{nutrition:1,meal:true});
 
 const q=id=>id.includes(':')?id:`${ns}:${id}`;
@@ -264,6 +275,13 @@ messages.mounted='锅具已嵌入灶面；侧面调火，顶部投料，潜行�
 messages.spent='此物品已用完、损坏或变质，请更换或修复。';messages.gas_remove='已有气罐；潜行空手点击侧面取出。';
 messages.gas_amount='实际储气：%s / %s 单位';messages.uses_left='剩余用量 / 耐久：%s / %s';
 messages.gas_status='储气 %s 单位｜火力 %s。开采机贴含气岩层，管道接储气罐与气灶；空手调火。';
+messages.recipe_fallback='本锅盛为%s；未成为%s：%s';messages.recipe_hint='%s：%s';messages.quality='菜肴品质：%s / 3';messages.recipe_generic='这组熟食没有对应固定菜谱，已按%s装盘，可以正常食用。';
+const problems={method:'请使用食谱要求的锅具和做法。',cut:'%s需要%s处理，可取出后重新切配。',history:'%s来自旧版未记录的下料过程，无法确认投料顺序。',preheat:'放入%s前需先加油并将锅预热至%s°C。',order:'%s下得太早，应先加入全部%s。',stage:'加入%s时，前面的%s尚未达到食谱要求的熟度。',missing:'还缺%s ×%s。',extra:'原料比例不符或加入了额外食材。',seasoning:'还需要%s。',finish:'%s需要在原料齐全且七成熟后再加；可在上限内补一份。',stir:'全部投料后还需翻动，至少%s次。'};
+for(const [key,value]of Object.entries(problems))lang[`recipe_problem.${ns}.${key}`]=value;
+for(const[key,value]of Object.entries({WHOLE:'完整',SLICE:'切片',DICE:'切块',SHRED:'切丝',MINCE:'剁碎'}))lang[`cut.${ns}.${key}`]=value;
+for(const[key,value]of Object.entries({egg:'蛋',rice:'生米',rice_cooked:'米饭',scallion:'葱',tomato:'番茄',potato:'土豆',garlic:'蒜',pork:'猪肉',tofu:'豆腐',chili:'辣椒',oil:'食用油',salt:'盐',soy:'酱油',vinegar:'醋'}))lang[`ingredient.${ns}.${key}`]=value;
+for(const definition of items)if(definition.ingredient&&!definition.variant_of&&!lang[`ingredient.${ns}.${definition.ingredient}`])lang[`ingredient.${ns}.${definition.ingredient}`]=definition.name;
+for(const[key,value]of Object.entries({fish:'鱼',beef:'牛肉',chicken:'鸡肉',carrot:'胡萝卜',pumpkin:'南瓜',apple:'苹果',mushroom:'菌菇'}))lang[`ingredient.${ns}.${key}`]=value;
 lang['itemGroup.smoke_kitchen']='烟火厨房';en['itemGroup.smoke_kitchen']='Smoke Kitchen';
 for(const[k,v]of Object.entries(messages)){lang[`message.${ns}.${k}`]=v;en[`message.${ns}.${k}`]=v;}
 for(const[k,v]of Object.entries({empty:'空锅',raw:'未熟',cooked:'已熟',burnt:'焦黑'}))lang[`state.${ns}.${k}`]=v;

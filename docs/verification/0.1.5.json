@@ -1,0 +1,77 @@
+{
+  "version": "0.1.5",
+  "date": "2026-10-20",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "itemDefinitions": 304,
+  "jarContainsTestCode": false,
+  "sha256": "b36e3ad25dcbfce2a7bab44c0f4b17332684c718e884023a1cd9a2d622ca4e47",
+  "unitTests": {
+    "passed": 44,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 36,
+    "failed": 0,
+    "builtinPassed": 1
+  },
+  "clientChecks": {
+    "iris": "1.11.4+mc26.1.2",
+    "irisPassed": true,
+    "shader": "MakeUp-UltraFast-9.6",
+    "knownShaderWarning": "Nonfatal fixedTaaCorrection parsing warning in shader pack",
+    "vanillaPassed": true,
+    "missingModAssets": 0,
+    "workflow": [
+      "creative tab, workbench crafting, coal/gas chicken and pipe regression",
+      "measured jug water, raw rice boiled then switched to covered low heat",
+      "fried rice, actual eating and world reopen regression",
+      "steamed fish, late egg soup, actual eating and world reopen regression",
+      "flour and water processed into dough through mixing table",
+      "actual board rolling followed by shredding into two noodle portions",
+      "cut cabbage and cook real named noodle soup",
+      "two actually sealed crocks ferment four dough portions over 120 elapsed seconds",
+      "mount actual baking tray inside oven then add fermented dough and sugar",
+      "bake bread and turn oven off when cooked while buns continue steaming",
+      "serve bread and buns, eat bread and preserve remaining portions",
+      "close actual world and reopen with soup water, remaining bread/buns and exact gas",
+      "actually sneak with heat cloth to lift and remount tray with remaining bread"
+    ],
+    "sodium": "0.9.2+mc26.1.2",
+    "shaderActuallyActive": true,
+    "finalNativeTextureReferences": 36,
+    "finalAssetVanillaPassed": true,
+    "finalAssetIrisPassed": true
+  },
+  "saveChecks": {
+    "actualWorldReopenPassed": true,
+    "exactGasPreserved": true,
+    "reducedSoupWaterPreserved": true,
+    "remainingDishes": [
+      {
+        "servings": 1,
+        "dish": "noodle_soup"
+      },
+      {
+        "servings": 1,
+        "dish": "homestyle_bread"
+      },
+      {
+        "servings": 1,
+        "dish": "steamed_buns"
+      }
+    ],
+    "trayAndOvenHistoryPreserved": true,
+    "actualTrayLiftAndRemountPassed": true,
+    "steamReservoirRetained": true
+  },
+  "releaseDownloadVerified": false,
+  "testScopeNotes": [
+    "Vanilla regression workflows passed in the first full run; the first staple attempt stopped because buns were only 82% cooked at the bread finish time.",
+    "A second vanilla staple run passed after normal separate oven shutdown and longer steaming; it also verified corrected noodle geometry and cooked naming.",
+    "The full Iris gameplay run passed. Afterwards, material-only fixes replace a missing native sandstone texture identifier and correct furnace firebox UVs. Final native and Iris asset runs validate actual rolling/cutting and an actually burning oven with the same simulation code.",
+    "Asset close-ups disable optional world text temporarily; complete cooking workflows retain the default configuration.",
+    "Ingredients are fixtures; complete uncheated survival acquisition remains in the finite project backlog."
+  ]
+}

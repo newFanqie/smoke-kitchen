@@ -97,6 +97,7 @@ export function stationGeometry(s,models) {
  const b=cube,base=models[s.model];
  const front=()=>{const pane=b([3,3,-.02],[13,10,0],'#firebox');pane.faces={north:{texture:'#firebox',uv:[3,7,13,14]}};return pane;};
  const burner=(x,z,size=8)=>[b([x,14,z],[x+size,15,z+size],'#dark'),b([x,15,z+size/2-1],[x+size,16,z+size/2+1],'#metal'),b([x+size/2-1,15,z],[x+size/2+1,16,z+size],'#metal')];
+ if(s.id==='oven')return [b([0,0,0],[16,4,16],'#stone'),b([0,4,0],[2,14,16],'#stone'),b([14,4,0],[16,14,16],'#stone'),b([2,4,14],[14,14,16],'#dark'),b([0,14,0],[16,16,16],'#stone'),b([2,4,1],[14,5,14],'#metal'),b([2,13,1],[14,14,14],'#dark'),{...b([3,1,-.02],[13,3,0],'#firebox'),faces:{north:{texture:'#firebox',uv:[3,7,13,14]}}}];
  if(s.id==='clay_stove')return [b([0,0,0],[16,12,16],'#clay'),front(),b([0,12,0],[16,13,16],'#stone'),b([4,13,4],[12,13.5,12],'#dark')];
  if(s.id==='brick_stove')return [b([0,0,0],[16,12,16]),front(),b([0,12,0],[16,13,16],'#stone'),b([3,13,3],[13,13.5,13],'#dark'),b([3,13.5,7],[13,14,9],'#metal'),b([7,13.5,3],[9,14,13],'#metal')];
  if(s.id==='double_stove')return [b([0,0,0],[16,12,16],'#stone'),front(),b([0,12,0],[16,13,16],'#metal'),b([3,13,3],[13,13.5,13],'#dark'),b([3,13.5,7],[13,14,9],'#metal'),b([7,13.5,3],[9,14,13],'#metal'),b([2,10,-.5],[4,12,0],'#dark')];

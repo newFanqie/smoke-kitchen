@@ -2,7 +2,8 @@
   "multipart": [
     {
       "when": {
-        "facing": "north"
+        "facing": "north",
+        "heat": "0"
       },
       "apply": {
         "model": "smoke_kitchen:block/oven",
@@ -11,7 +12,18 @@
     },
     {
       "when": {
-        "facing": "east"
+        "facing": "north",
+        "heat": "1|2|3"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/oven_lit",
+        "y": 0
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "heat": "0"
       },
       "apply": {
         "model": "smoke_kitchen:block/oven",
@@ -20,7 +32,18 @@
     },
     {
       "when": {
-        "facing": "south"
+        "facing": "east",
+        "heat": "1|2|3"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/oven_lit",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "heat": "0"
       },
       "apply": {
         "model": "smoke_kitchen:block/oven",
@@ -29,10 +52,31 @@
     },
     {
       "when": {
-        "facing": "west"
+        "facing": "south",
+        "heat": "1|2|3"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/oven_lit",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "heat": "0"
       },
       "apply": {
         "model": "smoke_kitchen:block/oven",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "heat": "1|2|3"
+      },
+      "apply": {
+        "model": "smoke_kitchen:block/oven_lit",
         "y": 270
       }
     },

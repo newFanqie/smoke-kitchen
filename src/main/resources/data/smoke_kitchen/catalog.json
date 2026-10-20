@@ -2283,7 +2283,14 @@
         "BOIL"
       ],
       "servings": 2,
-      "guide": "米×1，加水；煮沸后小火加盖。",
+      "guide": "米×1。用水壶加1–3份水后下米，煮沸后转小火，加盖至少焖10秒并煮到熟透；盛出2碗。桶装满6份水更适合煮粥，米饭不要加太多水。",
+      "minimum_water": 0.1,
+      "staple": {
+        "water_min": 1,
+        "water_max": 3,
+        "cooked": 1,
+        "low_heat_seconds": 10
+      },
       "stirs": 0
     },
     {
@@ -2296,8 +2303,13 @@
         "STEW"
       ],
       "servings": 3,
-      "guide": "米×1、较多水，小火搅拌。",
-      "stirs": 0
+      "guide": "米×1。先加至少4份水再下米（可用一水桶6份），汤锅空手点顶部切到炖煮；煮至软化140%，全部投料后用勺搅拌至少2次，保留至少1份水，盛3碗。",
+      "minimum_water": 1,
+      "staple": {
+        "water_min": 4,
+        "cooked": 1.4
+      },
+      "stirs": 2
     },
     {
       "id": "fried_rice",
@@ -2843,8 +2855,21 @@
         "BOIL"
       ],
       "servings": 2,
-      "guide": "面团×2擀切，青菜×1；加水煮。",
+      "guide": "面团×2。在砧板用擀面杖擀开，再潜行持刀切换至切丝，切4次得到生面条。两份面条、切丝或切块白菜×1，加水、盐煮熟装碗；整块面团不能成为手擀面。",
       "salt": true,
+      "cuts": {
+        "dough": [
+          "SHRED"
+        ],
+        "cabbage": [
+          "SHRED",
+          "DICE"
+        ]
+      },
+      "minimum_water": 0.1,
+      "staple": {
+        "rolled": true
+      },
       "stirs": 0
     },
     {
@@ -2858,8 +2883,9 @@
         "STEAM"
       ],
       "servings": 2,
-      "guide": "调理台用面团×2、肉末×1、白菜×1包成生饺子×2；盐水煮或蒸。",
+      "guide": "面团×2先在砧板擀开（不用切），猪肉×1剁碎，白菜×1切丝或剁碎。投入调理台，持擀面杖右键包制2次得到生饺子×2；下锅加水盐煮熟，或蒸笼加盖蒸熟。",
       "salt": true,
+      "minimum_water": 0.1,
       "stirs": 0
     },
     {
@@ -2872,7 +2898,9 @@
         "STEAM"
       ],
       "servings": 2,
-      "guide": "面团×2与引子在发酵缸发酵后蒸熟。",
+      "guide": "面团×2、引子×1放入发酵缸，空手盖好，等待120秒后潜行空手取出两份发酵面团（引子返还）。蒸笼有水、盖锅至少15秒并蒸至熟透，盛2份。",
+      "minimum_water": 0.1,
+      "covered_seconds": 15,
       "stirs": 0
     },
     {
@@ -2885,7 +2913,11 @@
         "BAKE"
       ],
       "servings": 2,
-      "guide": "发酵面团×2、少量糖，在烤盘上烘烤。",
+      "guide": "面团×2和引子在发酵缸盖好发酵120秒；取两份发酵面团，烤盘嵌入烤炉后放入、加糖1份、加煤。至少140°C烤15秒且全部熟透，盛2份；灶面烤盘不能代替烤炉。",
+      "staple": {
+        "sugar": 1,
+        "oven_seconds": 15
+      },
       "stirs": 0
     },
     {
@@ -2898,7 +2930,10 @@
         "BAKE"
       ],
       "servings": 3,
-      "guide": "调理台用面团×2、苹果×2、糖装馅，生苹果派放烤盘烤熟。",
+      "guide": "面团×2在砧板擀开，苹果×2切片、糖×1。投入调理台，持擀面杖右键包馅2次，潜行空手取出生苹果派。烤盘嵌入烤炉，放生派、加煤，至少140°C烤15秒且派熟透，盛3份。",
+      "staple": {
+        "oven_seconds": 15
+      },
       "stirs": 0
     }
   ],
@@ -3052,7 +3087,20 @@
         "smoke_kitchen:raw_dumplings": 2
       },
       "seconds": 10,
-      "water": 0
+      "water": 0,
+      "tool": "rolling_pin",
+      "rolled": [
+        "smoke_kitchen:dough"
+      ],
+      "cuts": {
+        "minecraft:porkchop": [
+          "MINCE"
+        ],
+        "smoke_kitchen:cabbage": [
+          "SHRED",
+          "MINCE"
+        ]
+      }
     },
     {
       "station": "mix",
@@ -3077,7 +3125,16 @@
         "smoke_kitchen:raw_apple_pie": 1
       },
       "seconds": 10,
-      "water": 0
+      "water": 0,
+      "tool": "rolling_pin",
+      "rolled": [
+        "smoke_kitchen:dough"
+      ],
+      "cuts": {
+        "minecraft:apple": [
+          "SLICE"
+        ]
+      }
     },
     {
       "station": "ferment",

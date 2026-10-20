@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dough": "minecraft:block/sandstone_top",
+    "particle": "minecraft:block/sandstone_top"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        7
+      ],
+      "to": [
+        14,
+        14,
+        8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#dough"
+        },
+        "down": {
+          "texture": "#dough"
+        },
+        "north": {
+          "texture": "#dough"
+        },
+        "south": {
+          "texture": "#dough"
+        },
+        "east": {
+          "texture": "#dough"
+        },
+        "west": {
+          "texture": "#dough"
+        }
+      }
+    }
+  ]
+}

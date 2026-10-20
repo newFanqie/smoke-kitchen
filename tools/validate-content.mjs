@@ -11,6 +11,11 @@ const known=new Set(allIds),errors=[];
 if(known.size!==allIds.length)errors.push('Duplicate item registration.');
 const checkItem=(id,source)=>{if(typeof id==='string' && id.startsWith(ns+':')&&!known.has(id.slice(ns.length+1)))errors.push(`${source}: unknown item ${id}`);};
 for(const r of catalog.processes){Object.keys(r.inputs).forEach(id=>checkItem(id,'processing input'));Object.keys(r.outputs).forEach(id=>checkItem(id,'processing output'));}
+for(const r of catalog.processes){
+ if(r.tool)checkItem(ns+':'+r.tool,'processing tool');
+ for(const[id,cuts]of Object.entries(r.cuts||{}))if(!r.inputs[id]||!cuts.length||cuts.some(c=>!['WHOLE','SLICE','DICE','SHRED','MINCE'].includes(c)))errors.push(`Invalid processing cuts: ${id}`);
+ for(const id of r.rolled||[])if(!r.inputs[id])errors.push(`Rolled input absent from process: ${id}`);
+}
 for(const r of catalog.dishes){if(!known.has(r.id))errors.push(`Dish ${r.id} has no item`);if(r.servings<1||r.servings>24)errors.push(`Invalid yield ${r.id}`);}
 for(const r of catalog.dishes){
  for(const [id,cuts]of Object.entries(r.cuts||{}))if(!r.ingredients[id]||!cuts.length||cuts.some(c=>!['WHOLE','SLICE','DICE','SHRED','MINCE'].includes(c)))errors.push(`Invalid preparation cut in ${r.id}: ${id}`);
@@ -25,6 +30,8 @@ for(const r of catalog.dishes){
  if((r.stirs||0)<0||(r.stirs||0)>10)errors.push(`Invalid stirring count in ${r.id}`);
  if((r.minimum_water||0)<0||(r.minimum_water||0)>6||(r.covered_seconds||0)<0||(r.covered_seconds||0)>300)errors.push(`Invalid wet cooking requirement in ${r.id}`);
  if((r.steps||[]).some(s=>s.boiling_water&&(!r.minimum_water||s.temperature<90)))errors.push(`Boiling step without water or valid temperature in ${r.id}`);
+ const s=r.staple||{};
+ if((s.water_min||0)<0||(s.water_max||12)>12||(s.water_min||0)>(s.water_max||12)||(s.cooked||0)<0||(s.cooked||0)>3||(s.low_heat_seconds||0)<0||(s.low_heat_seconds||0)>300||(s.oven_seconds||0)<0||(s.oven_seconds||0)>300||(s.sugar||0)<0||(s.sugar||0)>16)errors.push(`Invalid staple cooking rule in ${r.id}`);
 }
 function* files(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())yield*files(p);else if(e.name.endsWith('.json'))yield p;}}
 const shapeless=new Map();

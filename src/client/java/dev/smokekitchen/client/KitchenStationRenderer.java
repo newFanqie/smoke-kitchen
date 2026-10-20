@@ -27,6 +27,8 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         float stirAngle;
         ItemStackRenderState vessel,lid,gas,water;
         float waterHeight;
+        float vesselY;
+        boolean oven;
     }
     private final Font font;
     private final ItemModelResolver resolver;
@@ -34,11 +36,13 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
     @Override public State createRenderState() { return new State(); }
     @Override public void extractRenderState(KitchenBlockEntity entity,State state,float partialTick,Vec3 camera,ModelFeatureRenderer.CrumblingOverlay overlay) {
         BlockEntityRenderer.super.extractRenderState(entity,state,partialTick,camera,overlay);
+        state.oven=entity.isOven();state.vesselY=state.oven?.6875f:1.1875f;
+        int visible=entity.batch.remainingServings>=0&&entity.batch.totalServings>0?(int)Math.ceil((double)entity.batch.ingredients.size()*entity.batch.remainingServings/entity.batch.totalServings):26;
         var names=new ArrayList<Component>();
-        for(int i=0;i<26;i++)if(!entity.items.get(i).isEmpty() && names.size()<4)names.add(entity.displayedFood(i).getHoverName());
+        for(int i=0;i<visible;i++)if(!entity.items.get(i).isEmpty() && names.size()<4)names.add(entity.displayedFood(i).getHoverName());
         state.names=List.copyOf(names);
         var rendered=new ArrayList<ItemStackRenderState>();
-        for(int i=0;i<26;i++) if(!entity.items.get(i).isEmpty() && rendered.size()<6) {
+        for(int i=0;i<visible;i++) if(!entity.items.get(i).isEmpty() && rendered.size()<6) {
             var itemState=new ItemStackRenderState();
             resolver.updateForTopItem(itemState,entity.displayedFood(i),ItemDisplayContext.FIXED,entity.getLevel(),null,rendered.size());
             rendered.add(itemState);
@@ -47,6 +51,7 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         int sinceStir=entity.batch.seconds-entity.batch.lastStir;
         state.stirAngle=sinceStir<2 && entity.batch.stirs>0 ? (float)Math.sin((sinceStir+partialTick/20)*Math.PI)*25:0;
         state.height=entity.isBurner()?(entity.mountedCookware.isEmpty()?.89f:switch(entity.mountedCookware){case "frying_pan","baking_tray"->.965f;case "wok"->.99f;default->1.07f;}):switch(entity.kind()) { case "board" -> .13f; case "cook","plate" -> .23f; default -> 1.015f; };
+        if(state.oven)state.height=.47f;
         state.vessel=null;state.lid=null;state.gas=null;state.water=null;
         if(entity.batch.water>0 && (entity.isBurner()&&!entity.mountedCookware.isEmpty() || entity.kind().equals("cook"))) {
             var stack=new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.PAPER);
@@ -61,7 +66,7 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
     }
     private ItemStackRenderState resolve(net.minecraft.world.item.ItemStack stack,KitchenBlockEntity entity){var result=new ItemStackRenderState();resolver.updateForTopItem(result,stack,ItemDisplayContext.FIXED,entity.getLevel(),null,0);return result;}
     @Override public void submit(State state,PoseStack poses,SubmitNodeCollector queue,CameraRenderState camera) {
-        if(state.vessel!=null){poses.pushPose();poses.translate(.5,1.1875,.5);poses.scale(1.25f,1.25f,1.25f);state.vessel.submit(poses,queue,state.lightCoords,OverlayTexture.NO_OVERLAY,0);if(state.lid!=null)state.lid.submit(poses,queue,state.lightCoords,OverlayTexture.NO_OVERLAY,0);poses.popPose();}
+        if(state.vessel!=null){poses.pushPose();poses.translate(.5,state.vesselY,.5);poses.scale(1.25f,1.25f,1.25f);state.vessel.submit(poses,queue,state.lightCoords,OverlayTexture.NO_OVERLAY,0);if(state.lid!=null)state.lid.submit(poses,queue,state.lightCoords,OverlayTexture.NO_OVERLAY,0);poses.popPose();}
         if(state.gas!=null){poses.pushPose();poses.translate(.96,.4,.5);poses.scale(.7f,.7f,.7f);state.gas.submit(poses,queue,state.lightCoords,OverlayTexture.NO_OVERLAY,0);poses.popPose();}
         if(state.water!=null){poses.pushPose();poses.translate(.5,state.waterHeight+.3125f,.5);poses.scale(1.25f,1.25f,1.25f);state.water.submit(poses,queue,state.lightCoords,OverlayTexture.NO_OVERLAY,0);poses.popPose();}
         if(state.names.isEmpty())return;
@@ -74,7 +79,7 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
             state.items.get(i).submit(poses,queue,state.lightCoords,OverlayTexture.NO_OVERLAY,0);
             poses.popPose();
         }
-        if(!dev.smokekitchen.KitchenConfig.INSTANCE.showWorldLabels)return;
+        if(!dev.smokekitchen.KitchenConfig.INSTANCE.showWorldLabels||state.oven)return;
         poses.pushPose();poses.translate(.5,state.height,.5);poses.mulPose(Axis.XP.rotationDegrees(90));poses.scale(.009f,.009f,.009f);
         for(int i=0;i<state.names.size();i++) {
             Component name=state.names.get(i);

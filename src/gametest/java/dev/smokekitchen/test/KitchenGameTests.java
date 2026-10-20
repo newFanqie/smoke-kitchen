@@ -13,6 +13,47 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    private static ItemStack prepared(ItemStack stack,String cut,boolean rolled){var tag=new net.minecraft.nbt.CompoundTag();tag.putString("kitchen_cut",cut);tag.putBoolean("kitchen_rolled",rolled);stack.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.of(tag));return stack;}
+    @GameTest public void dumplingProcessRejectsUncutMeatAndUnrolledDough(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("mixing_table"));var table=test.getBlockEntity(p,KitchenBlockEntity.class);var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        table.items.set(0,new ItemStack(KitchenContent.item("dough"),2));table.items.set(1,new ItemStack(Items.PORKCHOP));table.items.set(2,new ItemStack(KitchenContent.item("cabbage")));table.work=10;
+        use(test,p,player,new ItemStack(KitchenContent.item("rolling_pin")),net.minecraft.core.Direction.UP);
+        test.assertTrue(table.items.stream().noneMatch(s->s.is(KitchenContent.item("raw_dumplings"))),"Whole meat and unrolled dough cannot make dumplings");
+        table.items.set(0,prepared(new ItemStack(KitchenContent.item("dough"),2),"WHOLE",true));table.items.set(1,prepared(new ItemStack(Items.PORKCHOP),"MINCE",false));table.items.set(2,prepared(new ItemStack(KitchenContent.item("cabbage")),"SHRED",false));
+        use(test,p,player,new ItemStack(KitchenContent.item("rolling_pin")),net.minecraft.core.Direction.UP);
+        test.assertTrue(table.items.stream().filter(s->s.is(KitchenContent.item("raw_dumplings"))).mapToInt(ItemStack::getCount).sum()==2,"Actual prepared inputs must make two raw dumplings");test.succeed();
+    }
+    @GameTest public void pieRequiresPreparedCrustSlicedAppleAndRollingPin(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("mixing_table"));var table=test.getBlockEntity(p,KitchenBlockEntity.class);var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        table.items.set(0,prepared(new ItemStack(KitchenContent.item("dough"),2),"WHOLE",true));table.items.set(1,new ItemStack(Items.APPLE,2));table.items.set(2,new ItemStack(Items.SUGAR));table.work=10;
+        use(test,p,player,new ItemStack(KitchenContent.item("rolling_pin")),net.minecraft.core.Direction.UP);test.assertTrue(table.items.stream().noneMatch(s->s.is(KitchenContent.item("raw_apple_pie"))),"Whole apples cannot pass filling preparation");
+        table.items.set(1,prepared(new ItemStack(Items.APPLE,2),"SLICE",false));use(test,p,player,new ItemStack(KitchenContent.item("rolling_pin")),net.minecraft.core.Direction.UP);
+        test.assertTrue(table.items.stream().anyMatch(s->s.is(KitchenContent.item("raw_apple_pie"))),"Prepared crust and apple slices must make the filled pie");test.succeed();
+    }
+    @GameTest public void processingBowlRiceReturnsExactlyTheConsumedBowl(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("fermentation_crock"));var table=test.getBlockEntity(p,KitchenBlockEntity.class);table.items.set(0,new ItemStack(KitchenContent.item("cooked_rice")));table.items.set(1,new ItemStack(KitchenContent.item("shiitake")));table.items.set(2,new ItemStack(Items.SUGAR));table.work=1200;
+        use(test,p,test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL),ItemStack.EMPTY,net.minecraft.core.Direction.UP);
+        test.assertTrue(table.items.stream().filter(s->s.is(Items.BOWL)).mapToInt(ItemStack::getCount).sum()==1,"Consuming bowl rice in processing must return one bowl");test.succeed();
+    }
+    @GameTest public void looseCookedRiceDoesNotGenerateAnotherBowl(GameTestHelper test) {
+        var rice=ResourceStates.cookedStack(new ItemStack(KitchenContent.item("rice")),true,false,test.getLevel());
+        test.assertTrue(rice.is(KitchenContent.item("cooked_rice"))&&!rice.has(net.minecraft.core.component.DataComponents.USE_REMAINDER),"Cooked raw rice must become a cooked item without generating a bowl");
+        var noodles=ResourceStates.cookedStack(prepared(new ItemStack(KitchenContent.item("dough")),"SHRED",true),true,false);
+        test.assertTrue(net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.cooked_noodles").equals(noodles.get(net.minecraft.core.component.DataComponents.CUSTOM_NAME)),"Cooked rolled noodles must no longer be labelled raw");test.succeed();
+    }
+    @GameTest public void bareStoveAndOvenRejectWaterWithoutConsumingTheBucket(GameTestHelper test) {
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);for(String id:new String[]{"gas_stove","oven"}){var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get(id));var water=new ItemStack(Items.WATER_BUCKET);use(test,p,player,water,net.minecraft.core.Direction.UP);test.assertTrue(test.getBlockEntity(p,KitchenBlockEntity.class).batch.water==0&&water.getCount()==1,"Only a suitable vessel may hold cooking water");}test.succeed();
+    }
+    @GameTest public void ovenActuallyMountsTrayAndPreservesItWhenLifting(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("oven"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);use(test,p,player,new ItemStack(KitchenContent.item("baking_tray")),net.minecraft.core.Direction.UP);var oven=test.getBlockEntity(p,KitchenBlockEntity.class);
+        test.assertTrue(oven.mountedCookware.equals("baking_tray")&&oven.batch.method==CookingBatch.Method.BAKE,"A tray must really mount inside the oven");oven.batch.ovenSeconds=16;oven.fuelSeconds=80;player.setShiftKeyDown(true);use(test,p,player,new ItemStack(KitchenContent.item("heat_cloth")),net.minecraft.core.Direction.UP);
+        test.assertTrue(oven.mountedCookware.isEmpty()&&oven.fuelSeconds==80&&player.getInventory().countItem(KitchenContent.item("baking_tray"))==1,"Lifting the tray must not move the oven or its fuel");test.succeed();
+    }
+    @GameTest public void lastSteamedServingRetainsReservoirWater(GameTestHelper test) {
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("steamer"));var pot=test.getBlockEntity(p,KitchenBlockEntity.class);pot.batch.water=5;pot.batch.add("dumplings",CookingBatch.Cut.WHOLE,1,true,true);pot.batch.add("dumplings",CookingBatch.Cut.WHOLE,1,true,true);pot.batch.salt=1;
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);use(test,p,player,new ItemStack(Items.BOWL),net.minecraft.core.Direction.UP);use(test,p,player,new ItemStack(Items.BOWL),net.minecraft.core.Direction.UP);
+        test.assertTrue(pot.batch.ingredients.isEmpty()&&pot.batch.water==5,"Serving steamed food must not discard the steamer water reservoir");test.succeed();
+    }
     @GameTest(maxTicks=40) public void sneakingToolsReachTheirVanillaItemUseEntry(GameTestHelper test) {
         var boardPos=new BlockPos(1,1,1);var stovePos=new BlockPos(2,1,1);test.setBlock(boardPos,KitchenContent.BLOCKS.get("cutting_board"));test.setBlock(stovePos,KitchenContent.BLOCKS.get("gas_stove"));
         var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);use(test,stovePos,player,new ItemStack(KitchenContent.item("soup_pot")),net.minecraft.core.Direction.UP);

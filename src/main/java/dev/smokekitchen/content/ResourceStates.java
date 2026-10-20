@@ -53,6 +53,15 @@ public final class ResourceStates {
     public static ItemStack cookedStack(ItemStack input,boolean cooked,boolean burnt) {
         if(burnt)return new ItemStack(KitchenContent.item("burnt_food"),input.getCount());
         if(!cooked)return input.copy();
+        if(baseId(input).equals("rice")) {
+            var result=input.transmuteCopy(KitchenContent.item("cooked_rice"));result.remove(DataComponents.USE_REMAINDER);return result;
+        }
+        if(baseId(input).equals("dough")) {
+            var data=input.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
+            if(data.getBooleanOr("kitchen_rolled",false)&&data.getStringOr("kitchen_cut","").equals("SHRED")) {
+                var result=input.copy();result.set(DataComponents.CUSTOM_NAME,net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.cooked_noodles"));return result;
+            }
+        }
         String target=COOKED.get(KitchenContent.fullName(input.getItem()));
         if(target==null)return input.copy();
         return input.transmuteCopy(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(target)));

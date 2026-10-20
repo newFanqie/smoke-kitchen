@@ -21,6 +21,8 @@ public final class CookingBatch {
         public int oilOnAdd;
         public double waterOnAdd;
         public int coveredCookingSeconds;
+        public int lowHeatSeconds;
+        public boolean rolled;
         public Map<String,Integer> priorCounts = new HashMap<>();
         public Map<String,Double> priorCooked = new HashMap<>();
         public Portion(String id, Cut cut, double resistance, boolean needsWater, boolean ready) {
@@ -49,6 +51,8 @@ public final class CookingBatch {
     public Map<String,Double> seasoningProgress = new HashMap<>();
     public Map<String,Integer> seasoningCounts = new HashMap<>();
     public int remainingServings = -1;
+    public int totalServings;
+    public int ovenSeconds;
     public String lockedDish = "";
     public int capacity = 6;
 
@@ -107,6 +111,7 @@ public final class CookingBatch {
                 continue;
             }
             if(wetMethod&&water>0&&lid&&displayedTemperature()>=90)p.coveredCookingSeconds++;
+            if(wetMethod&&water>0&&lid&&heat==1&&displayedTemperature()>=90)p.lowHeatSeconds++;
             if(method==Method.STEAM&&(!lid||displayedTemperature()<90))continue;
             if (method == Method.FERMENT) continue;
             double effective = Math.max(0, temperature - 40);
@@ -144,10 +149,12 @@ public final class CookingBatch {
     public boolean serve(String dish, int servings) {
         if (!ready() && !burnt()) return false;
         if (remainingServings < 0) {
-            remainingServings = Math.max(1, servings);
+            remainingServings = Math.clamp(servings,1,24);
+            totalServings = remainingServings;
             lockedDish = dish;
         }
         if (remainingServings == 0) return false;
+        if(method==Method.BOIL||method==Method.STEW)water*=((double)remainingServings-1)/remainingServings;
         remainingServings--;
         return true;
     }
@@ -166,6 +173,7 @@ public final class CookingBatch {
             if(p.priorCooked==null)p.priorCooked=new HashMap<>();
             p.waterOnAdd=Math.clamp(Double.isFinite(p.waterOnAdd)?p.waterOnAdd:0,0,12);
             p.coveredCookingSeconds=Math.clamp(p.coveredCookingSeconds,0,100000);
+            p.lowHeatSeconds=Math.clamp(p.lowHeatSeconds,0,100000);
             p.resistance = Math.clamp(Double.isFinite(p.resistance) ? p.resistance : 1, .25, 5);
             p.cooked = Math.clamp(Double.isFinite(p.cooked) ? p.cooked : 0, 0, 100);
             p.charred = Math.clamp(Double.isFinite(p.charred) ? p.charred : 0, 0, 100);
@@ -180,5 +188,7 @@ public final class CookingBatch {
         spice = Math.clamp(spice, 0, 32);
         capacity = Math.clamp(capacity, 1, 12);
         remainingServings = Math.clamp(remainingServings, -1, 24);
+        totalServings=Math.clamp(Math.max(totalServings,remainingServings),0,24);
+        ovenSeconds=Math.clamp(ovenSeconds,0,100000);
     }
 }

@@ -1,0 +1,137 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dough": "minecraft:block/sandstone_top",
+    "particle": "minecraft:block/sandstone_top"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        7
+      ],
+      "to": [
+        3.5,
+        14,
+        8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#dough"
+        },
+        "down": {
+          "texture": "#dough"
+        },
+        "north": {
+          "texture": "#dough"
+        },
+        "south": {
+          "texture": "#dough"
+        },
+        "east": {
+          "texture": "#dough"
+        },
+        "west": {
+          "texture": "#dough"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2,
+        7
+      ],
+      "to": [
+        6.5,
+        14,
+        8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#dough"
+        },
+        "down": {
+          "texture": "#dough"
+        },
+        "north": {
+          "texture": "#dough"
+        },
+        "south": {
+          "texture": "#dough"
+        },
+        "east": {
+          "texture": "#dough"
+        },
+        "west": {
+          "texture": "#dough"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        2,
+        7
+      ],
+      "to": [
+        9.5,
+        14,
+        8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#dough"
+        },
+        "down": {
+          "texture": "#dough"
+        },
+        "north": {
+          "texture": "#dough"
+        },
+        "south": {
+          "texture": "#dough"
+        },
+        "east": {
+          "texture": "#dough"
+        },
+        "west": {
+          "texture": "#dough"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        2,
+        7
+      ],
+      "to": [
+        12.5,
+        14,
+        8
+      ],
+      "faces": {
+        "up": {
+          "texture": "#dough"
+        },
+        "down": {
+          "texture": "#dough"
+        },
+        "north": {
+          "texture": "#dough"
+        },
+        "south": {
+          "texture": "#dough"
+        },
+        "east": {
+          "texture": "#dough"
+        },
+        "west": {
+          "texture": "#dough"
+        }
+      }
+    }
+  ]
+}

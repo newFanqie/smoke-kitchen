@@ -3,6 +3,6 @@
   "id": "smoke_kitchen_clienttest",
   "version": "1.0.0",
   "environment": "client",
-  "entrypoints": { "fabric-client-gametest": ["dev.smokekitchen.test.KitchenVisualTest", "dev.smokekitchen.test.RecipeFlowTest", "dev.smokekitchen.test.WetRecipeFlowTest"] },
+  "entrypoints": { "fabric-client-gametest": ["dev.smokekitchen.test.KitchenVisualTest", "dev.smokekitchen.test.RecipeFlowTest", "dev.smokekitchen.test.WetRecipeFlowTest", "dev.smokekitchen.test.StapleFlowTest", "dev.smokekitchen.test.StapleAssetVisualTest"] },
   "depends": { "smoke_kitchen": "*", "fabric-client-gametest-api-v1": "*" }
 }

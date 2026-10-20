@@ -34,11 +34,16 @@ public final class KitchenWorld {
             ResourceKey<PlacedFeature> key=ResourceKey.create(Registries.PLACED_FEATURE,SmokeKitchen.id(name));
             BiomeModifications.addFeature(BiomeSelectors.foundInOverworld(),GenerationStep.Decoration.SURFACE_STRUCTURES,key);
         }
+        KitchenWildCrops.HABITATS.forEach((crop,habitat)->{
+            String name="wild_"+crop;
+            Registry.register(BuiltInRegistries.FEATURE,SmokeKitchen.id(name),new KitchenWildCrops(crop));
+            BiomeModifications.addFeature(BiomeSelectors.includeByKey(habitat.biomes()),GenerationStep.Decoration.VEGETAL_DECORATION,ResourceKey.create(Registries.PLACED_FEATURE,SmokeKitchen.id(name)));
+        });
         PlayerBlockBreakEvents.AFTER.register((world,player,pos,state,entity)->{
             if(player.isCreative())return;
             if((state.is(Blocks.SHORT_GRASS)||state.is(Blocks.FERN)||state.is(Blocks.TALL_GRASS)) && world.getRandom().nextInt(8)==0) {
-                var names=KitchenContent.CROPS.keySet().toArray(String[]::new);
-                Block.popResource(world,pos,new ItemStack(KitchenContent.item(names[world.getRandom().nextInt(names.length)]+"_seeds")));
+                var names=KitchenWildCrops.seedsFor(world.getBiome(pos));
+                if(!names.isEmpty())Block.popResource(world,pos,new ItemStack(KitchenContent.item(names.get(world.getRandom().nextInt(names.size()))+"_seeds")));
             }
         });
     }

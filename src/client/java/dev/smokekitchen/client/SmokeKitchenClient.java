@@ -9,6 +9,11 @@ public final class SmokeKitchenClient implements ClientModInitializer {
         net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.register((stack,context,flag,lines)->{
             var data=stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag();
             if(data.contains("kitchen_cut"))lines.add(net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.cut",net.minecraft.network.chat.Component.translatable("cut.smoke_kitchen."+data.getStringOr("kitchen_cut","WHOLE"))));
+            String id=KitchenContent.name(stack.getItem());
+            if(id.endsWith("_seeds")) {
+                String crop=id.substring(0,id.length()-6);var habitat=dev.smokekitchen.world.KitchenWildCrops.HABITATS.get(crop);
+                if(habitat!=null){lines.add(net.minecraft.network.chat.Component.literal("野生来源："+habitat.description()));lines.add(net.minecraft.network.chat.Component.literal(crop.equals("rice_paddy")?"种在耕地，根旁两格内留水；缺水停长":crop.equals("shiitake")?"种在灰化土、菌丝体或近水耕地；遮阴，亮度≤12":"种在耕地；成熟收获可留种扩种"));}
+            }
         });
         net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.AFTER_INIT.register((client,screen,width,height)->{
             if(firstCreativeOpen && screen instanceof net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen) {

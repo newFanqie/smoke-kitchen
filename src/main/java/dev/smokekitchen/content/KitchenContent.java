@@ -75,7 +75,7 @@ public final class KitchenContent {
     }
     private static void registerBlockItem(String name, Block block) {
         var key = ResourceKey.create(Registries.ITEM, SmokeKitchen.id(name));
-        ITEMS.put(name,Registry.register(BuiltInRegistries.ITEM,key,new BlockItem(block,new Item.Properties().setId(key).useBlockDescriptionPrefix())));
+        ITEMS.put(name,Registry.register(BuiltInRegistries.ITEM,key,new BlockItem(block,name.endsWith("_seeds")?new Item.Properties().setId(key):new Item.Properties().setId(key).useBlockDescriptionPrefix())));
     }
     public static Item item(String name) { return ITEMS.getOrDefault(name, Items.AIR); }
     public static String name(Item item) { return BuiltInRegistries.ITEM.getKey(item).getPath(); }

@@ -15,6 +15,34 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "smoke_kitchen:cucumber_seeds",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "smoke_kitchen:cucumber_crop",
+          "properties": {
+            "age": "7"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "smoke_kitchen:cucumber",
           "functions": [
             {

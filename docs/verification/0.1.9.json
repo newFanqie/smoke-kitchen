@@ -1,0 +1,120 @@
+{
+  "version": "0.1.9",
+  "date": "2026-10-21",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "itemDefinitions": 309,
+  "jarBytes": 690011,
+  "jarContainsTestCode": false,
+  "sha256": "1a69a3369f18b929dd5b325999ce3d022252a47e5bc82af8c1e5791f3b14a96d",
+  "unitTests": {
+    "passed": 74,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 61,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "vanillaScope": [
+      "EcologyFlowTest",
+      "KitchenVisualTest",
+      "StapleFlowTest"
+    ],
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "irisPassed": true,
+    "shaderActuallyActive": true,
+    "irisScope": [
+      "EcologyFlowTest",
+      "KitchenVisualTest",
+      "StapleFlowTest"
+    ],
+    "captureSupplementPassed": true,
+    "normalTicks": true,
+    "naturalPlantFixturePlacement": false,
+    "playerToolFixtureAndBoneMeal": true,
+    "teleportForLocatingSamples": true,
+    "worldSeed": 1,
+    "terrain": "minecraft:normal",
+    "worldSettings": "Fabric consistent test settings; survival interaction; fixed day/clear weather; mobs and structures disabled",
+    "completeUnassistedSurvivalMealVerified": false,
+    "vanillaSpecimens": {
+      "rice_paddy": [
+        296,
+        63,
+        91
+      ],
+      "tomato": [
+        436,
+        64,
+        298
+      ],
+      "shiitake": [
+        -390,
+        69,
+        989
+      ]
+    },
+    "irisSpecimens": {
+      "rice_paddy": [
+        296,
+        63,
+        91
+      ],
+      "tomato": [
+        436,
+        64,
+        298
+      ],
+      "shiitake": [
+        -390,
+        69,
+        989
+      ]
+    },
+    "dryRicePosition": [
+      428,
+      66,
+      291
+    ],
+    "notes": [
+      "Natural wild harvests use generated plants, not placed fixtures or injected products.",
+      "Cultivation uses supplied vanilla tools and bone meal, and therefore does not count as the full survival acceptance.",
+      "Only the three listed client workflows were rerun this version; all existing server/unit tests passed.",
+      "Screenshots wait for rendered chunks; native and Iris capture supplements recorded separately."
+    ],
+    "regressionLogs": [
+      ".tools/iris-test/verified-vanilla-ecology-0.1.9.log",
+      ".tools/iris-test/verified-iris-ecology-0.1.9.log"
+    ],
+    "finalSoilPatchScope": [
+      "Complete server/unit tests including native mangrove mud support",
+      "EcologyFlowTest repeated in vanilla and Iris after the soil allowlist change"
+    ],
+    "captureLogs": [
+      ".tools/ecology-final-vanilla.log",
+      ".tools/ecology-final-iris.log"
+    ]
+  },
+  "nativeAssetReferences": {
+    "textures": 47,
+    "modelParents": 31,
+    "missing": []
+  },
+  "downloadVerified": false,
+  "knownRemaining": [
+    "Unassisted natural survival first meal",
+    "Dedicated paddy soil and functional spice trellis",
+    "Soy pre-cooking and filtering; vinegar filtering",
+    "Other device functions, art and animal husbandry",
+    "Independent building blueprints, professions and restaurant play",
+    "Multiplayer, long-term storage and chunk-unloaded aging"
+  ],
+  "sourceTestingNote": "Full three-workflow native/Iris regression preceded the localized mud allowlist addition; the final soil change was rechecked with all server/unit tests and complete ecology flow in both renderers.",
+  "finalHeadlessLog": ".tools/ecology-final-headless.log"
+}

@@ -1,0 +1,22 @@
+{
+  "replace": false,
+  "values": [
+    "smoke_kitchen:rice_paddy_crop",
+    "smoke_kitchen:tomato_crop",
+    "smoke_kitchen:chili_crop",
+    "smoke_kitchen:soybean_crop",
+    "smoke_kitchen:rapeseed_crop",
+    "smoke_kitchen:scallion_crop",
+    "smoke_kitchen:ginger_crop",
+    "smoke_kitchen:garlic_crop",
+    "smoke_kitchen:cucumber_crop",
+    "smoke_kitchen:cabbage_crop",
+    "smoke_kitchen:onion_crop",
+    "smoke_kitchen:eggplant_crop",
+    "smoke_kitchen:sesame_crop",
+    "smoke_kitchen:sichuan_pepper_crop",
+    "smoke_kitchen:black_pepper_crop",
+    "smoke_kitchen:cumin_crop",
+    "smoke_kitchen:shiitake_crop"
+  ]
+}

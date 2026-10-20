@@ -33,7 +33,7 @@ public final class KitchenBuildingFeature extends Feature<NoneFeatureConfigurati
                 boolean door=(x==3&&z==0&&y<=2);
                 put(world,origin.offset(x,y,z),edge&&!door?wall:Blocks.AIR);
             }
-            put(world,origin.offset(x,5,z),Blocks.SPRUCE_SLAB);
+            put(world,origin.offset(x,5,z),variant.equals("farmstead")&&x>0&&x<6&&z>0&&z<4?Blocks.AIR:Blocks.SPRUCE_SLAB);
         }
         for(int x:new int[]{0,6})for(int z:new int[]{0,8})for(int y=1;y<=4;y++)put(world,origin.offset(x,y,z),Blocks.OAK_LOG);
         put(world,origin.offset(0,2,4),Blocks.GLASS_PANE);put(world,origin.offset(6,2,4),Blocks.GLASS_PANE);
@@ -55,8 +55,11 @@ public final class KitchenBuildingFeature extends Feature<NoneFeatureConfigurati
         if(variant.equals("farmstead")) {
             var names=KitchenContent.CROPS.keySet().toArray(String[]::new);
             for(int x=1;x<6;x++)for(int z=1;z<4;z++) {
-                BlockPos p=origin.offset(x,0,z);world.setBlock(p,Blocks.FARMLAND.defaultBlockState(),2);
-                world.setBlock(p.above(),KitchenContent.CROPS.get(names[(x+z)%names.length]).getStateForAge(7),2);
+                BlockPos p=origin.offset(x,0,z);
+                if(x==3){world.setBlock(p,Blocks.WATER.defaultBlockState(),2);continue;}
+                world.setBlock(p,Blocks.FARMLAND.defaultBlockState().setValue(FarmlandBlock.MOISTURE,7),2);
+                String crop=x<=2?"rice_paddy":names[((x-4)*3+z)%names.length];
+                world.setBlock(p.above(),KitchenContent.CROPS.get(crop).getStateForAge(7),2);
             }
         }
         if(variant.equals("abandoned_granary")||variant.equals("raider_camp")) {

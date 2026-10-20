@@ -126,9 +126,11 @@ export function stationGeometry(s,models) {
 }
 
 export function cropModel(crop,age,index) {
+ if(crop.id==='rice_paddy')return {parent:`minecraft:block/wheat_stage${age}`,textures:{particle:`minecraft:block/wheat_stage${age}`}};
  const b=cube,h=2+age*1.6;
  const colors={tomato:'red',chili:'red',soybean:'lime',rapeseed:'yellow',scallion:'green',ginger:'yellow',garlic:'white',cucumber:'green',cabbage:'lime',onion:'pink',eggplant:'purple',sesame:'white',sichuan_pepper:'red',black_pepper:'black',cumin:'brown',shiitake:'brown',rice_paddy:'yellow'};
  const textures={stem:material('green'),leaf:material(age<4?'lime':'green'),fruit:material(colors[crop.id]),particle:material('green')};
+ if(crop.id==='shiitake'){textures.stem='minecraft:block/mushroom_stem';textures.fruit='minecraft:block/brown_mushroom_block';textures.particle=textures.fruit;}
  let elements=[b([7,0,7],[9,h,9],'#stem'),b([3,h*.4,7],[13,h*.4+1,9],'#leaf'),b([7,h*.65,3],[9,h*.65+1,13],'#leaf')];
  if(['rice_paddy','sesame','rapeseed','cumin','black_pepper','sichuan_pepper'].includes(crop.id)) {
   elements=[];for(const [x,z]of [[4,4],[10,6],[6,11]]){elements.push(b([x,0,z],[x+1,h,z+1],'#stem'));if(age>3)elements.push(b([x-1,h-3,z],[x+2,h,z+2],'#fruit'));}

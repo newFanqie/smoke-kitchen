@@ -291,7 +291,10 @@ write(`assets/${ns}/models/block/lid.json`,{parent:'minecraft:block/block',textu
 for(const c of crops){
  const variants={};for(let age=0;age<8;age++){variants[`age=${age}`]={model:`${ns}:block/${c.id}_${age}`};write(`assets/${ns}/models/block/${c.id}_${age}.json`,cropModel(c,age,crops.indexOf(c)));}
  write(`assets/${ns}/blockstates/${c.id}_crop.json`,{variants});write(`assets/${ns}/models/item/${c.id}_seeds.json`,inventoryModel({id:c.id+'_seeds'},crops.indexOf(c)+115));write(`assets/${ns}/items/${c.id}_seeds.json`,{model:{type:'minecraft:model',model:`${ns}:item/${c.id}_seeds`}});
- write(`data/${ns}/loot_table/blocks/${c.id}_crop.json`,{type:'minecraft:block',pools:[{rolls:1,entries:[{type:'minecraft:item',name:`${ns}:${c.id}_seeds`}]},{rolls:1,entries:[{type:'minecraft:item',name:`${ns}:${c.id}`,functions:[{function:'minecraft:set_count',count:{type:'minecraft:uniform',min:2,max:3}}]}],conditions:[{condition:'minecraft:block_state_property',block:`${ns}:${c.id}_crop`,properties:{age:'7'}}]}]});
+ const mature={condition:'minecraft:block_state_property',block:`${ns}:${c.id}_crop`,properties:{age:'7'}};
+ write(`data/${ns}/loot_table/blocks/${c.id}_crop.json`,{type:'minecraft:block',pools:[{rolls:1,entries:[{type:'minecraft:item',name:`${ns}:${c.id}_seeds`}]},{rolls:1,entries:[{type:'minecraft:item',name:`${ns}:${c.id}_seeds`,functions:[{function:'minecraft:set_count',count:{type:'minecraft:uniform',min:1,max:2}}]}],conditions:[mature]},{rolls:1,entries:[{type:'minecraft:item',name:`${ns}:${c.id}`,functions:[{function:'minecraft:set_count',count:{type:'minecraft:uniform',min:2,max:3}}]}],conditions:[mature]}]});
+ write(`data/${ns}/worldgen/configured_feature/wild_${c.id}.json`,{type:`${ns}:wild_${c.id}`,config:{}});
+ write(`data/${ns}/worldgen/placed_feature/wild_${c.id}.json`,{feature:`${ns}:wild_${c.id}`,placement:[{type:'minecraft:rarity_filter',chance:c.id==='rice_paddy'?2:c.id==='shiitake'?8:20},{type:'minecraft:in_square'},{type:'minecraft:heightmap',heightmap:'WORLD_SURFACE_WG'},{type:'minecraft:biome'}]});
 }
 const craft=(id,ingredients,count=1)=>write(`data/${ns}/recipe/${id}.json`,{type:'minecraft:crafting_shapeless',category:'misc',ingredients:ingredients.map(q),result:{id:q(id),count}});
 const shaped=(id,pattern,key,count=1)=>write(`data/${ns}/recipe/${id}.json`,{type:'minecraft:crafting_shaped',category:'misc',pattern,key:Object.fromEntries(Object.entries(key).map(([k,v])=>[k,q(v)])),result:{id:q(id),count}});
@@ -389,6 +392,7 @@ write(`assets/${ns}/lang/zh_cn.json`,lang);write(`assets/${ns}/lang/en_us.json`,
 lang[`food.${ns}.stale`]='不新鲜的%s';lang[`food.${ns}.spoiled`]='变质的%s';
 write(`assets/${ns}/lang/zh_cn.json`,lang);write(`assets/${ns}/lang/en_us.json`,{...lang,...en});
 write(`data/minecraft/tags/block/mineable/axe.json`,{replace:false,values:stations.filter(s=>s.kind!=='cook'&&s.kind!=='stove'&&!s.kind.startsWith('gas_')).map(s=>`${ns}:${s.id}`)});
+write(`data/minecraft/tags/block/maintains_farmland.json`,{replace:false,values:crops.map(c=>`${ns}:${c.id}_crop`)});
 write(`data/minecraft/tags/block/mineable/pickaxe.json`,{replace:false,values:[...stations.filter(s=>s.kind==='cook'||s.kind==='stove'||s.kind.startsWith('gas_')).map(s=>`${ns}:${s.id}`),`${ns}:salt_ore`]});
 lang[`block.${ns}.salt_ore`]='盐矿石';
 write(`assets/${ns}/lang/zh_cn.json`,lang);write(`assets/${ns}/lang/en_us.json`,{...lang,...en});

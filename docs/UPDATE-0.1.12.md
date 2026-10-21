@@ -55,3 +55,7 @@ CookingAppearanceTest在原版和实际启用Iris分别执行：真正持刀切�
 ![独立工具与状态图标](images/tools-final-iris-0.1.12.png)
 
 工艺阶段的发酵截图早于本版后续美术调整，保留实际制作证据；以上锅盖/工具最终截图来自后续相应检查。生成的概念样例不作为实机证据。用户提供的八个参考JAR仅只读分析，清单、模型与像素设计观察见[厨房模组参考](REFERENCE-KITCHEN-MODS.md)，未复制原素材到正式模组。
+
+## 发布核对
+
+[0.1.12开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.12)已发布，实际下载920727字节JAR并核对SHA256：`6c77a6ea103a93491684b1d2cf65d43c4198335ac93ac95299796ed8b4066b33`。源码提交为`4615ed4b21134454cdbe65a7818aee9541c177e4`，[对应自动构建与游戏测试](https://github.com/newFanqie/smoke-kitchen/actions/runs/39567285841)通过。详情见verification/0.1.12.json。

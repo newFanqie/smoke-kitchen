@@ -6,6 +6,12 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CookingBatchTest {
+    @Test void transferredCookedPortionKeepsFreshnessAndLegacyPortionsStartWithoutAnInventedDate(){
+        var g=new com.google.gson.Gson();var b=new CookingBatch();b.add("egg",CookingBatch.Cut.DICE,1,false,true);b.ingredients.getFirst().preparedAt=0L;b.ingredients.getFirst().freshnessFloor=2;
+        var saved=g.fromJson(g.toJson(b),CookingBatch.class);saved.normalize();var target=new CookingBatch();target.add("egg",CookingBatch.Cut.DICE,1,false,true);target.restorePortion(0,saved.removePortion(0));
+        assertEquals(0L,target.ingredients.getFirst().preparedAt);assertEquals(2,target.ingredients.getFirst().freshnessFloor);
+        var legacy=g.fromJson("{\"ingredients\":[{\"id\":\"egg\",\"cooked\":1}]}",CookingBatch.class);legacy.normalize();assertNull(legacy.ingredients.getFirst().preparedAt);assertEquals(0,legacy.ingredients.getFirst().freshnessFloor);
+    }
     @Test void boilingAndSteamingRequireWaterEvenForMeat() {
         for(var method:new CookingBatch.Method[]{CookingBatch.Method.BOIL,CookingBatch.Method.STEAM}) {
             var b=new CookingBatch();b.method=method;b.add("chicken",CookingBatch.Cut.WHOLE,1.6,false,false);

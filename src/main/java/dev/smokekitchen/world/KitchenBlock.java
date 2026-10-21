@@ -38,7 +38,8 @@ public class KitchenBlock extends Block implements EntityBlock {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
         if(hit.getDirection()==Direction.UP && stack.getItem() instanceof net.minecraft.world.item.BlockItem placed && placed.getBlock() instanceof KitchenBlock block
                 && java.util.Set.of("cook","board","plate").contains(block.kind) && kind.equals("storage")) return InteractionResult.PASS;
-        if(stack.getItem() instanceof net.minecraft.world.item.BlockItem placed && (!(placed.getBlock() instanceof KitchenBlock block)||!block.kind.equals("cook"))&&!stack.is(net.minecraft.world.item.Items.COAL_BLOCK)&&KitchenBlockEntity.ingredient(stack).isEmpty())return InteractionResult.PASS;
+        boolean coolingIce=id.equals("icebox")&&(stack.is(net.minecraft.world.item.Items.ICE)||stack.is(net.minecraft.world.item.Items.PACKED_ICE)||stack.is(net.minecraft.world.item.Items.BLUE_ICE));
+        if(!coolingIce&&stack.getItem() instanceof net.minecraft.world.item.BlockItem placed && (!(placed.getBlock() instanceof KitchenBlock block)||!block.kind.equals("cook"))&&!stack.is(net.minecraft.world.item.Items.COAL_BLOCK)&&KitchenBlockEntity.ingredient(stack).isEmpty())return InteractionResult.PASS;
         if (level.isClientSide()) return InteractionResult.SUCCESS;
         return level.getBlockEntity(pos) instanceof KitchenBlockEntity station ? station.interact(player, stack, hit) : InteractionResult.PASS;
     }

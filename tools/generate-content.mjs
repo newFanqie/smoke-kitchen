@@ -480,6 +480,11 @@ for(const[id,drop]of Object.entries({duck:'duck_meat',goose:'goose_meat',boar:'b
 }
 for(const[id,name]of Object.entries({shrimp_bucket:'河虾桶',crab_bucket:'河蟹桶'})) {lang[`item.${ns}.${id}`]=name;write(`assets/${ns}/models/item/${id}.json`,inventoryModel({id},id==='shrimp_bucket'?150:151));write(`assets/${ns}/items/${id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${id}`}});}
 write(`assets/${ns}/lang/zh_cn.json`,lang);write(`assets/${ns}/lang/en_us.json`,{...lang,...en});
+lang['message.smoke_kitchen.meal_stale']='锅里的食物已变味，品质下降；装盘或换锅不会恢复新鲜。';
+lang['message.smoke_kitchen.meal_spoiled']='锅里的食物已腐坏，不能食用；可装出后投入厨余桶，回收餐具。';
+en['message.smoke_kitchen.meal_stale']='Food in this vessel is stale. Serving or moving it will not restore freshness.';
+en['message.smoke_kitchen.meal_spoiled']='Food in this vessel has spoiled and is inedible. Serve it for composting to reclaim the dish.';
+write(`assets/${ns}/lang/zh_cn.json`,lang);write(`assets/${ns}/lang/en_us.json`,{...lang,...en});
 // Use vanilla recipe discovery so ingredients reveal the custom recipes in the normal book.
 for(const file of fs.readdirSync(path.join(root,`data/${ns}/recipe`)).filter(file=>file.endsWith('.json'))){
  const recipe=JSON.parse(fs.readFileSync(path.join(root,`data/${ns}/recipe`,file),'utf8'));

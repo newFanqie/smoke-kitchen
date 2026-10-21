@@ -514,5 +514,7 @@
   "entity.smoke_kitchen.cellar_silverfish": "地窖蠹虫",
   "item.smoke_kitchen.cellar_silverfish_spawn_egg": "cellar silverfish spawn egg",
   "item.smoke_kitchen.shrimp_bucket": "河虾桶",
-  "item.smoke_kitchen.crab_bucket": "河蟹桶"
+  "item.smoke_kitchen.crab_bucket": "河蟹桶",
+  "message.smoke_kitchen.meal_stale": "Food in this vessel is stale. Serving or moving it will not restore freshness.",
+  "message.smoke_kitchen.meal_spoiled": "Food in this vessel has spoiled and is inedible. Serve it for composting to reclaim the dish."
 }

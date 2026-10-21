@@ -514,5 +514,7 @@
   "entity.smoke_kitchen.cellar_silverfish": "地窖蠹虫",
   "item.smoke_kitchen.cellar_silverfish_spawn_egg": "地窖蠹虫刷怪蛋",
   "item.smoke_kitchen.shrimp_bucket": "河虾桶",
-  "item.smoke_kitchen.crab_bucket": "河蟹桶"
+  "item.smoke_kitchen.crab_bucket": "河蟹桶",
+  "message.smoke_kitchen.meal_stale": "锅里的食物已变味，品质下降；装盘或换锅不会恢复新鲜。",
+  "message.smoke_kitchen.meal_spoiled": "锅里的食物已腐坏，不能食用；可装出后投入厨余桶，回收餐具。"
 }

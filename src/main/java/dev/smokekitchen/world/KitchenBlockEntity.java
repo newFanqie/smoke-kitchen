@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import dev.smokekitchen.SmokeKitchen;
 import dev.smokekitchen.content.ContentCatalog;
 import dev.smokekitchen.content.KitchenContent;
+import dev.smokekitchen.content.KitchenFoodItem;
 import dev.smokekitchen.content.ResourceStates;
 import dev.smokekitchen.cooking.CookingBatch;
 import net.minecraft.core.*;
@@ -41,7 +42,8 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     public String attachedLid="";
     public boolean saltwater;
     public int coldTicks;
-    public long lastCoolingTime;
+    public long lastCoolingTime=Long.MIN_VALUE;
+    private boolean settlingFreshness;
     public boolean lastRedstone;
     public String mountedCookware="";
     public boolean gasValveInitialized;
@@ -65,7 +67,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         long now = level.getGameTime();
         if (now-lastAction < 4) return InteractionResult.SUCCESS;
         lastAction = now;
-        if(station().id.equals("icebox"))coolInventory();
+        settleFreshness();
         if(ResourceStates.spent(stack)&&!kind().equals("compost")){say(p,"spent");return InteractionResult.SUCCESS;}
         String held = stack.isEmpty() ? "" : ResourceStates.baseId(stack);
         if (held.equals("recipe_book")) { RecipeGuide.show(p); return InteractionResult.SUCCESS; }
@@ -329,6 +331,8 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
                 int grade=data.getIntOr("kitchen_quality",3);String reasons=data.getStringOr("kitchen_quality_reasons","");
                 if(reasons.contains("stale")||grade<=1&&reasons.contains("strong")){var portion=batch.ingredients.get(index);portion.qualityLimit=grade;portion.inheritedReasons=new ArrayList<>(List.of(reasons.contains("stale")?"stale":"strong"));}
             }
+            var portion=batch.ingredients.get(index);
+            if(portion.cooked>=1&&portion.preparedAt==null)portion.preparedAt=data.getLongOr("kitchen_prepared",level.getGameTime());
             var stored=stack.is(Items.MILK_BUCKET)?new ItemStack(KitchenContent.item("milk_portion")):stack.copyWithCount(1);
             var remainder=stack.get(DataComponents.USE_REMAINDER);
             if(remainder!=null)stored.remove(DataComponents.USE_REMAINDER);
@@ -396,6 +400,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         };
     }
     private void serve(Player p,ItemStack container) {
+        settleFreshness();
         if (!batch.ready() && !batch.burnt()) { say(p,"not_ready"); return; }
         if(!batch.burnt()&&batch.remainingServings<0) {
             var expected=closestRecipe();
@@ -422,7 +427,8 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if (!batch.serve(dish,servings)) { say(p,"empty"); return; }
         var result = new ItemStack(KitchenContent.item(dish));
         result.set(DataComponents.USE_REMAINDER,new net.minecraft.world.item.component.UseRemainder(net.minecraft.world.item.ItemStackTemplate.fromNonEmptyStack(container.copyWithCount(1))));
-        dev.smokekitchen.content.KitchenFoodItem.stampMeal(result,quality,batch.qualityReasons(),level.getGameTime());
+        KitchenFoodItem.stampMeal(result,quality,batch.qualityReasons(),preparedTime());
+        result=KitchenFoodItem.agedStack(result,level.getGameTime(),batchFreshness());
         take(p,container); give(p,result);
         if (batch.remainingServings == 0) {
             for(int i=0;i<(isBurner()?26:items.size());i++)items.set(i,ItemStack.EMPTY);
@@ -467,6 +473,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         for(int i=batch.ingredients.size()-1;i>=0;i--)if(!items.get(i).isEmpty()) {
             var result=displayedFood(i);stampLoose(result,batch.portionBatch(i));var portion=batch.removePortion(i);
             if(ResourceStates.baseId(result).equals("soy_milk"))batch.water=Math.max(0,batch.water-result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getDoubleOr("kitchen_liquid_water",0));
+            result=KitchenFoodItem.agedStack(result,level.getGameTime(),portion.freshnessFloor);
             applyPortion(result,portion);give(player,result);items.set(i,ItemStack.EMPTY);batch.refreshTemperatureHistory();changed();return;
         }
         say(player,"empty");
@@ -474,7 +481,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     private void stampLoose(ItemStack result,CookingBatch individual){
         if(!result.has(DataComponents.FOOD))return;
         var data=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
-        dev.smokekitchen.content.KitchenFoodItem.stampMeal(result,individual.quality(),individual.qualityReasons(),data.getLongOr("kitchen_prepared",level.getGameTime()));
+        KitchenFoodItem.stampMeal(result,individual.quality(),individual.qualityReasons(),individual.ingredients.getFirst().preparedAt!=null?individual.ingredients.getFirst().preparedAt:data.getLongOr("kitchen_prepared",level.getGameTime()));
     }
     public ItemStack displayedFood(int slot) {
         var input=items.get(slot);
@@ -482,7 +489,8 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             var portion=batch.ingredients.get(slot);var result=ResourceStates.cookedStack(input,portion.cooked>=1,portion.charred>=.75,level);
             if(ResourceStates.baseId(result).equals("soy_milk")){var data=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();data.putDouble("kitchen_liquid_water",Math.min(1,batch.water/Math.max(1,batch.count("soy_milk"))));result.set(DataComponents.CUSTOM_DATA,CustomData.of(data));}
             if(portion.id.equals("soy_milk")&&ResourceStates.baseId(result).equals("soy_curds")){var data=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();data.putInt("kitchen_tofu_acid",(int)Math.ceil(batch.vinegar));result.set(DataComponents.CUSTOM_DATA,CustomData.of(data));}
-            return result;
+            if(portion.preparedAt!=null){var tag=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();tag.putLong("kitchen_prepared",portion.preparedAt);result.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));}
+            return KitchenFoodItem.agedStack(result,level==null?0:level.getGameTime(),portion.freshnessFloor);
         }
         return input.copy();
     }
@@ -497,6 +505,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         ResourceStates.replaceHeld(p,stack,ResourceStates.usedStack(stack,replacement));
     }
     private boolean insert(ItemStack stack) {
+        if(level!=null)stack=KitchenFoodItem.agedStack(stack,level.getGameTime());
         for (int i=0;i<items.size();i++) {
             if (ItemStack.isSameItemSameComponents(items.get(i),stack) && items.get(i).getCount()<items.get(i).getMaxStackSize()) { items.get(i).grow(1); return true; }
         }
@@ -510,6 +519,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         say(p,"empty");
     }
     public void showStatus(Player p) {
+        if((kind().equals("cook")||isBurner())&&batchFreshness()>0){say(p,batchFreshness()>=2?"meal_spoiled":"meal_stale");return;}
         if(kind().equals("ferment")&&items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soybean"))&&items.stream().filter(x->!x.isEmpty()).allMatch(x->ResourceStates.baseId(x).equals("soybean"))){say(p,"soy_soak",Math.min(100,100*work/120),work);return;}
         if(kind().equals("mix")&&items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soy_curds"))){say(p,"tofu_press",Math.min(100,100*work/20));return;}
         if(kind().equals("mix")&&items.stream().anyMatch(x->Set.of("raw_bean_pulp","boiled_bean_pulp").contains(ResourceStates.baseId(x)))){say(p,"tofu_filter");return;}
@@ -546,6 +556,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     }
     public void serverTick() {
         if (++tickCounter % 20 != 0) return;
+        settleFreshness();
         if(isBurner())migrateLegacyCookware();
         if(kind().startsWith("gas_")) { tickGas();if(isBurner())tickCooking(getFuelUnits()>0?heat:0);showTargetedStatus();return; }
         if (kind().equals("stove")) {
@@ -567,7 +578,6 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             if(lastProcessTime>0 && allowed) work+=(int)Math.min(72000,Math.max(1,(now-lastProcessTime)/20));
             lastProcessTime=now; tryProcess(); setChanged();
         }
-        if(station().id.equals("icebox"))coolInventory();
         if(Set.of("board","ferment","mix").contains(kind()))showTargetedStatus();
         if(tickCounter%40==0) broadcast();
     }
@@ -579,6 +589,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     }
     private void tickCooking(int sourceHeat) {
         batch.tick(sourceHeat,getBlockState().getValue(KitchenBlock.LID));
+        settleFreshness();
         if(isOven()&&mountedCookware.equals("baking_tray")&&sourceHeat>0&&batch.displayedTemperature()>=140&&!batch.ingredients.isEmpty())batch.ovenSeconds++;
         if(batch.temperature>90&&(!batch.ingredients.isEmpty()||batch.water>0) && level instanceof net.minecraft.server.level.ServerLevel server) {
             boolean wet=batch.water>0;server.sendParticles(wet?net.minecraft.core.particles.ParticleTypes.WHITE_SMOKE:net.minecraft.core.particles.ParticleTypes.SMOKE,
@@ -592,7 +603,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         for(var player:level.players())if(player.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(worldPosition))<36 && player.pick(5,0,false) instanceof BlockHitResult hit && hit.getBlockPos().equals(worldPosition)) {
             if(player.isShiftKeyDown()&&!items.getFirst().isEmpty()) {
                 var contents=Component.translatable("message.smoke_kitchen.contents");int shown=0;
-                if(batch.remainingServings>=0){contents.append(new ItemStack(KitchenContent.item(batch.lockedDish)).getHoverName()).append(" ×"+batch.remainingServings);player.sendOverlayMessage(contents);continue;}
+                if(batch.remainingServings>=0){contents.append(KitchenFoodItem.agedStack(new ItemStack(KitchenContent.item(batch.lockedDish)),level.getGameTime(),batchFreshness()).getHoverName()).append(" ×"+batch.remainingServings);player.sendOverlayMessage(contents);continue;}
                 for(int i=0;i<26&&shown<4;i++)if(!items.get(i).isEmpty()){if(shown++>0)contents.append("，");contents.append(displayedFood(i).getHoverName()).append(" ×"+items.get(i).getCount());}
                 player.sendOverlayMessage(contents);continue;
             }
@@ -618,11 +629,35 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             copyCookingFrom(vessel);level.removeBlock(worldPosition.above(),false);changed();
         }
     }
+    private long preparedTime(){return batch.ingredients.stream().filter(p->p.preparedAt!=null).mapToLong(p->p.preparedAt).min().orElse(level.getGameTime());}
+    private int batchFreshness(){return batch.ingredients.stream().mapToInt(p->p.freshnessFloor).max().orElse(0);}
+    /** Settle against world game time before any inventory mutation, including hopper access. */
+    private void settleFreshness(){
+        if(level==null||level.isClientSide()||settlingFreshness)return;
+        settlingFreshness=true;
+        try{
+            long now=level.getGameTime();
+            if(station().id.equals("icebox"))coolInventory();
+            for(int i=0;i<items.size();i++){
+                var stack=items.get(i);if(stack.isEmpty())continue;
+                if(i<batch.ingredients.size()){
+                    var portion=batch.ingredients.get(i);
+                    var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
+                    if(!tag.contains("kitchen_prepared")){tag.putLong("kitchen_prepared",now);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));}
+                    if((portion.cooked>=1||portion.charred>=.75)&&portion.preparedAt==null)portion.preparedAt=now;
+                    long prepared=portion.preparedAt==null?tag.getLongOr("kitchen_prepared",now):portion.preparedAt;
+                    portion.freshnessFloor=Math.max(portion.freshnessFloor,portion.preparedAt!=null?KitchenFoodItem.elapsedStage(now,prepared):KitchenFoodItem.freshnessStage(stack,now,prepared));
+                    if(portion.freshnessFloor>0){portion.qualityLimit=Math.min(1,portion.qualityLimit==null?3:portion.qualityLimit);if(!portion.inheritedReasons.contains("stale"))portion.inheritedReasons.add("stale");}
+                }else items.set(i,KitchenFoodItem.agedStack(stack,now));
+            }
+            if(!isEmpty())setChanged();
+        }finally{settlingFreshness=false;}
+    }
     private void coolInventory() {
         if(level==null)return;
         long now=level.getGameTime();
-        if(lastCoolingTime==0){lastCoolingTime=now;return;}
-        long elapsed=Math.clamp(now-lastCoolingTime,0,24000L*365);lastCoolingTime=now;
+        if(lastCoolingTime==Long.MIN_VALUE){lastCoolingTime=now;return;}
+        long elapsed=Math.max(0,now-lastCoolingTime);lastCoolingTime=now;
         if(elapsed<=0)return;
         long capacity=coldTicks;
         while(capacity<elapsed){
@@ -680,7 +715,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             for(var output:recipe.getAsJsonObject("outputs").entrySet()) {
                 var item=net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(output.getKey()));
                 var result=new ItemStack(item);
-                if(excessTofuAcid&&output.getKey().equals("smoke_kitchen:tofu"))dev.smokekitchen.content.KitchenFoodItem.stampMeal(result,1,List.of("strong"),level.getGameTime());
+                if(excessTofuAcid&&output.getKey().equals("smoke_kitchen:tofu"))KitchenFoodItem.stampMeal(result,1,List.of("strong"),level.getGameTime());
                 if(recipe.has("output_uses")&&recipe.getAsJsonObject("output_uses").has(output.getKey())) {
                     int uses=recipe.getAsJsonObject("output_uses").get(output.getKey()).getAsInt();
                     if(!result.isDamageableItem()||uses<1||uses>result.getMaxDamage()){fit=false;continue;}
@@ -715,9 +750,10 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     }
     public void dropContents() {
         if(level==null || level.isClientSide()) return;
+        settleFreshness();
         if((isBurner()||isOven())&&!mountedCookware.isEmpty()){Block.popResource(level,worldPosition,new ItemStack(KitchenContent.item(mountedCookware)));mountedCookware="";}
         if((kind().equals("cook") || isBurner()) && batch.remainingServings>=0) {
-            if(batch.remainingServings>0){var loose=new ItemStack(KitchenContent.item(batch.burnt()?"burnt_food":batch.lockedDish),batch.remainingServings);loose.remove(DataComponents.USE_REMAINDER);dev.smokekitchen.content.KitchenFoodItem.stampMeal(loose,batch.quality(),batch.qualityReasons(),level.getGameTime());Block.popResource(level,worldPosition,loose);}
+            if(batch.remainingServings>0){var loose=new ItemStack(KitchenContent.item(batch.burnt()?"burnt_food":batch.lockedDish),batch.remainingServings);loose.remove(DataComponents.USE_REMAINDER);KitchenFoodItem.stampMeal(loose,batch.quality(),batch.qualityReasons(),preparedTime());loose=KitchenFoodItem.agedStack(loose,level.getGameTime(),batchFreshness());Block.popResource(level,worldPosition,loose);}
             if(!items.get(26).isEmpty())Block.popResource(level,worldPosition,items.get(26));
         } else {
             for(int i=0;i<items.size();i++) if(!items.get(i).isEmpty()) {
@@ -759,7 +795,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         work=Math.clamp(in.getIntOr("work",0),0,100000); cutProgress=Math.clamp(in.getIntOr("cutProgress",0),0,4); lastProcessTime=in.getLongOr("lastProcess",0);
         attachedLid=in.getStringOr("attachedLid","");
         saltwater=in.getBooleanOr("saltwater",false);
-        coldTicks=Math.clamp(in.getIntOr("coldTicks",0),0,216000);lastCoolingTime=in.getLongOr("lastCoolingTime",0);lastRedstone=in.getBooleanOr("lastRedstone",false);
+        coldTicks=Math.clamp(in.getIntOr("coldTicks",0),0,216000);lastCoolingTime=in.getLongOr("lastCoolingTime",Long.MIN_VALUE);lastRedstone=in.getBooleanOr("lastRedstone",false);
         mountedCookware=in.getStringOr("mountedCookware","");if(!KitchenContent.BLOCKS.containsKey(mountedCookware))mountedCookware="";
         methodIndex=Math.clamp(in.getIntOr("methodIndex",Arrays.asList(methods()).indexOf(batch.method)),0,methods().length-1);
         gasValveInitialized=in.getBooleanOr("gasValveInitialized",false);
@@ -771,13 +807,13 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     @Override public Packet<ClientGamePacketListener> getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
     @Override public int getContainerSize() { return items.size(); }
     @Override public boolean isEmpty() { return items.stream().allMatch(ItemStack::isEmpty); }
-    @Override public ItemStack getItem(int slot) { return items.get(slot); }
+    @Override public ItemStack getItem(int slot) { settleFreshness();return items.get(slot); }
     @Override public ItemStack removeItem(int slot,int count) {
         if(!kind().equals("storage") && !kind().equals("rack")) return ItemStack.EMPTY;
-        var result=ContainerHelper.removeItem(items,slot,count); if(!result.isEmpty()) changed(); return result;
+        settleFreshness();var result=ContainerHelper.removeItem(items,slot,count); if(!result.isEmpty()) changed(); return result;
     }
     @Override public ItemStack removeItemNoUpdate(int slot) { return removeItem(slot,items.get(slot).getCount()); }
-    @Override public void setItem(int slot,ItemStack stack) { items.set(slot,stack); changed(); }
+    @Override public void setItem(int slot,ItemStack stack) { settleFreshness();items.set(slot,level==null?stack:KitchenFoodItem.agedStack(stack,level.getGameTime())); changed(); }
     @Override public boolean stillValid(Player player) { return Container.stillValidBlockEntity(this,player); }
     @Override public void clearContent() { items.clear(); changed(); }
     @Override public boolean canPlaceItem(int slot,ItemStack stack) { return kind().equals("storage") || kind().equals("rack"); }

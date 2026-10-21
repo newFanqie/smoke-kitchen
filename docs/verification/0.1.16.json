@@ -1,0 +1,101 @@
+{
+  "version": "0.1.16",
+  "date": "2026-10-22",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "registeredItems": 322,
+  "processingRecipes": 31,
+  "namedDishes": 29,
+  "unitTests": {
+    "passed": 84,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 80,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "modelResourcesUnchangedSince": "0.1.14",
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "scopePerRenderer": [
+      "FreshnessFlowTest inherits actual FirstMealFlowTest production",
+      "FreshnessGuideTest actual guide crafting/navigation"
+    ],
+    "fullManifestEntrypoints": 23,
+    "allTwentyThreeRerunClaimed": false,
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "shaderActuallyActive": true,
+    "rawMaterialsOnly": true,
+    "actualCraftingKillsSaltMiningMillingLardAndCutting": true,
+    "processedItemsGranted": false,
+    "preparedTimeEdited": false,
+    "nativeProductionCheckpointLog": ".tools/freshness-0.1.16-native-production-before-retrieval-failure.log",
+    "nativeContinuation": "Actual production plus48040 unloaded ticks passed in native-production-before-retrieval-failure.log; return fixture fell into earlier bucket water-source hole. Continued real save98 with normal respawn and actual retrieval/eating/final reopen; no item or date replacement.",
+    "nativeBowlCheck": "Return one original bowl relative to inventory at resume; Iris clean full run expects original total3.",
+    "cookingProgressEdited": false,
+    "testFreshDays": 1,
+    "testSpoiledDays": 2,
+    "defaultDaysUnchanged": [
+      7,
+      14
+    ],
+    "vanillaTickRate": 200,
+    "allWorldTicksActuallyExecuted": true,
+    "halfDayUnservedBeforeActualReopenAndServing": true,
+    "actualServings": 2,
+    "actualKitchenChunkUnloaded": true,
+    "unloadedWaitTicks": 48040,
+    "actualIceBlocksUsed": 2,
+    "cooledTicksExactly": 48000,
+    "cabinetMealActuallySpoiledAndInedible": true,
+    "coldMealActuallyFreshEatenAndBowlReturned": true,
+    "multipleActualWorldReopens": true,
+    "separateInterimFixtureFailuresExcluded": [
+      "initial zero-time cooling sentinel fixed",
+      "returned lid held during side-click fixture fixed",
+      "AFK framerate wait aborted and fixed",
+      "remote platform fill before chunk loaded aborted and fixed",
+      "actual ice external-placement defect fixed; failed workflow excluded"
+    ],
+    "logs": [
+      ".tools/freshness-0.1.16-vanilla.log",
+      ".tools/freshness-0.1.16-iris.log",
+      ".tools/freshness-final-0.1.16.log",
+      ".tools/freshness-guide-0.1.16-iris.log",
+      ".tools/freshness-guide-0.1.16-vanilla.log"
+    ],
+    "visualReview": {
+      "vanillaReviewed": true,
+      "irisReviewed": true,
+      "finalGuideReviewedBoth": true,
+      "selectedPerRenderer": [
+        "freshness-actual-spoiled-and-cold-tooltips-0.1.16.png",
+        "freshness-guide-1-0.1.16.png"
+      ],
+      "additionalReviewed": [
+        "vanilla/freshness-wait-unserved-0.1.16.png",
+        "vanilla/freshness-wait-unloaded-0.1.16.png",
+        "iris/freshness-final-world-reopen-0.1.16.png"
+      ],
+      "notes": [
+        "Real native resumed inventory shows fresh quality3 and actual spoiled quality1 with age reason; advancement toasts partly cover only the heading, not the actual items/text",
+        "Clean Iris actual inventory shows both meal states and readable quality reasons; actual shader scene empty vessels/stores reviewed",
+        "Final concise storage guide fits one full page in both renderers; orphaned second-page captures removed",
+        "Wait phase and49percent visible in native full-world-tick waiting capture",
+        "No new models or pixel artwork claimed in this release"
+      ]
+    }
+  },
+  "migration": "Legacy unserved portions without dates start when first observed; dates are never guessed. Previously stamped meals retain their original date.",
+  "ordinaryVanillaFoodsNotConvertedToSpoilageSystem": true,
+  "preservationRules": "World gameTime only; finite cooling offsets age before classifying; adding ice or food cannot earn retroactive cooling; already stale/spoiled states never revive. Unloaded fuel and cooking are not fast-forwarded.",
+  "sha256": "c531a4ba833dc0ec6f0736839833e4657211563c83ba3bd245caac1a37f6c4f7",
+  "jarBytes": 962084,
+  "downloadVerified": false,
+  "sourceCIPassed": false
+}

@@ -2,7 +2,7 @@
 
 Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配、锅具投料、调火和翻炒，把食材做成可以装盘分享的饭菜。
 
-**当前版本：0.1.15 开发版。** 散装食材取出、分份、换锅和拆锅掉落时，六种调味按实际份额分配并扣原锅；过盐、焦化及不可逆品质不会因换锅消失。提示显示六种附着量，原版熟肉也有实际食物值变化，重复取料不反复扣营养。原版与实际启用Iris完成基础材料制工具、击杀取料、加工盐油、切配煮熟、分锅多次重开、装盘食用返碗。见[本版更新](docs/UPDATE-0.1.15.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)和[玩法设计](docs/DESIGN.md)。原版协调的原创美术、设备、生态、建筑、经营及多人等有限待办继续推进。
+**当前版本：0.1.16 开发版。** 厨房储物设备与离开区块后的保鲜使用同一游戏时钟，食物从实际做熟时计时，装盘和换锅不重新变新。冰柜消耗有限冰块，后来加入的冰不能挽回此前变质。原版与实际启用Iris完成真实制作、留锅、装盘储存、卸载两日、食用返碗和多次重开。见[本版更新](docs/UPDATE-0.1.16.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)和[玩法设计](docs/DESIGN.md)。其余原创素材、设备、生态、建筑、经营及多人验收继续推进。
 
 ## 当前玩法
 
@@ -17,11 +17,11 @@ Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配
 
 ## 安装
 
-[下载 0.1.15 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.15) · [本次更新与实测记录](docs/UPDATE-0.1.15.md)
+[下载 0.1.16 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.16) · [本次更新与实测记录](docs/UPDATE-0.1.16.md)
 
 1. 使用 Minecraft Java **26.1.2**、Fabric Loader **0.19.2** 或更高的兼容版本。
 2. 安装对应版本的 Fabric API；本工程验证使用 **0.149.1+26.1.2**。
-3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.15.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
+3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.16.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
 4. 联机时服务器与客户端均安装本模组及 Fabric API。
 
 实际客户端检查截图：

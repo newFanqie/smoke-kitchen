@@ -30,6 +30,8 @@ public final class CookingBatch {
         public double maximumTemperature;
         public Map<String,Double> seasonings = new HashMap<>();
         public Integer qualityLimit;
+        public Long preparedAt;
+        public int freshnessFloor;
         public List<String> inheritedReasons = new ArrayList<>();
         public Map<String,Integer> priorCounts = new HashMap<>();
         public Map<String,Double> priorCooked = new HashMap<>();
@@ -98,6 +100,7 @@ public final class CookingBatch {
         fresh.turnedAfterSetting=saved.turnedAfterSetting;fresh.cookedAtTurn=saved.cookedAtTurn;
         fresh.marinatedSeconds=saved.marinatedSeconds;fresh.coveredCookingSeconds=saved.coveredCookingSeconds;fresh.lowHeatSeconds=saved.lowHeatSeconds;
         fresh.caramelOnAdd|=saved.caramelOnAdd;fresh.rolled|=saved.rolled;
+        fresh.preparedAt=saved.preparedAt;fresh.freshnessFloor=saved.freshnessFloor;
         fresh.qualityLimit=saved.qualityLimit;fresh.inheritedReasons=saved.inheritedReasons==null?new ArrayList<>():new ArrayList<>(saved.inheritedReasons);
         if(saved.seasonings!=null)for(String key:SEASONINGS)setSeasoning(key,seasoning(key)+bounded(saved.seasonings.get(key)==null?0:saved.seasonings.get(key),32));
         // Order and entry temperature belong to this pot; old neighbours cannot prove a new recipe step.
@@ -275,6 +278,7 @@ public final class CookingBatch {
             p.marinatedSeconds=Math.clamp(p.marinatedSeconds,0,100000);
             p.maximumTemperature=Math.clamp(Double.isFinite(p.maximumTemperature)?p.maximumTemperature:0,0,500);
             if(p.maximumTemperature==0)p.maximumTemperature=Math.max(temperature,maximumFoodTemperature);
+            p.freshnessFloor=Math.clamp(p.freshnessFloor,0,2);
             p.resistance = Math.clamp(Double.isFinite(p.resistance) ? p.resistance : 1, .25, 5);
             p.cooked = Math.clamp(Double.isFinite(p.cooked) ? p.cooked : 0, 0, 100);
             p.charred = Math.clamp(Double.isFinite(p.charred) ? p.charred : 0, 0, 100);

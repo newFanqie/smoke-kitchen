@@ -13,6 +13,40 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void allThreeIceBlocksEnterIceboxThroughRealBlockInteraction(GameTestHelper test){
+        var pos=new BlockPos(1,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("icebox"));var box=test.getBlockEntity(pos,KitchenBlockEntity.class);var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        for(var item:new net.minecraft.world.item.Item[]{Items.ICE,Items.PACKED_ICE,Items.BLUE_ICE}){var stack=new ItemStack(item);use(test,pos,player,stack,net.minecraft.core.Direction.UP);test.assertTrue(stack.isEmpty()&&box.items.stream().anyMatch(x->x.is(item)),"Actual block interaction inserts cooling ice instead of falling through to external placement");}
+        test.assertTrue(test.getBlockState(pos.above()).isAir(),"No ice block is placed on the cabinet");test.succeed();
+    }
+    @GameTest public void storageAgesOnAccessAndLateIceCannotErasePastAge(GameTestHelper test){
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("cabinet"));var cabinet=test.getBlockEntity(p,KitchenBlockEntity.class);
+        long now=test.getLevel().getGameTime(),old=now-(dev.smokekitchen.KitchenConfig.INSTANCE.freshDays+1)*24000L;
+        var meal=new ItemStack(KitchenContent.item("mixed_stew"));KitchenFoodItem.stampMeal(meal,0,java.util.List.of("salty"),old);cabinet.items.set(0,meal);
+        var stale=cabinet.removeItem(0,1);var data=stale.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag();
+        test.assertTrue(stale.is(KitchenContent.item("stale_mixed_stew"))&&data.getIntOr("kitchen_quality",3)==0&&data.getStringOr("kitchen_quality_reasons","").contains("salty"),"Storage extraction settles elapsed time without improving bad quality");
+        test.setBlock(p,KitchenContent.BLOCKS.get("icebox"));var box=test.getBlockEntity(p,KitchenBlockEntity.class);box.items.set(0,meal.copy());box.lastCoolingTime=now-24000;box.setItem(1,new ItemStack(Items.ICE));
+        test.assertTrue(box.getItem(0).is(KitchenContent.item("stale_mixed_stew"))&&box.coldTicks==0,"New ice cannot cool the preceding uncooled day");
+        var recent=new ItemStack(KitchenContent.item("mixed_stew"));KitchenFoodItem.stampMeal(recent,3,java.util.List.of(),now-100);box.lastCoolingTime=now-24000;box.setItem(2,recent);
+        test.assertTrue(box.getItem(2).get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag().getLongOr("kitchen_prepared",0)==now-100,"Food inserted now cannot receive cooling from before it entered");test.succeed();
+    }
+    @GameTest public void unloadedIceBudgetAndSpoiledStateSurviveSerialization(GameTestHelper test){
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("icebox"));var box=test.getBlockEntity(p,KitchenBlockEntity.class);long now=test.getLevel().getGameTime();
+        var meal=new ItemStack(KitchenContent.item("mixed_stew"));KitchenFoodItem.stampMeal(meal,3,java.util.List.of(),now-48000);box.items.set(0,meal);box.items.set(1,new ItemStack(Items.ICE));box.lastCoolingTime=now-48000;
+        var restored=(KitchenBlockEntity)BlockEntity.loadStatic(test.absolutePos(p),box.getBlockState(),box.saveWithFullMetadata(test.getLevel().registryAccess()),test.getLevel().registryAccess());restored.setLevel(test.getLevel());restored.getItem(0);
+        test.assertTrue(restored.coldTicks==0&&restored.items.get(1).isEmpty()&&restored.items.get(0).get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag().getLongOr("kitchen_prepared",0)==now-24000,"Two unloaded days and one ice day leave exactly one food-age day");
+        var spoiled=new ItemStack(KitchenContent.item("spoiled_mixed_stew"));var canonical=KitchenFoodItem.agedStack(spoiled,now);
+        test.assertTrue(!canonical.has(net.minecraft.core.component.DataComponents.FOOD)&&!canonical.has(net.minecraft.core.component.DataComponents.CONSUMABLE),"Registered spoiled state is inedible even without an old timestamp");
+        var stale=new ItemStack(KitchenContent.item("stale_mixed_stew"));KitchenFoodItem.stampMeal(stale,1,java.util.List.of("stale"),now+1000);test.assertTrue(KitchenFoodItem.agedStack(stale,now).is(KitchenContent.item("stale_mixed_stew")),"Clock rollback cannot revive stale food");test.succeed();
+    }
+    @GameTest public void unservedPotAndRemainingServingsKeepActualPreparedTime(GameTestHelper test){
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("soup_pot"));var pot=test.getBlockEntity(p,KitchenBlockEntity.class);pot.batch.method=CookingBatch.Method.STEW;pot.batch.water=6;long now=test.getLevel().getGameTime(),old=now-(dev.smokekitchen.KitchenConfig.INSTANCE.freshDays+1)*24000L;
+        for(int i=0;i<4;i++){pot.batch.add("egg",CookingBatch.Cut.DICE,1,false,true);pot.batch.ingredients.get(i).preparedAt=old;pot.items.set(i,new ItemStack(Items.EGG));}
+        var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);use(test,p,player,new ItemStack(Items.BOWL),net.minecraft.core.Direction.UP);
+        var meal=player.getInventory().getNonEquipmentItems().stream().filter(x->x.is(KitchenContent.item("stale_mixed_stew"))).findFirst().orElseThrow();test.assertTrue(meal.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA).copyTag().getLongOr("kitchen_prepared",0)==old&&pot.batch.remainingServings==1,"Serving cannot restart an unserved meal's shelf life, including vanilla ingredients");
+        var restored=(KitchenBlockEntity)BlockEntity.loadStatic(test.absolutePos(p),pot.getBlockState(),pot.saveWithFullMetadata(test.getLevel().registryAccess()),test.getLevel().registryAccess());restored.setLevel(test.getLevel());test.assertTrue(restored.batch.ingredients.getFirst().preparedAt==old&&restored.batch.ingredients.getFirst().freshnessFloor==1,"Remaining prepared time and irreversible stale grade serialize");
+        pot.batch.ingredients.forEach(x->x.preparedAt=now-(dev.smokekitchen.KitchenConfig.INSTANCE.spoiledDays+1)*24000L);use(test,p,player,new ItemStack(Items.BOWL),net.minecraft.core.Direction.UP);
+        test.assertTrue(player.getInventory().contains(x->x.is(KitchenContent.item("spoiled_mixed_stew"))&&!x.has(net.minecraft.core.component.DataComponents.FOOD)),"Unserved remaining food can spoil and is removable for disposal");test.succeed();
+    }
     @GameTest public void actualLooseRetrievalMovesSeasoningShareIntoNewPot(GameTestHelper test){
         var a=new BlockPos(1,1,1);var b=new BlockPos(2,1,1);test.setBlock(a,KitchenContent.BLOCKS.get("soup_pot"));test.setBlock(b,KitchenContent.BLOCKS.get("soup_pot"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);var source=test.getBlockEntity(a,KitchenBlockEntity.class);source.batch.salt=2;source.batch.oil=1;
         for(int i=0;i<2;i++){use(test,a,player,new ItemStack(Items.COOKED_PORKCHOP),net.minecraft.core.Direction.UP);}player.setShiftKeyDown(true);use(test,a,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);player.setShiftKeyDown(false);

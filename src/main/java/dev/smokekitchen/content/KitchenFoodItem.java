@@ -45,18 +45,35 @@ public final class KitchenFoodItem extends Item {
         if(slot!=null && owner instanceof net.minecraft.world.entity.LivingEntity living)living.setItemSlot(slot,result);
         else if(owner instanceof net.minecraft.world.entity.player.Player player)for(int i=0;i<player.getInventory().getContainerSize();i++)if(player.getInventory().getItem(i)==stack){player.getInventory().setItem(i,result);break;}
     }
-    public static ItemStack agedStack(ItemStack stack,long now) {
+    /** Preserve state even if an old save or a clock rollback would otherwise make food fresh again. */
+    public static int freshnessStage(ItemStack stack,long now,long prepared) {
+        var definition=KitchenContent.DEFINITIONS.get(KitchenContent.name(stack.getItem()));
+        String state=definition==null?"":ContentCatalog.str(definition,"state");
+        int floor=state.equals("spoiled")?2:state.equals("stale")?1:0;
+        if(!(stack.getItem() instanceof KitchenFoodItem)||!KitchenConfig.INSTANCE.spoilage)return floor;
+        return Math.max(floor,elapsedStage(now,prepared));
+    }
+    public static int elapsedStage(long now,long prepared){
+        if(!KitchenConfig.INSTANCE.spoilage)return 0;
+        long age=Math.max(0,now-prepared);
+        return age>KitchenConfig.INSTANCE.spoiledDays*24000L?2:age>KitchenConfig.INSTANCE.freshDays*24000L?1:0;
+    }
+    public static ItemStack agedStack(ItemStack stack,long now) {return agedStack(stack,now,0);}
+    public static ItemStack agedStack(ItemStack stack,long now,int minimumStage) {
+        if(!(stack.getItem() instanceof KitchenFoodItem))return stack;
         var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
-        if(!tag.contains("kitchen_prepared")) {tag.putLong("kitchen_prepared",now);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));return stack;}
-        long age=Math.max(0,now-tag.getLongOr("kitchen_prepared",now));
-        String state=age>KitchenConfig.INSTANCE.spoiledDays*24000L?"spoiled_":age>KitchenConfig.INSTANCE.freshDays*24000L?"stale_":"";
-        String target=state+ResourceStates.baseId(stack);
-        var item=KitchenContent.item(target);
-        if(item==Items.AIR || item==stack.getItem())return stack;
-        var result=stack.transmuteCopy(item);
-        result.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
-        if(!state.isEmpty())stampMeal(result,1,java.util.List.of("stale"),tag.getLongOr("kitchen_prepared",now));
-        if(state.equals("spoiled_")){result.remove(DataComponents.FOOD);result.remove(DataComponents.CONSUMABLE);}
+        long prepared=tag.getLongOr("kitchen_prepared",now);
+        tag.putLong("kitchen_prepared",prepared);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
+        int stage=Math.max(minimumStage,freshnessStage(stack,now,prepared));
+        if(stage==0)return stack;
+        var item=KitchenContent.item((stage>=2?"spoiled_":"stale_")+ResourceStates.baseId(stack));
+        if(item==Items.AIR)return stack;
+        var result=item==stack.getItem()?stack:stack.transmuteCopy(item);
+        var reasons=new java.util.ArrayList<String>();
+        for(String reason:tag.getStringOr("kitchen_quality_reasons","").split(","))if(!reason.isEmpty()&&!reasons.contains(reason))reasons.add(reason);
+        if(!reasons.contains("stale"))reasons.add("stale");
+        stampMeal(result,Math.min(1,tag.getIntOr("kitchen_quality",3)),reasons,prepared);
+        if(stage>=2){result.remove(DataComponents.FOOD);result.remove(DataComponents.CONSUMABLE);}
         return result;
     }
 }

@@ -13,6 +13,8 @@ const checkItem=(id,source)=>{if(typeof id==='string' && id.startsWith(ns+':')&&
 for(const r of catalog.processes){Object.keys(r.inputs).forEach(id=>checkItem(id,'processing input'));Object.keys(r.outputs).forEach(id=>checkItem(id,'processing output'));}
 for(const r of catalog.processes){
  if(r.tool)checkItem(ns+':'+r.tool,'processing tool');
+ for(const[id,uses]of Object.entries(r.output_uses||{})){const definition=catalog.items.find(item=>ns+':'+item.id===id);if(!r.outputs[id]||!Number.isInteger(uses)||uses<1||uses>(definition?.uses||0))errors.push(`Invalid partial processing output: ${id}`);}
+
  for(const[id,cuts]of Object.entries(r.cuts||{}))if(!r.inputs[id]||!cuts.length||cuts.some(c=>!['WHOLE','SLICE','DICE','SHRED','MINCE'].includes(c)))errors.push(`Invalid processing cuts: ${id}`);
  for(const id of r.rolled||[])if(!r.inputs[id])errors.push(`Rolled input absent from process: ${id}`);
 }

@@ -10,7 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.*;
 import java.util.*;
@@ -24,8 +23,9 @@ final class SurvivalPlayer {
     static Item item(String id){return BuiltInRegistries.ITEM.getValue(Identifier.parse(id.contains(":")?id:"minecraft:"+id));}
     int count(String id){return c.computeOnClient(client->client.player.getInventory().countItem(item(id)));}
     BlockPos feet(){return c.computeOnClient(client->client.player.blockPosition());}
-    void note(String text){org.slf4j.LoggerFactory.getLogger("NaturalSurvival").info("{} at {}",text,feet());}
-    void select(String id){c.runOnClient(client->{for(var slot:client.player.inventoryMenu.slots)if(slot.container==client.player.getInventory()&&slot.getItem().is(item(id))){int i=slot.getContainerSlot();if(i<9)client.player.getInventory().setSelectedSlot(i);else{client.gameMode.handleContainerInput(client.player.inventoryMenu.containerId,slot.index,8,ContainerInput.SWAP,client.player);client.player.getInventory().setSelectedSlot(8);}return;}throw new AssertionError("Not actually owned: "+id);});c.waitTicks(4);}
+    void note(String text){org.slf4j.LoggerFactory.getLogger("KitchenPlayerActions").info("{} at {}",text,feet());}
+    void select(String id){select(id,stack->true);}
+    void select(String id,Predicate<ItemStack> allowed){c.runOnClient(client->{for(var slot:client.player.inventoryMenu.slots)if(slot.container==client.player.getInventory()&&allowed.test(slot.getItem())&&(slot.getItem().is(item(id))||id.startsWith("smoke_kitchen:")&&dev.smokekitchen.content.ResourceStates.baseId(slot.getItem()).equals(id.substring(14))&&!dev.smokekitchen.content.ResourceStates.spent(slot.getItem()))){int i=slot.getContainerSlot();if(i<9)client.player.getInventory().setSelectedSlot(i);else{client.gameMode.handleContainerInput(client.player.inventoryMenu.containerId,slot.index,8,ContainerInput.SWAP,client.player);client.player.getInventory().setSelectedSlot(8);}return;}throw new AssertionError("Not actually owned: "+id);});c.waitTicks(4);}
     void emptyHand(){c.runOnClient(client->{for(int i=0;i<9;i++)if(client.player.getInventory().getItem(i).isEmpty()){client.player.getInventory().setSelectedSlot(i);return;}client.gameMode.handleContainerInput(client.player.inventoryMenu.containerId,44,0,ContainerInput.QUICK_MOVE,client.player);client.player.getInventory().setSelectedSlot(8);});c.waitTicks(3);}
     void look(Vec3 target){c.runOnClient(client->{var d=target.subtract(client.player.getEyePosition());client.player.setYRot((float)(Math.toDegrees(Math.atan2(d.z,d.x))-90));client.player.setXRot((float)-Math.toDegrees(Math.atan2(d.y,Math.sqrt(d.x*d.x+d.z*d.z))));});c.waitTicks(2);}
     void stop(){c.getInput().releaseKey(o->o.keyUp);c.getInput().releaseKey(o->o.keyJump);c.getInput().releaseKey(o->o.keySprint);}
@@ -52,19 +52,18 @@ final class SurvivalPlayer {
         }
         throw new AssertionError("Could not approach "+target+" from "+feet());
     }
-    BlockPos find(Predicate<net.minecraft.world.level.block.state.BlockState> wanted,int radius){return find(wanted,radius,10);}
-    BlockPos find(Predicate<net.minecraft.world.level.block.state.BlockState> wanted,int radius,int maxAbove){
-        return find(wanted,p->true,radius,maxAbove);
-    }
-    BlockPos find(Predicate<net.minecraft.world.level.block.state.BlockState> wanted,Predicate<BlockPos> allowed,int radius,int maxAbove){
-        return c.computeOnClient(client->{var eye=client.player.getEyePosition();var origin=client.player.blockPosition();var candidates=new ArrayList<BlockPos>();for(int x=-radius;x<=radius;x++)for(int z=-radius;z<=radius;z++)for(int y=-8;y<=maxAbove;y++){var p=origin.offset(x,y,z);if(!allowed.test(p)||!wanted.test(client.level.getBlockState(p)))continue;boolean exposed=false;for(var direction:Direction.values())if(client.level.getBlockState(p.relative(direction)).isAir()||!client.level.getFluidState(p.relative(direction)).isEmpty()){exposed=true;break;}if(exposed)candidates.add(p);}
-            candidates.sort(Comparator.comparingDouble(p->Vec3.atCenterOf(p).distanceToSqr(eye)));for(var p:candidates){var hit=client.level.clip(new net.minecraft.world.level.ClipContext(eye,Vec3.atCenterOf(p),net.minecraft.world.level.ClipContext.Block.OUTLINE,net.minecraft.world.level.ClipContext.Fluid.NONE,client.player));if(hit.getBlockPos().equals(p))return p;}return null;});
-    }
     void mine(BlockPos pos){closeMenu();walkNear(pos,4.4);look(Vec3.atCenterOf(pos));c.runOnClient(client->client.gameMode.startDestroyBlock(pos,Direction.UP));for(int tick=0;tick<220;tick++){if(c.computeOnClient(client->client.level.isEmptyBlock(pos)))break;c.runOnClient(client->client.gameMode.continueDestroyBlock(pos,Direction.UP));c.waitTicks(1);}c.runOnClient(client->client.gameMode.stopDestroyBlock());check(c.computeOnClient(client->client.level.isEmptyBlock(pos)),"Normal mining did not break "+pos);c.waitTicks(30);var drops=c.computeOnClient(client->{var found=new ArrayList<net.minecraft.world.entity.item.ItemEntity>();for(var entity:client.level.entitiesForRendering())if(entity instanceof net.minecraft.world.entity.item.ItemEntity drop&&drop.position().distanceTo(Vec3.atCenterOf(pos))<7)found.add(drop);found.sort(Comparator.comparingDouble(x->x.distanceToSqr(client.player)));return found.stream().map(x->x.blockPosition()).toList();});for(var drop:drops){boolean remains=c.computeOnClient(client->{for(var entity:client.level.entitiesForRendering())if(entity instanceof net.minecraft.world.entity.item.ItemEntity&&entity.blockPosition().equals(drop))return true;return false;});if(remains){walkNear(drop,1.6);c.waitTicks(12);}}}
-    void harvestLogs(int wanted){for(int n=0;n<40&&count("oak_log")<wanted;n++){var pos=find(state->state.is(Blocks.OAK_LOG),18,4);check(pos!=null,"No visible oak log near "+feet());mine(pos);}check(count("oak_log")>=wanted,"Not enough real oak logs");note("Collected oak logs="+count("oak_log"));}
+    void pickUpAround(Vec3 center){
+        var drops=c.computeOnClient(client->{var found=new ArrayList<BlockPos>();for(var entity:client.level.entitiesForRendering())if(entity instanceof net.minecraft.world.entity.item.ItemEntity&&entity.position().distanceTo(center)<7)found.add(entity.blockPosition());return found;});
+        for(var pos:drops){walkNear(pos,1.4);c.waitTicks(10);}
+    }
     void click(BlockPos pos,Direction face){walkNear(pos);look(Vec3.atCenterOf(pos));c.runOnClient(client->client.gameMode.useItemOn(client.player,InteractionHand.MAIN_HAND,new BlockHitResult(Vec3.atCenterOf(pos),face,pos,false)));c.waitTicks(6);}
     BlockPos place(String id){closeMenu();select(id);BlockPos[] ground={null};c.runOnClient(client->{var origin=client.player.blockPosition();for(var direction:Direction.Plane.HORIZONTAL){var p=origin.relative(direction,2);if(client.level.getBlockState(p).canBeReplaced()&&client.level.getFluidState(p).isEmpty()&&client.level.getBlockState(p.above()).canBeReplaced()&&client.level.getBlockState(p.below()).isSolid()){ground[0]=p.below();break;}}});check(ground[0]!=null,"No free placement ground");click(ground[0],Direction.UP);return ground[0].above();}
     void slot(int slot,int button,ContainerInput action){c.runOnClient(client->client.gameMode.handleContainerInput(client.player.containerMenu.containerId,slot,button,action,client.player));c.waitTicks(2);}
+    void putInMenu(String id,int destination,int amount){
+        int from=c.computeOnClient(client->{for(var slot:client.player.containerMenu.slots)if(slot.container==client.player.getInventory()&&slot.getItem().is(item(id))&&slot.getItem().getCount()>=amount)return slot.index;throw new AssertionError("Missing actual menu input "+id);});
+        slot(from,0,ContainerInput.PICKUP);for(int i=0;i<amount;i++)slot(destination,1,ContainerInput.PICKUP);slot(from,0,ContainerInput.PICKUP);
+    }
     void craft(String output,String... pattern){
         c.runOnClient(client->{if(client.player.containerMenu==client.player.inventoryMenu&&!(client.screen instanceof net.minecraft.client.gui.screens.inventory.InventoryScreen))client.setScreen(new net.minecraft.client.gui.screens.inventory.InventoryScreen(client.player));});c.waitTicks(3);
         c.runOnClient(client->{check(client.player.containerMenu.getCarried().isEmpty(),"Crafting must start with an empty cursor");});

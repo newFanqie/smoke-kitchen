@@ -175,6 +175,7 @@ const q=id=>id.includes(':')?id:`${ns}:${id}`;
 function process(station,inputs,outputs,seconds=5,water=0){processes.push({station,inputs:Object.fromEntries(Object.entries(inputs).map(([k,v])=>[q(k),v])),outputs:Object.fromEntries(Object.entries(outputs).map(([k,v])=>[q(k),v])),seconds,water});}
 process('mill',{rice_paddy:1},{rice:1,rice_husk:1});process('mill',{'minecraft:wheat':1},{flour:1});process('mill',{salt_ore_chunk:1},{salt_crystals:4});
 process('mill',{salt_crystals:16,empty_jar:1},{salt:1});
+process('mill',{salt_crystals:4,empty_jar:1},{salt:1});processes[processes.length-1].output_uses={[q('salt')]:4};
 process('mill',{dried_chili:1},{chili_powder:1});process('mill',{black_pepper:1},{pepper_powder:1});process('mill',{cumin:1},{cumin_powder:1});process('mill',{dried_shiitake:1},{mushroom_powder:1});
 process('press',{rapeseed:8,'minecraft:glass_bottle':1},{rapeseed_oil:1,oil_cake:2});process('press',{sesame:16,'minecraft:glass_bottle':1},{sesame_oil:1,oil_cake:2});
 process('mix',{flour:2},{dough:2},5,1);process('mix',{'minecraft:book':1},{recipe_book:1});

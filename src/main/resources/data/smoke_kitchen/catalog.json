@@ -3182,6 +3182,21 @@
     {
       "station": "mill",
       "inputs": {
+        "smoke_kitchen:salt_crystals": 4,
+        "smoke_kitchen:empty_jar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:salt": 1
+      },
+      "seconds": 5,
+      "water": 0,
+      "output_uses": {
+        "smoke_kitchen:salt": 4
+      }
+    },
+    {
+      "station": "mill",
+      "inputs": {
         "smoke_kitchen:dried_chili": 1
       },
       "outputs": {

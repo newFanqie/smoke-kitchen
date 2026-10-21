@@ -639,7 +639,13 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             boolean fit=true;
             for(var output:recipe.getAsJsonObject("outputs").entrySet()) {
                 var item=net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(output.getKey()));
-                for(int i=0;i<output.getValue().getAsInt();i++) if(!insert(new ItemStack(item))) fit=false;
+                var result=new ItemStack(item);
+                if(recipe.has("output_uses")&&recipe.getAsJsonObject("output_uses").has(output.getKey())) {
+                    int uses=recipe.getAsJsonObject("output_uses").get(output.getKey()).getAsInt();
+                    if(!result.isDamageableItem()||uses<1||uses>result.getMaxDamage()){fit=false;continue;}
+                    if(uses<result.getMaxDamage()){result.setDamageValue(result.getMaxDamage()-uses);result=ResourceStates.usedStack(result,emptyContainer(result));}
+                }
+                for(int i=0;i<output.getValue().getAsInt();i++) if(!insert(result.copy())) fit=false;
             }
             if(!fit) { for(int i=0;i<items.size();i++) items.set(i,backup.get(i)); return; }
             batch.water-=ContentCatalog.num(recipe,"water",0);if(batch.water<=0)saltwater=false;work=0;lastTool=""; changed(); return;

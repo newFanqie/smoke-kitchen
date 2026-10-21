@@ -1,0 +1,95 @@
+{
+  "version": "0.1.11",
+  "date": "2026-10-21",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "itemDefinitions": 309,
+  "processingRecipes": 26,
+  "discoveryAdvancements": 82,
+  "unitTests": {
+    "passed": 74,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 64,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "firstMeal": {
+    "rawFixture": [
+      "oak_log 8",
+      "cobblestone 32",
+      "clay_ball 12",
+      "coal 5",
+      "iron_ingot 3",
+      "sand 3",
+      "tomato 2",
+      "book 1",
+      "wheat_seeds 1"
+    ],
+    "worldFixture": [
+      "Flat platform",
+      "Water source",
+      "One salt ore",
+      "Two NoAI ducks",
+      "One NoAI pig",
+      "Day and clear weather"
+    ],
+    "actualActions": [
+      "Craft tools, kitchen, containers and guide",
+      "Smelt sand in actual furnace",
+      "Kill ducks and pig; collect actual loot",
+      "Mine salt ore and manually mill",
+      "Pack a four-use salt jar",
+      "Render pig fat on low heat; jar four oil uses and collect crackling",
+      "Dice two ducks and two tomatoes",
+      "Actually fill crafted bucket; add water, oil, salt and cut food",
+      "Cover, medium heat, stir; wait for independent food cooking",
+      "Reject premature serving without consuming bowl",
+      "Open lid, serve, actually eat and return bowl",
+      "Turn off heat, save and reopen world",
+      "Retain remaining dish, servings, water, finite fuel and both exact three-use jars",
+      "Serve final saved portion without raw-food duplication",
+      "Open actual crafted recipe book; navigate to small-batch guide"
+    ],
+    "cookedOutputGranted": false,
+    "progressEdited": false,
+    "normalTicks": true,
+    "hungerSetToEightBeforeEating": true,
+    "naturalGatheringClaimed": false
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "scopePerRenderer": [
+      "FirstMealFlowTest",
+      "AcquisitionFlowTest",
+      "StapleFlowTest"
+    ],
+    "otherClientWorkflowsRerun": false,
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "shaderActuallyActive": true,
+    "screenshotsVisuallyReviewed": true,
+    "normalTicks": true,
+    "saveReload": true,
+    "logs": [
+      ".tools/first-meal-regression-0.1.11-vanilla.log",
+      ".tools/first-meal-regression-0.1.11-iris.log"
+    ]
+  },
+  "headlessLog": ".tools/first-meal-0.1.11-vanilla.log",
+  "knownRemaining": [
+    "Soy pre-cooking and filtering; vinegar filtering",
+    "Device functions, clearer food and animal art, husbandry",
+    "Independent building blueprints, professions and restaurant play",
+    "Multiplayer concurrency, storage and chunk-unloaded aging"
+  ],
+  "pauseRequestedAfterVersion": true,
+  "jarBytes": 726163,
+  "jarContainsTestCode": false,
+  "sha256": "5f577d0d4d0527f092eb0a185c65da9dab91659b0109d7dc04957d88629cbc46",
+  "downloadVerified": false
+}

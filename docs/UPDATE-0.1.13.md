@@ -47,4 +47,6 @@
 
 ## 发布核对
 
-JAR：952809字节，本地SHA256 `a0fc30d89f73c47c636cc6d03f8bbb507098360788effe039123366a75d2ba58`。实际下载与源码CI结果在发布完成后补记，[结构化验证记录](verification/0.1.13.json)。
+JAR：952809字节，本地SHA256 `a0fc30d89f73c47c636cc6d03f8bbb507098360788effe039123366a75d2ba58`。本地文件、GitHub服务器摘要与实际重新下载的JAR三者一致，[结构化验证记录](verification/0.1.13.json)。
+
+[下载0.1.13开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.13)。源码提交 `e81d14fa2f5b6cfb06e6b3a01c6baf8888a8c05b` 的[自动构建与游戏测试](https://github.com/newFanqie/smoke-kitchen/actions/runs/39590399449)已通过。

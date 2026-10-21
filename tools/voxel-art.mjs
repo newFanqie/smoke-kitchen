@@ -113,7 +113,7 @@ export function stationGeometry(s,models) {
  if(s.id==='spice_rack')return base;
  if(s.id==='dish_rack')return [...base,...[3,7,11].map(x=>b([x,3,6],[x+1,7,13],'#clay'))];
  if(s.id==='spice_trellis')return [b([1,0,0],[3,16,2],'#stake'),b([13,0,0],[15,16,2],'#stake'),...[4,9,14].map(y=>b([3,y,.75],[13,y+.5,1.25],'#twine')),b([7.75,1,.75],[8.25,15,1.25],'#twine')];
- if(s.id==='drying_rack')return [...base,b([4,15,7],[6,20,8],'#clay'),b([10,15,7],[12,20,8],'#grain')];
+ if(s.id==='drying_rack')return [b([0,0,7],[1.5,16,9]),b([14.5,0,7],[16,16,9]),b([1.5,7,7.5],[14.5,8,8.5]),b([1.5,15,7.5],[14.5,16,8.5])];
  if(s.id==='mixing_table')return [...base,b([5,16,5],[11,18,11],'#clay'),b([2,16,3],[4,17,13])];
  if(s.id==='soup_pot')return [...base,b([-1,4,6],[1,6,10],'#metal'),b([15,4,6],[17,6,10],'#metal')];
  if(s.id==='clay_pot')return base.map(e=>({...e,faces:Object.fromEntries(Object.keys(e.faces).map(f=>[f,{texture:'#clay'}]))}));

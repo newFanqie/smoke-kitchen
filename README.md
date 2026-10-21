@@ -2,7 +2,7 @@
 
 Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配、锅具投料、调火和翻炒，把食材做成可以装盘分享的饭菜。
 
-**当前版本：0.1.20 开发版。** 香料种植架现在支撑真实耕地里的胡椒藤；可播种、灌溉、生长、采收留种，缺水或撤架暂停而不删苗。花椒按独立灌木处理，空架去掉假叶片，旧库存可原样回收。原版与实际启用Iris完成基础材料合成、耕种采收、拆除回收和两次读档。见[本版更新](docs/UPDATE-0.1.20.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)和[玩法设计](docs/DESIGN.md)。其余有限设计继续推进。
+**当前版本：0.1.21 开发版。** 晾晒架六格逐件计时，半干辣椒/香菇可精确取回换架；露天雨水暂停，遮雨继续，真正卸载后按实际晴雨结算。原版与启用Iris完成基础材料合成、挂料、换架、离开区块、磨粉和三次读档。见[本版更新](docs/UPDATE-0.1.21.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)和[玩法设计](docs/DESIGN.md)。肉类风干和其余有限设计继续推进。
 
 ## 当前玩法
 
@@ -17,11 +17,11 @@ Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配
 
 ## 安装
 
-[下载 0.1.20 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.20) · [本次更新与实测记录](docs/UPDATE-0.1.20.md)
+[下载 0.1.21 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.21) · [本次更新与实测记录](docs/UPDATE-0.1.21.md)
 
 1. 使用 Minecraft Java **26.1.2**、Fabric Loader **0.19.2** 或更高的兼容版本。
 2. 安装对应版本的 Fabric API；本工程验证使用 **0.149.1+26.1.2**。
-3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.20.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
+3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.21.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
 4. 联机时服务器与客户端均安装本模组及 Fabric API。
 
 实际客户端检查截图：

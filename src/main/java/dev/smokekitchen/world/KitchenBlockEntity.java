@@ -39,6 +39,8 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     public int methodIndex;
     public long lastAction = -100;
     public long lastProcessTime;
+    public long lastDryTick=Long.MIN_VALUE;
+    public boolean dryWeatherSensitive;
     public String attachedLid="";
     public boolean saltwater;
     public int coldTicks;
@@ -68,6 +70,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if (now-lastAction < 4) return InteractionResult.SUCCESS;
         lastAction = now;
         settleFreshness();
+        if(station().id.equals("drying_rack"))return drying(p,stack,hit);
         if(station().id.equals("spice_rack"))return rack(p,stack,hit);
         if(station().id.equals("spice_trellis")&&stack.isEmpty()){
             for(int i=items.size()-1;i>=0;i--)if(!items.get(i).isEmpty()){give(p,items.get(i));items.set(i,ItemStack.EMPTY);changed();return InteractionResult.SUCCESS;}
@@ -176,6 +179,18 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         items.set(slot,held.copyWithCount(1));take(p,held);changed();sound();return InteractionResult.SUCCESS;
     }
 
+    private InteractionResult drying(Player player,ItemStack held,BlockHitResult hit){
+        DryingRack.settle(this);int slot=DryingRack.slot(worldPosition,getBlockState(),hit);
+        if(held.is(KitchenContent.item("recipe_book"))){RecipeGuide.show(player);return InteractionResult.SUCCESS;}
+        if(held.isEmpty()){
+            if(player.isShiftKeyDown())for(int i=26;i>=6;i--)if(!items.get(i).isEmpty()){give(player,items.get(i));items.set(i,ItemStack.EMPTY);changed();return InteractionResult.SUCCESS;}
+            if(items.get(slot).isEmpty()){player.sendOverlayMessage(DryingRack.status(this));return InteractionResult.SUCCESS;}
+            give(player,items.get(slot));items.set(slot,ItemStack.EMPTY);changed();sound();return InteractionResult.SUCCESS;
+        }
+        if(!DryingRack.accepts(held)){player.sendOverlayMessage(Component.literal("晾晒架目前可挂辣椒或香菇；肉类需要单独的腌制工艺，不能直接晾成熟食。"));return InteractionResult.SUCCESS;}
+        if(!items.get(slot).isEmpty()){player.sendOverlayMessage(Component.literal("此格已有食材，请先空手取回。"));return InteractionResult.SUCCESS;}
+        items.set(slot,held.copyWithCount(1));take(player,held);changed();sound();return InteractionResult.SUCCESS;
+    }
     public boolean isBurner() { return kind().equals("stove") || kind().equals("gas_stove"); }
     public boolean isOven(){return station().id.equals("oven");}
     private InteractionResult gas(Player p,ItemStack stack,String held) {
@@ -537,6 +552,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         say(p,"empty");
     }
     public void showStatus(Player p) {
+        if(station().id.equals("drying_rack")){p.sendOverlayMessage(DryingRack.status(this));return;}
         if((kind().equals("cook")||isBurner())&&batchFreshness()>0){say(p,batchFreshness()>=2?"meal_spoiled":"meal_stale");return;}
         if(kind().equals("ferment")&&items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soybean"))&&items.stream().filter(x->!x.isEmpty()).allMatch(x->ResourceStates.baseId(x).equals("soybean"))){say(p,"soy_soak",Math.min(100,100*work/120),work);return;}
         if(kind().equals("mix")&&items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soy_curds"))){say(p,"tofu_press",Math.min(100,100*work/20));return;}
@@ -589,7 +605,8 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             if(station().id.equals("oven") && fuelSeconds>0){sourceHeat=heat;fuelSeconds=Math.max(0,fuelSeconds-heat);}
             tickCooking(sourceHeat);
             showTargetedStatus();
-        } else if (Set.of("ferment","pickle","dry","evaporate").contains(kind())) {
+        } else if(kind().equals("dry")){DryingRack.settle(this);showTargetedStatus();return;
+        } else if (Set.of("ferment","pickle","evaporate").contains(kind())) {
             long now=level.getGameTime();
             boolean allowed=kind().equals("dry")?!level.isRainingAt(worldPosition.above()):kind().equals("evaporate")?
                     heatBelow()>0:getBlockState().getValue(KitchenBlock.LID);
@@ -768,6 +785,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     }
     public void dropContents() {
         if(level==null || level.isClientSide()) return;
+        if(station().id.equals("drying_rack"))DryingRack.settle(this);
         settleFreshness();
         if((isBurner()||isOven())&&!mountedCookware.isEmpty()){Block.popResource(level,worldPosition,new ItemStack(KitchenContent.item(mountedCookware)));mountedCookware="";}
         if((kind().equals("cook") || isBurner()) && batch.remainingServings>=0) {
@@ -797,6 +815,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         super.saveAdditional(out); ContainerHelper.saveAllItems(out,items);
         out.putString("batch",GSON.toJson(batch)); out.putInt("heat",heat); out.putInt("fuel",fuelSeconds);
         out.putInt("work",work); out.putInt("cutProgress",cutProgress); out.putString("cut",cut.name()); out.putLong("lastProcess",lastProcessTime);
+        out.putLong("lastDryTick",lastDryTick);out.putBoolean("dryWeatherSensitive",dryWeatherSensitive);
         out.putString("attachedLid",attachedLid);
         out.putBoolean("saltwater",saltwater);
         out.putInt("coldTicks",coldTicks);out.putLong("lastCoolingTime",lastCoolingTime);out.putBoolean("lastRedstone",lastRedstone);
@@ -811,6 +830,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         catch(RuntimeException e) { SmokeKitchen.LOGGER.warn("Invalid saved cooking state at {}",worldPosition); batch=new CookingBatch(); }
         heat=Math.clamp(in.getIntOr("heat",0),0,3); fuelSeconds=Math.clamp(in.getIntOr("fuel",0),0,7200);
         work=Math.clamp(in.getIntOr("work",0),0,100000); cutProgress=Math.clamp(in.getIntOr("cutProgress",0),0,4); lastProcessTime=in.getLongOr("lastProcess",0);
+        lastDryTick=in.getLongOr("lastDryTick",Long.MIN_VALUE);dryWeatherSensitive=in.getBooleanOr("dryWeatherSensitive",false);
         attachedLid=in.getStringOr("attachedLid","");
         saltwater=in.getBooleanOr("saltwater",false);
         coldTicks=Math.clamp(in.getIntOr("coldTicks",0),0,216000);lastCoolingTime=in.getLongOr("lastCoolingTime",Long.MIN_VALUE);lastRedstone=in.getBooleanOr("lastRedstone",false);
@@ -823,17 +843,17 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     }
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries) { return saveWithoutMetadata(registries); }
     @Override public Packet<ClientGamePacketListener> getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
-    @Override public int getContainerSize() { return station().id.equals("spice_rack")?6:items.size(); }
-    @Override public int getMaxStackSize(){return station().id.equals("spice_rack")?1:Container.super.getMaxStackSize();}
+    @Override public int getContainerSize() { return Set.of("spice_rack","drying_rack").contains(station().id)?6:items.size(); }
+    @Override public int getMaxStackSize(){return Set.of("spice_rack","drying_rack").contains(station().id)?1:Container.super.getMaxStackSize();}
     @Override public boolean isEmpty() { return items.stream().allMatch(ItemStack::isEmpty); }
-    @Override public ItemStack getItem(int slot) { settleFreshness();return items.get(slot); }
+    @Override public ItemStack getItem(int slot) { DryingRack.settle(this);settleFreshness();return items.get(slot); }
     @Override public ItemStack removeItem(int slot,int count) {
-        if(!kind().equals("storage") && !kind().equals("rack")) return ItemStack.EMPTY;
-        settleFreshness();var result=ContainerHelper.removeItem(items,slot,count); if(!result.isEmpty()) changed(); return result;
+        if(!kind().equals("storage") && !kind().equals("rack")&&!kind().equals("dry")) return ItemStack.EMPTY;
+        DryingRack.settle(this);settleFreshness();var result=ContainerHelper.removeItem(items,slot,count); if(!result.isEmpty()) changed(); return result;
     }
     @Override public ItemStack removeItemNoUpdate(int slot) { return removeItem(slot,items.get(slot).getCount()); }
-    @Override public void setItem(int slot,ItemStack stack) { settleFreshness();items.set(slot,level==null?stack:KitchenFoodItem.agedStack(stack,level.getGameTime())); changed(); }
+    @Override public void setItem(int slot,ItemStack stack) { DryingRack.settle(this);settleFreshness();items.set(slot,level==null?stack:KitchenFoodItem.agedStack(stack,level.getGameTime())); changed(); }
     @Override public boolean stillValid(Player player) { return Container.stillValidBlockEntity(this,player); }
     @Override public void clearContent() { items.clear(); changed(); }
-    @Override public boolean canPlaceItem(int slot,ItemStack stack) { if(station().id.equals("spice_trellis"))return false;return station().id.equals("spice_rack")?slot>=0&&slot<6&&items.get(slot).isEmpty()&&stack.getCount()==1&&SpiceRack.accepts(stack):kind().equals("storage") || kind().equals("rack"); }
+    @Override public boolean canPlaceItem(int slot,ItemStack stack) { if(station().id.equals("spice_trellis"))return false;if(station().id.equals("drying_rack"))return slot>=0&&slot<6&&items.get(slot).isEmpty()&&stack.getCount()==1&&DryingRack.accepts(stack);return station().id.equals("spice_rack")?slot>=0&&slot<6&&items.get(slot).isEmpty()&&stack.getCount()==1&&SpiceRack.accepts(stack):kind().equals("storage") || kind().equals("rack"); }
 }

@@ -328,6 +328,8 @@
   "item.smoke_kitchen.used_lard": "used lard",
   "item.smoke_kitchen.stale_cooked_soybean": "stale cooked soybean",
   "item.smoke_kitchen.spoiled_cooked_soybean": "spoiled cooked soybean",
+  "item.smoke_kitchen.partially_dried_chili": "partially dried chili",
+  "item.smoke_kitchen.partially_dried_shiitake": "partially dried shiitake",
   "water.smoke_kitchen.dry": "无水",
   "water.smoke_kitchen.warming": "加热中",
   "water.smoke_kitchen.simmering": "微沸",

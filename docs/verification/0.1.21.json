@@ -1,0 +1,45 @@
+{
+  "version": "0.1.21",
+  "scope": "Six independently timed drying slots, real rain/shelter, persisted weather history and partial-transfer state for chili/shiitake.",
+  "sha256": "bbaabb682f53390a02dae6055af49b8613ff6c9d318bccde692ffe195fc34fb8",
+  "jarBytes": 1026629,
+  "downloadVerified": false,
+  "sourceCIPassed": false,
+  "unitTests": 84,
+  "totalGameTests": 90,
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "onlyEntrypointRun": "DryingFlowTest",
+    "actualMixedPlankCrafting": true,
+    "actualSixSlotPlacement": true,
+    "actualIndependentAgesAndPartialTransfer": true,
+    "actualRainPauseAndPlankRoofContinue": true,
+    "actualUnloadedRainClearRain": true,
+    "independentWeatherTickObserver": true,
+    "actualSavedDataReopenEquality": true,
+    "actualMillingOutputs": true,
+    "actualWorldReopens": 3,
+    "activeIrisAsserted": true,
+    "guideSinglePageViewed": true,
+    "fullManifestRestored": 30,
+    "irisDisabledAfterRun": true,
+    "oldInventoryFixture": "Separately labelled legacy slot0 raw chili64 and slot26 custom-named pickaxe damage23; actual emptyhand recovery/mining retains all. Not natural production.",
+    "clockNote": "Actual server ticks accelerated200/s and restored20finally. Clear/rain command fades are measured independently per actual non-raining tick; no item progress/date/weather-history edits.",
+    "captureNote": "Camera waits25ticks after aiming for targeted status refresh, avoiding previous-target overlay in final photographs."
+  },
+  "earlierFailures": [
+    "First backend used nonexistent END_WORLD_TICK, corrected to END_LEVEL_TICK.",
+    "First native run used command-clear duration instead of actual rain fade threshold; assertion replaced with independent per-tick observer and real persisted-journal reopen check.",
+    "Initial final screenshots retained previous targeted HUD; test camera refresh wait corrected, both actual workflows rerun. No failed run counted as whole pass."
+  ],
+  "knownLimits": [
+    "Only existing chili/shiitake drying completed here; curing meat, dry black pepper/cumin and their actual recipes remain finite followup. Drying is not cooking.",
+    "Unknown old weather history is not credited as clear; history bounded4096transitions.",
+    "Legacy stack larger than1 is preserved for recovery, not silently truncated or freely converted. Old shared work migrates to at most one eligible item.",
+    "Unloaded roof/biome state uses last observed rack exposure; does not simulate unobserved environment edits in unloaded chunks.",
+    "No real-time offline aging; only game-world time.",
+    "Iris1.11.4/Sodium0.9.2/MakeUpUltraFast9.6 verified, not every shader.",
+    "All confirmed design not complete; remaining devices/ecology/buildings/management/multiplayer/performance retained."
+  ]
+}

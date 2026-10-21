@@ -5,6 +5,7 @@ import {inventoryModel,stationGeometry,cropModel} from './voxel-art.mjs';
 import {vessel,vesselLid,toolModel,tofuModel,dishModel,disk,foodFamilies,foodStages,foodModel} from './kitchen-art.mjs';
 import {sampleFoodModel,writeFoodSampleTextures,sampleBases} from './food-samples.mjs';
 import {farmRackResources} from './farm-rack.mjs';
+import {dryingResources} from './drying-art.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../src/main/resources');
 const ns='smoke_kitchen';
 const write=(p,data)=>{if(p.includes('/models/')&&data.textures&&!data.textures.particle)data.textures.particle=Object.values(data.textures).find(t=>!t.startsWith('#'));const out=path.join(root,p);fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(data,null,2)+'\n');};
@@ -226,6 +227,7 @@ for(const original of [...items]) {
   item('spoiled_'+original.id,'变质的'+original.name,original.texture,{...original,id:'spoiled_'+original.id,name:'变质的'+original.name,variant_of:original.id,state:'spoiled',nutrition:0});
  }
 }
+for(const id of ['chili','shiitake']){const original=items.find(x=>x.id===id);item('partially_dried_'+id,'半干'+original.name,original.texture,{...original,id:'partially_dried_'+id,name:'半干'+original.name,variant_of:id,state:'drying'});}
 write(`data/${ns}/catalog.json`,{items,stations,crops,dishes,processes});
 const vanillaTools={rice_paddy:'wheat',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle',pan_fried_fish:'cooked_cod',roast_potatoes:'baked_potato'};
 write(`assets/${ns}/models/item/pot_water.json`,{parent:'minecraft:block/block',textures:{water:'minecraft:block/water_still'},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#water',tintindex:0,uv:[0,0,16,16]}}}]});
@@ -252,7 +254,7 @@ for(const it of items){
  const sample=sampleFoodModel(it.id);
  let model=sample||dishModel(it.id)||tofuModel(it.id)||toolModel(it.id)|| (vanilla?{parent:`minecraft:item/${vanilla}`} : it.id==='fried_rice'?{parent:'minecraft:item/generated',textures:{layer0:`${ns}:item/fried_rice`}}:inventoryModel(it,items.indexOf(it)));
  if(it.id==='wooden_lid')model={parent:'minecraft:block/oak_trapdoor_bottom'};
- if(it.variant_of&&!sample) {
+ if(it.variant_of&&!sample&&it.state!=='drying') {
   model={parent:`${ns}:item/${it.variant_of}`};
   const badge=inventoryModel({id:it.id,variant_of:it.variant_of,state:it.state},items.indexOf(it));
   write(`assets/${ns}/models/item/${it.id}_state.json`,badge);
@@ -396,6 +398,7 @@ shaped('dining_table',['PP','SS'],{P:'minecraft:oak_planks',S:'minecraft:stick'}
 shaped('dish_rack',['SSS','P P',' S '],{P:'minecraft:oak_planks',S:'minecraft:stick'});
 shaped('spice_rack',['PPP','SGS',' S '],{P:'minecraft:oak_planks',S:'minecraft:stick',G:'minecraft:glass'});
 shaped('spice_trellis',['S S','SLS','SLS'],{S:'minecraft:stick',L:'minecraft:string'},2);
+shaped('drying_rack',['S S','PTP','STS'],{S:'minecraft:stick',P:'#minecraft:planks',T:'minecraft:string'});
 shaped('gas_stove',['III','CFC','ICI'],{I:'minecraft:iron_ingot',C:'minecraft:copper_ingot',F:'minecraft:furnace'});
 shaped('gas_pipe',['CCC'],{C:'minecraft:copper_ingot'},6);
 shaped('gas_tank',['III','I I','III'],{I:'minecraft:iron_ingot'});
@@ -513,3 +516,4 @@ console.log(`Generated ${items.length} items, ${stations.length} stations, ${cro
 
 writeFoodSampleTextures(root);
 farmRackResources(root);
+dryingResources(root);

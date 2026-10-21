@@ -98,6 +98,20 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         state.labels=!state.covered&&!cook&&!board&&!crock&&!Set.of("plate","mix").contains(entity.kind());
         int visible=entity.batch.remainingServings>=0&&entity.batch.totalServings>0?(int)Math.ceil((double)entity.batch.ingredients.size()*entity.batch.remainingServings/entity.batch.totalServings):26;
         var names=new ArrayList<Component>();var pieces=new ArrayList<FoodPiece>();
+        if(entity.station().id.equals("drying_rack")){
+            state.labels=false;var face=entity.getBlockState().getValue(KitchenBlock.FACING);
+            for(int slot=0;slot<6;slot++)if(!entity.items.get(slot).isEmpty()){
+                var stack=entity.items.get(slot);String id=dev.smokekitchen.content.ResourceStates.baseId(stack),type=id.contains("shiitake")?"shiitake":"chili";
+                var p=dev.smokekitchen.world.DryingRack.position(slot,face);float top=(slot<3?7.5f:15.5f)/16;
+                if(dev.smokekitchen.world.DryingRack.accepts(stack)||id.equals("dried_chili")||id.equals("dried_shiitake")){
+                    String stage=id.startsWith("dried_")?"dried":dev.smokekitchen.world.DryingRack.progress(stack)>0?"partial":"fresh",appearance="drying/"+type+"_"+stage;
+                    pieces.add(new FoodPiece(model(appearance,entity),p[0],top-6/16f,p[1],1,face.toYRot(),0,6/16f,false,appearance));
+                }else{
+                    var item=resolve(stack,entity,ItemDisplayContext.NONE);var b=item.getModelBoundingBox();float scale=(float)Math.min(.25/Math.max(.001,Math.max(b.getXsize(),b.getZsize())),.28/Math.max(.001,b.getYsize()));
+                    pieces.add(new FoodPiece(item,p[0],top-.02f-scale*(.5f+(float)b.maxY),p[1],scale,0,0,1,false,"drying/legacy"));
+                }
+            }state.names=List.of();state.pieces=List.copyOf(pieces);return;
+        }
         if(entity.station().id.equals("spice_trellis")){state.labels=false;state.names=List.of();state.pieces=List.of();return;}
         if(entity.station().id.equals("spice_rack")){
             state.labels=false;

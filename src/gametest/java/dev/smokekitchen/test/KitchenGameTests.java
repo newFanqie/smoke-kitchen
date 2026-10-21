@@ -14,6 +14,20 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void dryingWeatherHistoryCountsOnlyRecordedClearIntervalsAndSurvivesCodec(GameTestHelper t){
+        var h=new dev.smokekitchen.world.DryWeatherHistory();h.observe(100,false);h.observe(200,true);h.observe(400,false);h.observe(500,false);
+        t.assertTrue(h.dryTicks(0,600)==200&&h.dryTicks(150,450)==100,"Unknown prefix/future and200 rainy ticks cannot become offline dry credit");
+        var encoded=dev.smokekitchen.world.DryWeatherHistory.CODEC.encodeStart(net.minecraft.nbt.NbtOps.INSTANCE,h).getOrThrow();var copy=dev.smokekitchen.world.DryWeatherHistory.CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE,encoded).getOrThrow();t.assertTrue(copy.dryTicks(0,600)==200,"The exact weather segments survive persistent codec roundtrip");
+        for(int i=0;i<5000;i++)h.observe(1000+i,i%2==0);t.assertTrue(h.dryTicks(0,6000)<=2048,"Evicted history cannot be assumed dry");t.succeed();
+    }
+    @GameTest public void hangingItemsHaveIndependentClocksAndPreserveProgressThroughContainers(GameTestHelper t){
+        var pos=new BlockPos(1,1,1);t.setBlock(pos,KitchenContent.BLOCKS.get("drying_rack"));var e=t.getBlockEntity(pos,KitchenBlockEntity.class);var now=t.getLevel().getGameTime();dev.smokekitchen.world.DryingRack.settle(e);
+        var chili=new ItemStack(KitchenContent.item("chili"));chili.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,net.minecraft.network.chat.Component.literal("晒椒"));e.setItem(0,chili);e.lastDryTick=now-20;e.dryWeatherSensitive=false;dev.smokekitchen.world.DryingRack.settle(e);
+        e.setItem(1,new ItemStack(KitchenContent.item("shiitake")));t.assertTrue(dev.smokekitchen.world.DryingRack.progress(e.items.get(0))==20&&dev.smokekitchen.world.DryingRack.progress(e.items.get(1))==0,"New food cannot borrow existing food or empty-rack work");
+        var partial=e.removeItem(0,1);t.assertTrue(partial.is(KitchenContent.item("partially_dried_chili"))&&dev.smokekitchen.world.DryingRack.progress(partial)==20,"Actual container removal keeps the independent intermediate item and progress");e.setItem(2,partial);e.lastDryTick=now-2380;e.dryWeatherSensitive=false;dev.smokekitchen.world.DryingRack.settle(e);
+        t.assertTrue(e.items.get(2).is(KitchenContent.item("dried_chili"))&&e.items.get(2).getHoverName().getString().equals("晒椒")&&dev.smokekitchen.world.DryingRack.progress(e.items.get(1))==2380,"Only the older portion completes, and its name survives conversion");
+        var rejected=net.minecraft.world.level.block.entity.HopperBlockEntity.addItem(null,e,new ItemStack(KitchenContent.item("chili"),8),null);t.assertTrue(rejected.getCount()==8&&e.getContainerSize()==6,"Bulk hopper input must be rejected whole, not truncated");t.succeed();
+    }
     @GameTest public void trellisEmptyHandUsesNormalBlockEntryToRecoverOldInventory(GameTestHelper t){
         var at=new BlockPos(1,1,1);t.setBlock(at,KitchenContent.BLOCKS.get("spice_trellis"));var e=t.getBlockEntity(at,KitchenBlockEntity.class);var old=new ItemStack(Items.IRON_PICKAXE);old.setDamageValue(23);e.items.set(26,old);e.items.set(0,new ItemStack(Items.COBBLESTONE,13));
         var player=t.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);use(t,at,player,ItemStack.EMPTY,net.minecraft.core.Direction.NORTH);

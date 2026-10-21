@@ -59,6 +59,7 @@ public class KitchenBlock extends Block implements EntityBlock {
     }
     @Override protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, CollisionContext context) {
         if(id.equals("oven"))return Shapes.block();
+        if(id.equals("drying_rack"))return state.getValue(FACING).getAxis()==Direction.Axis.X?Block.box(7,0,0,9,16,16):Block.box(0,0,7,16,16,9);
         if(id.equals("spice_trellis"))return switch(state.getValue(FACING)){
             case NORTH->Block.box(1,0,0,15,16,2);case EAST->Block.box(14,0,1,16,16,15);case SOUTH->Block.box(1,0,14,15,16,16);default->Block.box(0,0,1,2,16,15);
         };

@@ -2105,6 +2105,24 @@
       "nutrition": 0,
       "variant_of": "cooked_soybean",
       "state": "spoiled"
+    },
+    {
+      "id": "partially_dried_chili",
+      "name": "半干辣椒",
+      "texture": "sweet_berries",
+      "nutrition": 0,
+      "ingredient": "chili",
+      "variant_of": "chili",
+      "state": "drying"
+    },
+    {
+      "id": "partially_dried_shiitake",
+      "name": "半干香菇",
+      "texture": "brown_mushroom",
+      "nutrition": 0,
+      "ingredient": "mushroom",
+      "variant_of": "shiitake",
+      "state": "drying"
     }
   ],
   "stations": [

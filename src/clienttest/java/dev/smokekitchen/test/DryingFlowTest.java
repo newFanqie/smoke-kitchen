@@ -1,0 +1,66 @@
+package dev.smokekitchen.test;
+
+import dev.smokekitchen.content.*;
+import dev.smokekitchen.world.*;
+import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
+import net.fabricmc.fabric.api.client.gametest.v1.context.*;
+import net.fabricmc.fabric.api.client.gametest.v1.world.TestWorldSave;
+import net.minecraft.core.*;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.*;
+import net.minecraft.world.phys.*;
+
+/** Actual raw material crafting/drying/milling; isolated old-save fixture is explicitly separate. */
+public final class DryingFlowTest implements FabricClientGameTest {
+    private static volatile net.minecraft.server.level.ServerLevel measuredLevel;
+    private static final java.util.concurrent.atomic.AtomicLong observedClear=new java.util.concurrent.atomic.AtomicLong();
+    private static final BlockPos A=new BlockPos(2,100,0),B=new BlockPos(4,100,0),C=new BlockPos(6,100,0),TABLE=new BlockPos(0,100,2),MILL=new BlockPos(-2,100,0),OLD=new BlockPos(8,100,3);
+    private static void check(boolean b,String m){if(!b)throw new AssertionError(m);}
+    private static KitchenBlockEntity rack(net.minecraft.server.MinecraftServer g,BlockPos p){return (KitchenBlockEntity)g.overworld().getBlockEntity(p);}
+    private static boolean observe(SurvivalPlayer p,java.util.function.Predicate<net.minecraft.server.MinecraftServer> test){boolean[] v={false};p.s.runOnServer(g->v[0]=test.test(g));return v[0];}
+    private static int ticks(SurvivalPlayer p,BlockPos at,int slot){int[] v={0};p.s.runOnServer(g->v[0]=DryingRack.progress(rack(g,at).getItem(slot)));return v[0];}
+    private static void near(SurvivalPlayer p,BlockPos at){p.s.runCommand("tp @a "+(at.getX()+.5)+" 100 "+(at.getZ()-2.5));p.c.waitTicks(4);}
+    private static void tap(SurvivalPlayer p,BlockPos at){near(p,at);p.click(at,Direction.UP);}
+    private static void cell(SurvivalPlayer p,BlockPos at,int slot){near(p,at);var v=new Vec3(at.getX()+(3+5*(slot%3))/16d,at.getY()+(slot<3?.3:.7),at.getZ()+7/16d);p.look(v);p.c.runOnClient(m->m.gameMode.useItemOn(m.player,InteractionHand.MAIN_HAND,new BlockHitResult(v,Direction.NORTH,at,false)));p.c.waitTicks(6);}
+    private static void put(SurvivalPlayer p,BlockPos at,int slot,String id){p.select(id);cell(p,at,slot);}
+    private static void take(SurvivalPlayer p,BlockPos at,int slot){p.emptyHand();cell(p,at,slot);}
+    private static void waitWorld(SurvivalPlayer p,int ticks,String phase,boolean unloaded){
+        long[] began={0};p.s.runOnServer(g->began[0]=g.overworld().getGameTime());p.c.runOnClient(m->{FermentationFlowTest.fastClock=true;m.options.enableVsync().set(false);m.options.framerateLimit().set(260);m.options.pauseOnLostFocus=false;});p.s.runCommand("tick rate 200");
+        try{for(int n=0;n<ticks+4000;n+=20){boolean[] done={false};p.s.runOnServer(g->{long elapsed=g.overworld().getGameTime()-began[0];done[0]=elapsed>=ticks;if(unloaded)check(!g.overworld().hasChunkAt(A),"Kitchen must actually remain unloaded during all three weather intervals");g.getPlayerList().getPlayers().forEach(x->x.sendOverlayMessage(Component.literal("自动验收："+phase+" "+Math.min(100,elapsed*100/ticks)+"% · 真实游戏刻")));});if(done[0])return;p.c.waitTicks(20);}throw new AssertionError("Actual world clock stalled");}finally{p.s.runCommand("tick rate 20");p.c.runOnClient(m->FermentationFlowTest.fastClock=false);}
+    }
+    private static void photo(SurvivalPlayer p,String name,BlockPos at){p.emptyHand();p.s.runCommand("time set noon");p.s.runCommand("tp @a "+(at.getX()+2.5)+" 100 "+(at.getZ()-3.5));p.c.waitTicks(6);p.look(new Vec3(at.getX()+.5,at.getY()+.5,at.getZ()+.5));p.c.runOnClient(m->{m.options.fov().set(42);m.getToastManager().clear();});p.c.waitTicks(25);p.c.takeScreenshot("drying-"+name+"-0.1.21");p.c.runOnClient(m->m.options.fov().set(70));}
+    private static void mine(SurvivalPlayer p,BlockPos at){near(p,at);p.select("stone_axe");p.look(Vec3.atCenterOf(at));p.c.runOnClient(m->m.gameMode.startDestroyBlock(at,Direction.NORTH));for(int i=0;i<180&&!p.c.computeOnClient(m->m.level.isEmptyBlock(at));i++){p.c.runOnClient(m->m.gameMode.continueDestroyBlock(at,Direction.NORTH));p.c.waitTicks(1);}p.c.runOnClient(m->m.gameMode.stopDestroyBlock());check(p.c.computeOnClient(m->m.level.isEmptyBlock(at)),"Actual axe breaks legacy rack");p.s.runCommand("tp @a "+(at.getX()+.5)+" 100 "+(at.getZ()+.5));p.c.waitTicks(30);}
+    @Override public void runTest(ClientGameTestContext c){
+        TestWorldSave save;int[] prior={0},moved={0};long[] savedWeather={0,0};
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_LEVEL_TICK.register(level->{if(level==measuredLevel&&!level.isRaining())observedClear.incrementAndGet();});
+        try(var w=c.worldBuilder().create()){
+            save=w.getWorldSave();var s=w.getServer();var p=new SurvivalPlayer(c,s);s.runCommand("gamemode survival @a");s.runCommand("difficulty peaceful");s.runCommand("fill -7 98 -6 12 99 7 minecraft:smooth_stone");s.runCommand("fillbiome -7 98 -6 12 110 7 minecraft:plains");s.runCommand("weather clear 10000");s.runCommand("time set noon");
+            for(String raw:new String[]{"oak_log 6","spruce_log","string 6","cobblestone 9","book","wheat_seeds","smoke_kitchen:chili 10","smoke_kitchen:shiitake 4"})s.runCommand("give @a "+(raw.startsWith("smoke_kitchen:")?raw:"minecraft:"+raw));near(p,TABLE);
+            if(net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("iris"))c.runOnClient(m->{try{var a=Class.forName("net.irisshaders.iris.api.v0.IrisApi");check((Boolean)a.getMethod("isShaderPackInUse").invoke(a.getMethod("getInstance").invoke(null)),"Iris test must have an active shader");}catch(ReflectiveOperationException e){throw new AssertionError(e);}});
+            for(int i=0;i<6;i++)p.craft("oak_planks","oak_log");p.craft("spruce_planks","spruce_log");p.craft("crafting_table","oak_planks","oak_planks","oak_planks","oak_planks");p.closeMenu();p.select("crafting_table");tap(p,TABLE.below());p.emptyHand();tap(p,TABLE);for(int i=0;i<4;i++)p.craft("stick","oak_planks","","","oak_planks","","");p.craft("stone_axe","cobblestone","cobblestone","","cobblestone","stick","","","stick","");p.craft("smoke_kitchen:hand_mill","","stick","","cobblestone","cobblestone","cobblestone","cobblestone","cobblestone","cobblestone");p.craft("smoke_kitchen:recipe_book","book","wheat_seeds");
+            for(int i=0;i<3;i++){if(i==0)p.nextCraftScreenshot="drying-actual-mixed-wood-recipe-0.1.21";p.craft("smoke_kitchen:drying_rack","stick","","stick","oak_planks","string","spruce_planks","stick","string","stick");}p.closeMenu();for(var at:new BlockPos[]{A,B,C}){p.select("smoke_kitchen:drying_rack");tap(p,at.below());}p.select("smoke_kitchen:hand_mill");tap(p,MILL.below());p.select("oak_planks");tap(p,B);check(observe(p,g->!DryingRack.weatherSensitive(g.overworld(),B)&&DryingRack.weatherSensitive(g.overworld(),A)),"Actually placed plank roof shelters only the covered rack");photo(p,"actual-empty-rack",A);
+            waitWorld(p,300,"空架不积攒工时",false);for(int slot=0;slot<6;slot++)put(p,A,slot,slot%2==0?"smoke_kitchen:chili":"smoke_kitchen:shiitake");check(ticks(p,A,5)<100,"Newly hung food cannot inherit empty-rack waiting time");put(p,B,0,"smoke_kitchen:chili");photo(p,"actual-full-hanging",A);waitWorld(p,400,"逐件晾制",false);photo(p,"actual-partial",A);
+            s.runCommand("weather rain 10000");waitWorld(p,100,"等待实际降雨",false);check(observe(p,g->g.overworld().isRainingAt(A.above())&&!g.overworld().isRainingAt(B.above())),"Rain reaches open food but not the actual roof");int a=ticks(p,A,0),b=ticks(p,B,0);waitWorld(p,600,"露天暂停、遮雨继续",false);check(ticks(p,A,0)==a&&ticks(p,B,0)>=b+580,"Rain pauses the exposed item; covered item really progresses");photo(p,"actual-rain-pause",A);photo(p,"actual-covered-in-rain",B);
+            take(p,A,0);p.select("smoke_kitchen:partially_dried_chili");int held=c.computeOnClient(m->DryingRack.progress(m.player.getMainHandItem()));cell(p,C,3);check(ticks(p,C,3)==held,"Actual take/rehang retains the precise partial progress");p.select("smoke_kitchen:chili",x->x.is(KitchenContent.item("chili")));cell(p,C,4);check(ticks(p,C,3)>ticks(p,C,4)+200,"A new adjacent item cannot borrow the older item's progress");put(p,B,1,"smoke_kitchen:chili");prior[0]=ticks(p,A,2);moved[0]=ticks(p,C,3);
+            // Explicit old-save fixture, not crafted/processed garden evidence.
+            s.runOnServer(g->{g.overworld().setBlockAndUpdate(OLD,KitchenContent.BLOCKS.get("drying_rack").defaultBlockState());var e=rack(g,OLD);e.items.set(0,new ItemStack(KitchenContent.item("chili"),64));var tool=new ItemStack(Items.IRON_PICKAXE);tool.setDamageValue(23);tool.set(DataComponents.CUSTOM_NAME,Component.literal("旧晾架的镐"));e.items.set(26,tool);e.setChanged();});
+            p.select("smoke_kitchen:recipe_book");c.runOnClient(m->m.gameMode.useItem(m.player,InteractionHand.MAIN_HAND));c.waitTicks(5);c.takeScreenshot("drying-actual-guide-0.1.21");p.closeMenu();p.s.runOnServer(g->{savedWeather[0]=g.overworld().getGameTime();savedWeather[1]=DryWeatherHistory.get(g.overworld()).dryTicks(0,savedWeather[0]);check(savedWeather[1]>0,"Real clear weather must have been recorded before the save");});
+        }
+        try(var w=save.open()){
+            var p=new SurvivalPlayer(c,w.getServer());c.waitTicks(12);check(ticks(p,A,2)==prior[0]&&ticks(p,C,3)==moved[0],"Actual rainy-world reopen preserves each paused item");p.s.runOnServer(g->check(DryWeatherHistory.get(g.overworld()).dryTicks(0,savedWeather[0])==savedWeather[1],"Weather history must actually persist through closing and reopening, not just an in-memory codec fixture"));
+            p.s.runCommand("forceload add 2000 2000");c.waitTicks(50);p.s.runCommand("fill 2000 99 2000 2003 99 2003 minecraft:smooth_stone");p.s.runCommand("tp @a 2001.5 100 2001.5");c.waitTicks(80);
+            for(int n=0;n<20&&observe(p,g->g.overworld().hasChunkAt(A));n++)waitWorld(p,300,"等待厨房真正卸载",false);check(observe(p,g->!g.overworld().hasChunkAt(A)),"Kitchen must really unload before weather catch-up verification");
+            observedClear.set(0);p.s.runOnServer(g->measuredLevel=g.overworld());
+            try{waitWorld(p,1000,"离开厨房：雨天",true);p.s.runCommand("weather clear 10000");waitWorld(p,600,"离开厨房：晴天",true);p.s.runCommand("weather rain 10000");waitWorld(p,1000,"离开厨房：再次雨天",true);}finally{measuredLevel=null;}
+            p.s.runCommand("tp @a 0.5 100 3.5");c.waitTicks(50);p.s.runCommand("forceload remove 2000 2000");int gained=ticks(p,A,2)-prior[0];long expected=observedClear.get();check(expected>400&&expected<800&&Math.abs(gained-expected)<=3,"Only independently observed non-raining ticks count after actual unload: gained="+gained+",observed="+expected);check(observe(p,g->rack(g,B).getItem(1).is(KitchenContent.item("dried_chili"))),"New covered item completes while its chunk is actually unloaded through rainy intervals");check(ticks(p,C,3)>ticks(p,C,4)+200,"Independent transferred age remains different after unloading");photo(p,"actual-weather-history-return",A);
+        }
+        try(var w=save.open()){
+            var p=new SurvivalPlayer(c,w.getServer());c.waitTicks(12);p.s.runCommand("weather clear 10000");waitWorld(p,2600,"实际完成晾制",false);check(observe(p,g->rack(g,A).getItem(1).is(KitchenContent.item("dried_shiitake"))&&rack(g,C).getItem(3).is(KitchenContent.item("dried_chili"))),"Both raw materials actually become their dried outputs");photo(p,"actual-dried-outputs",A);take(p,A,1);take(p,C,3);
+            p.select("smoke_kitchen:dried_chili");tap(p,MILL);p.emptyHand();tap(p,MILL);p.emptyHand();c.getInput().holdKey(o->o.keyShift);tap(p,MILL);c.getInput().releaseKey(o->o.keyShift);check(p.count("smoke_kitchen:chili_powder")==1,"Actual dried chili really grinds into seasoning");p.select("smoke_kitchen:dried_shiitake");tap(p,MILL);p.emptyHand();tap(p,MILL);p.emptyHand();c.getInput().holdKey(o->o.keyShift);tap(p,MILL);c.getInput().releaseKey(o->o.keyShift);check(p.count("smoke_kitchen:mushroom_powder")==1,"Actual dried mushroom really grinds into seasoning");
+            p.emptyHand();c.getInput().holdKey(o->o.keyShift);cell(p,OLD,0);c.getInput().releaseKey(o->o.keyShift);check(observe(p,g->g.getPlayerList().getPlayers().getFirst().getInventory().getNonEquipmentItems().stream().anyMatch(x->x.is(Items.IRON_PICKAXE)&&x.getDamageValue()==23&&x.getHoverName().getString().equals("旧晾架的镐"))),"Old overflow tool returns original name and damage");int raw=p.count("smoke_kitchen:chili");mine(p,OLD);check(p.count("smoke_kitchen:chili")==raw+64,"Mining returns all64 legacy raw items without truncation or free conversion");photo(p,"actual-processing-and-legacy-recovery",C);
+        }
+        try(var w=save.open()){w.getServer().runOnServer(g->{check(rack(g,A).getItem(2).is(KitchenContent.item("dried_chili"))&&g.overworld().isEmptyBlock(OLD),"Final actual reopen preserves dried food and removed legacy rack");var inv=g.getPlayerList().getPlayers().getFirst().getInventory();check(inv.countItem(KitchenContent.item("chili_powder"))==1&&inv.countItem(KitchenContent.item("mushroom_powder"))==1,"Actual milled seasonings remain after reopen");});c.takeScreenshot("drying-final-reopen-0.1.21");}
+    }
+}

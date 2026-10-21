@@ -19,6 +19,7 @@ public final class SmokeKitchen implements ModInitializer {
         dev.smokekitchen.world.KitchenWorld.register();
         KitchenContent.registerCreativeTab();
         dev.smokekitchen.world.KitchenInteractions.register();
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_LEVEL_TICK.register(level->dev.smokekitchen.world.DryWeatherHistory.get(level));
         LOGGER.info("Smoke Kitchen: {} items, {} stations, {} recipes", KitchenContent.ITEMS.size(), KitchenContent.BLOCKS.size(), ContentCatalog.DISHES.size());
     }
 }

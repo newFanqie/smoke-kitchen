@@ -109,5 +109,10 @@
   ],
   "jarBytes": 955486,
   "sha256": "efd1df1a526e665e969f56fb18e25ead2c75e05454c74123bc51b24eb1765a1f",
-  "downloadVerified": false
+  "downloadVerified": true,
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.14",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.14/smoke-kitchen-0.1.14.jar",
+  "sourceCommit": "d9b0bfc442a57a98c21938d17ea8f012c20a7689",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39598916245",
+  "sourceCIPassed": true
 }

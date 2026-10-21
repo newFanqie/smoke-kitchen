@@ -31,3 +31,5 @@ MapoFlowTest 接续真实首代培养、酿酱油/醋与豆腐六工序，保留
 ![游戏内食谱](screenshots/0.1.14/vanilla/mapo-guide-1-0.1.14.png)
 
 完整制作截图保存在screenshots/0.1.14/vanilla与iris。独立汤色夹具使用给予的中间品，只用于检查红汤、花椒颗粒和盖锅隐藏，不作为基础原料制作证据。
+
+发布核对：实际重新下载 **955486字节** 的开发JAR，SHA256 `efd1df1a526e665e969f56fb18e25ead2c75e05454c74123bc51b24eb1765a1f`，与本地验收包及GitHub上传摘要一致。[开发版下载](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.14)；[精确源码构建与游戏测试](https://github.com/newFanqie/smoke-kitchen/actions/runs/39598916245)通过，源码提交 `d9b0bfc442a57a98c21938d17ea8f012c20a7689`。

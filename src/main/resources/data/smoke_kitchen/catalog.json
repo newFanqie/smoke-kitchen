@@ -213,7 +213,8 @@
       "texture": "chicken",
       "ingredient": "duck",
       "nutrition": 2,
-      "resistance": 1.6
+      "resistance": 1.6,
+      "food_model_height": 4
     },
     {
       "id": "goose_meat",
@@ -277,7 +278,8 @@
       "texture": "cooked_chicken",
       "ingredient": "duck",
       "nutrition": 6,
-      "ready": true
+      "ready": true,
+      "food_model_height": 4
     },
     {
       "id": "cooked_goose",
@@ -791,7 +793,8 @@
       "name": "家常炖汤",
       "texture": "bowl",
       "nutrition": 5,
-      "meal": true
+      "meal": true,
+      "food_model_height": 6
     },
     {
       "id": "burnt_food",
@@ -953,6 +956,7 @@
       "ingredient": "duck",
       "nutrition": 1,
       "resistance": 1.6,
+      "food_model_height": 4,
       "variant_of": "duck_meat",
       "state": "stale"
     },
@@ -963,6 +967,7 @@
       "ingredient": "duck",
       "nutrition": 0,
       "resistance": 1.6,
+      "food_model_height": 4,
       "variant_of": "duck_meat",
       "state": "spoiled"
     },
@@ -1073,6 +1078,7 @@
       "ingredient": "duck",
       "nutrition": 3,
       "ready": true,
+      "food_model_height": 4,
       "variant_of": "cooked_duck",
       "state": "stale"
     },
@@ -1083,6 +1089,7 @@
       "ingredient": "duck",
       "nutrition": 0,
       "ready": true,
+      "food_model_height": 4,
       "variant_of": "cooked_duck",
       "state": "spoiled"
     },
@@ -2040,6 +2047,7 @@
       "texture": "bowl",
       "nutrition": 2,
       "meal": true,
+      "food_model_height": 6,
       "variant_of": "mixed_stew",
       "state": "stale"
     },
@@ -2049,6 +2057,7 @@
       "texture": "bowl",
       "nutrition": 0,
       "meal": true,
+      "food_model_height": 6,
       "variant_of": "mixed_stew",
       "state": "spoiled"
     },

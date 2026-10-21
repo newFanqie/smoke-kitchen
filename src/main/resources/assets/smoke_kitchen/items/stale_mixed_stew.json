@@ -1,15 +1,6 @@
 {
   "model": {
-    "type": "minecraft:composite",
-    "models": [
-      {
-        "type": "minecraft:model",
-        "model": "smoke_kitchen:item/mixed_stew"
-      },
-      {
-        "type": "minecraft:model",
-        "model": "smoke_kitchen:item/stale_mixed_stew_state"
-      }
-    ]
+    "type": "minecraft:model",
+    "model": "smoke_kitchen:item/stale_mixed_stew"
   }
 }

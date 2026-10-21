@@ -103,6 +103,8 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         float flipPhase=Math.clamp((entity.getLevel().getGameTime()+partialTick-entity.lastFlipTime)/12f,0,1);
         float flip=entity.batch.turns==0?0:180*((entity.batch.turns-1)%2)+(entity.batch.turns%2==1?180:-180)*flipPhase;
         int seed=(int)entity.getBlockPos().asLong();
+        int volumeIndex=0;
+        int shownItems=(int)entity.items.stream().limit(visible).filter(s->!s.isEmpty()).count();
         if(!state.covered)for(int slot=0;slot<visible&&slot<26;slot++){
             var input=entity.items.get(slot);if(input.isEmpty())continue;
             if(names.size()<4)names.add(entity.displayedFood(slot).getHoverName());
@@ -133,7 +135,14 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
                 }
             }else if(pieces.size()<36){
                 float angle=(float)(slot*2.399963),r=.12f+(slot%3)*.035f;
-                pieces.add(new FoodPiece(resolve(entity.displayedFood(slot),entity,ItemDisplayContext.FIXED),.5f+(float)Math.cos(angle)*r,foodY+.015f,.5f+(float)Math.sin(angle)*r,.27f,slot*47,0,0,true,"item"));
+                var displayed=entity.displayedFood(slot);var definition=dev.smokekitchen.content.KitchenContent.DEFINITIONS.get(dev.smokekitchen.content.ResourceStates.baseId(displayed));
+                int nativeHeight=definition==null?0:dev.smokekitchen.content.ContentCatalog.num(definition,"food_model_height",0);
+                if(nativeHeight>0&&!cook&&!board&&!crock){
+                    if(volumeIndex>=4)continue;int place=volumeIndex++;
+                    float scale=shownItems==1?.65f:.38f,x=shownItems==1?.5f:.28f+.44f*(place%2),z=shownItems==1?.5f:.28f+.44f*((place/2)%2);
+                    float top=entity.kind().equals("plate")?1/16f:1f;
+                    pieces.add(new FoodPiece(resolve(displayed,entity,ItemDisplayContext.NONE),x,top,z,scale,0,0,nativeHeight/16f,false,"upright_food"));
+                }else pieces.add(new FoodPiece(resolve(displayed,entity,ItemDisplayContext.FIXED),.5f+(float)Math.cos(angle)*r,foodY+.015f,.5f+(float)Math.sin(angle)*r,.27f,slot*47,0,0,true,"item"));
             }
             if(pieces.size()>=36)break;
         }

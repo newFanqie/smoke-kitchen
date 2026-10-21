@@ -3,6 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {inventoryModel,stationGeometry,cropModel} from './voxel-art.mjs';
 import {vessel,vesselLid,toolModel,tofuModel,dishModel,disk,foodFamilies,foodStages,foodModel} from './kitchen-art.mjs';
+import {sampleFoodModel,writeFoodSampleTextures,sampleBases} from './food-samples.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../src/main/resources');
 const ns='smoke_kitchen';
 const write=(p,data)=>{if(p.includes('/models/')&&data.textures&&!data.textures.particle)data.textures.particle=Object.values(data.textures).find(t=>!t.startsWith('#'));const out=path.join(root,p);fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(data,null,2)+'\n');};
@@ -213,6 +214,7 @@ item('boiled_bean_pulp','煮熟豆糊','clay_ball');
 item('soy_milk','熟豆浆（待点制）','honey_bottle',{ingredient:'soy_milk',unstackable:true,container:'empty_jar',liquid_water:1});
 item('soy_curds','豆花（待压模）','snowball');
 item('okara','熟豆渣','wheat',{ingredient:'okara',ready:true});
+for(const original of items)if(sampleBases.includes(original.id))original.food_model_height=original.id==='mixed_stew'?6:4;
 for(const original of [...items]) {
  if(original.uses>0){
   item('used_'+original.id,original.name+(original.seasoning||original.id==='water_jug'?'（50%）':'（已使用）'),original.texture,{...original,id:'used_'+original.id,name:original.name+'（已使用）',variant_of:original.id,state:'used'});
@@ -246,9 +248,10 @@ for(const id of ['dough_sheet','raw_noodles']){
 for(const it of items){
  write(`assets/${ns}/items/${it.id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${it.id}`}});
  const vanilla=(it.variant_of||it.id)==='thermometer'?'clock_00':vanillaTools[it.variant_of||it.id];
- let model=dishModel(it.id)||tofuModel(it.id)||toolModel(it.id)|| (vanilla?{parent:`minecraft:item/${vanilla}`} : it.id==='fried_rice'?{parent:'minecraft:item/generated',textures:{layer0:`${ns}:item/fried_rice`}}:inventoryModel(it,items.indexOf(it)));
+ const sample=sampleFoodModel(it.id);
+ let model=sample||dishModel(it.id)||tofuModel(it.id)||toolModel(it.id)|| (vanilla?{parent:`minecraft:item/${vanilla}`} : it.id==='fried_rice'?{parent:'minecraft:item/generated',textures:{layer0:`${ns}:item/fried_rice`}}:inventoryModel(it,items.indexOf(it)));
  if(it.id==='wooden_lid')model={parent:'minecraft:block/oak_trapdoor_bottom'};
- if(it.variant_of) {
+ if(it.variant_of&&!sample) {
   model={parent:`${ns}:item/${it.variant_of}`};
   const badge=inventoryModel({id:it.id,variant_of:it.variant_of,state:it.state},items.indexOf(it));
   write(`assets/${ns}/models/item/${it.id}_state.json`,badge);
@@ -493,3 +496,5 @@ for(const file of fs.readdirSync(path.join(root,`data/${ns}/recipe`)).filter(fil
  write(`data/${ns}/advancement/recipes/${id}.json`,{parent:'minecraft:recipes/root',criteria:{has_material:{trigger:'minecraft:inventory_changed',conditions:{items:[{items:ingredient}]}},has_the_recipe:{trigger:'minecraft:recipe_unlocked',conditions:{recipe:`${ns}:${id}`}}},requirements:[['has_material','has_the_recipe']],rewards:{recipes:[`${ns}:${id}`]}});
 }
 console.log(`Generated ${items.length} items, ${stations.length} stations, ${crops.length} crops, ${dishes.length} dishes, ${processes.length} processing recipes.`);
+
+writeFoodSampleTextures(root);

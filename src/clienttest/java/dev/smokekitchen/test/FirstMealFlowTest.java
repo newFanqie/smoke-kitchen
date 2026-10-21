@@ -31,7 +31,7 @@ public class FirstMealFlowTest implements FabricClientGameTest {
     private static void mount(SurvivalPlayer p,String id,BlockPos pos){p.select(id);p.click(pos.below(),Direction.UP);}
     private static void take(SurvivalPlayer p,BlockPos pos){p.emptyHand();p.walkNear(pos);p.c.getInput().holdKey(o->o.keyShift);p.c.waitTicks(3);p.click(pos,Direction.UP);p.c.getInput().releaseKey(o->o.keyShift);p.c.waitTicks(3);}
     private static void inventory(ClientGameTestContext c,String file){c.runOnClient(client->client.setScreen(new net.minecraft.client.gui.screens.inventory.InventoryScreen(client.player)));c.waitTicks(4);c.takeScreenshot(file);c.runOnClient(client->{client.player.closeContainer();client.setScreen(null);});c.waitTicks(3);}
-    private static void kill(SurvivalPlayer p,EntityType<?> type,Vec3 around){
+    protected static void kill(SurvivalPlayer p,EntityType<?> type,Vec3 around){
         p.closeMenu();p.select("stone_axe");
         for(int hit=0;hit<8;hit++){
             Integer id=p.c.computeOnClient(client->{for(var entity:client.level.entitiesForRendering())if(entity.getType()==type&&entity.isAlive())return entity.getId();return null;});if(id==null)break;

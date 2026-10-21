@@ -1,0 +1,74 @@
+{
+  "version": "0.1.17",
+  "date": "2026-10-22",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "registeredItems": 322,
+  "processingRecipes": 31,
+  "namedDishes": 29,
+  "unitTests": {
+    "passed": 84,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 80,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "originalArt": {
+    "bases": [
+      "mixed_stew",
+      "duck_meat",
+      "cooked_duck"
+    ],
+    "nativeModels": 9,
+    "originalTextures16px": 21,
+    "thirdPartyAssetsCopied": false,
+    "artAuditPassed": true
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "scopePerRenderer": [
+      "FoodSamplesPreviewTest: model-state preview only",
+      "FoodSamplesFlowTest: actual FirstMealFlowTest plus raw duck furnace/counter/eating/save"
+    ],
+    "fullManifestEntrypoints": 25,
+    "allTwentyFiveRerunClaimed": false,
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "shaderActuallyActive": true,
+    "rawMaterialsOnly": true,
+    "processedItemsGranted": false,
+    "cookingProgressEdited": false,
+    "preparedTimeEdited": false,
+    "artStatePreviewNotActualAgingEvidence": true,
+    "previousTwoDayFreshnessWaitNotRerun": true,
+    "actualDuckKilledAndDropSmelted": true,
+    "actualStewProducedAndServed": true,
+    "actualCounterCraftingAndStandingFood": true,
+    "actualEatingAndBowlReturned": true,
+    "multipleActualWorldReopens": true,
+    "logs": [
+      ".tools/food-art-0.1.17-vanilla.log",
+      ".tools/food-art-0.1.17-iris.log",
+      ".tools/food-art-final-0.1.17.log"
+    ],
+    "visualReview": {
+      "vanillaReviewed": true,
+      "irisReviewed": true,
+      "notes": [
+        "Original/native and actual enabled Iris: produced foods enlarged and16px, counter contact, actual last serving after reopen visually inspected.",
+        "Nine states preview is labeled model preview, not actual aging."
+      ]
+    },
+    "fullManifestRestored": true,
+    "isolatedIrisDisabledAfterValidation": true
+  },
+  "sha256": "4a549ad433c8b5dc52449c63a58b624f27efa3327646ad414ac4ef402e3c241e",
+  "jarBytes": 972472,
+  "downloadVerified": false,
+  "sourceCIPassed": false
+}

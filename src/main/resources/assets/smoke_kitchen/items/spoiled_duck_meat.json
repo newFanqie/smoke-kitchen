@@ -1,15 +1,6 @@
 {
   "model": {
-    "type": "minecraft:composite",
-    "models": [
-      {
-        "type": "minecraft:model",
-        "model": "smoke_kitchen:item/duck_meat"
-      },
-      {
-        "type": "minecraft:model",
-        "model": "smoke_kitchen:item/spoiled_duck_meat_state"
-      }
-    ]
+    "type": "minecraft:model",
+    "model": "smoke_kitchen:item/spoiled_duck_meat"
   }
 }

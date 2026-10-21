@@ -80,6 +80,10 @@
   },
   "sha256": "56772e82bd3bba2745fe458c32b820f6d42bc62b5eff3585a26f96f3df5d374c",
   "jarBytes": 993999,
-  "downloadVerified": false,
-  "sourceCIPassed": false
+  "downloadVerified": true,
+  "sourceCIPassed": true,
+  "sourceCommit": "d60ea8fec5dda46ff0dd984c38c0feaccfd91765",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39655906922",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.18",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.18/smoke-kitchen-0.1.18.jar"
 }

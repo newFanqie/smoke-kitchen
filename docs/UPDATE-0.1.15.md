@@ -22,3 +22,5 @@
 ![新增换锅指南](screenshots/0.1.15/iris/transfer-guide-1-0.1.15.png)
 
 本版不新增或替换模型资源。完整21项客户端清单归位，本轮按依赖选择两组实际流程，不声称21项全部重跑。[机器可读验证](verification/0.1.15.json)记录范围、摘要及发布核对。
+
+发布核对：实际重新下载959382字节JAR，SHA256 `568eb460197e03adf1452799ff90a2ba6fab9f1c991ea43ceff65998d254dc4a`，与本地及服务器摘要一致。[发布页](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.15)；[精确源码CI](https://github.com/newFanqie/smoke-kitchen/actions/runs/39606698504)通过，源码 `a66bb1b65a601a1170d97ec5519a3a778eb66d70`。

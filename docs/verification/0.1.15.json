@@ -90,5 +90,10 @@
   ],
   "jarBytes": 959382,
   "sha256": "568eb460197e03adf1452799ff90a2ba6fab9f1c991ea43ceff65998d254dc4a",
-  "downloadVerified": false
+  "downloadVerified": true,
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.15",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.15/smoke-kitchen-0.1.15.jar",
+  "sourceCommit": "a66bb1b65a601a1170d97ec5519a3a778eb66d70",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39606698504",
+  "sourceCIPassed": true
 }

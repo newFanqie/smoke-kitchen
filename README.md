@@ -2,7 +2,7 @@
 
 Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配、锅具投料、调火和翻炒，把食材做成可以装盘分享的饭菜。
 
-**当前版本：0.1.13 开发版。** 豆腐现在需要泡豆、湿磨、煮浆、筛浆、温热点制和木盖压模，配有独立工序模型、锅内凝块和翻页教程；空罐循环使用，散装豆浆不补回蒸发水，过量醋的低品质保留到压好的豆腐。原版与实际启用Iris完成基础材料合成、酿醋、制作豆腐、食用与多次存档重开，煤气和全部322物品分类回归通过。此前的低高度阶梯圆锅、翻动与生熟焦化保留。独立生物美术、建筑、经营及其他设备等有限待办仍在继续。见[本版更新](docs/UPDATE-0.1.13.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)、[参考研究](docs/REFERENCE-KITCHEN-MODS.md)和[玩法设计](docs/DESIGN.md)。
+**当前版本：0.1.14 开发版。** 麻婆豆腐补齐花椒与少量汤汁，先剁肉切豆腐，热油炒肉后下豆腐和香料、轻推并熟透装盘。新增原创阶梯圆盘成菜、加热后红汤和小颗粒花椒。原版与实际启用Iris完成基础材料合成、酿造/豆腐六工序、击杀取猪肉脂、炼油、切配烹饪、食用返陶盘及制作中/剩菜存档重开。独立生物美术、建筑、经营及其他设备等有限待办仍在继续。见[本版更新](docs/UPDATE-0.1.14.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)、[参考研究](docs/REFERENCE-KITCHEN-MODS.md)和[玩法设计](docs/DESIGN.md)。
 
 ## 当前玩法
 
@@ -17,18 +17,18 @@ Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配
 
 ## 安装
 
-[下载 0.1.13 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.13) · [本次更新与实测记录](docs/UPDATE-0.1.13.md)
+[下载 0.1.14 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.14) · [本次更新与实测记录](docs/UPDATE-0.1.14.md)
 
 1. 使用 Minecraft Java **26.1.2**、Fabric Loader **0.19.2** 或更高的兼容版本。
 2. 安装对应版本的 Fabric API；本工程验证使用 **0.149.1+26.1.2**。
-3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.13.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
+3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.14.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
 4. 联机时服务器与客户端均安装本模组及 Fabric API。
 
 实际客户端检查截图：
 
-![原创豆腐工序模型预览（仅为外观展示）](docs/images/tofu-original-model-preview-vanilla-0.1.13.png)
-![实际基础原料制作出的豆腐](docs/images/tofu-actual-finished-inventory-iris-0.1.13.png)
-![独立视觉夹具中的凝块（不是整链制作证据）](docs/images/tofu-fluid-fixture-ready-iris-0.1.13.png)
+![原创麻婆豆腐模型预览（不是生产链证据）](docs/screenshots/0.1.14/vanilla/mapo-original-model-preview-0.1.14.png)
+![实际基础原料制作出的麻婆豆腐（Iris）](docs/screenshots/0.1.14/iris/mapo-ready-in-wok-0.1.14.png)
+![游戏内麻婆豆腐食谱](docs/screenshots/0.1.14/vanilla/mapo-guide-1-0.1.14.png)
 
 ![自然河岸的野生稻谷](docs/images/ecology-rice-vanilla-0.1.9.png)
 ![最终锅具接触和盖子](docs/images/fit-pan-lid-side-iris-0.1.12.png)

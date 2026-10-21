@@ -1,0 +1,113 @@
+{
+  "version": "0.1.14",
+  "date": "2026-10-21",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "registeredItems": 322,
+  "processingRecipes": 31,
+  "namedDishes": 29,
+  "unitTests": {
+    "passed": 77,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 73,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "nativeAssetReferences": {
+    "textures": 52,
+    "parents": 22,
+    "missing": []
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "scopePerRenderer": [
+      "MapoFlowTest (includes actual FermentationFlowTest and TofuFlowTest with both pressed tofu reserved)",
+      "MapoGuideTest (actual book plus explicitly separate model/sauce visual fixture)"
+    ],
+    "fullManifestEntrypoints": 19,
+    "allNineteenRerunClaimed": false,
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "shaderActuallyActive": true,
+    "rawMaterialsOnlyForProductionChain": true,
+    "actualFirstCulturesAndSauceFermentation": true,
+    "actualSixStepTofuProduction": true,
+    "actualToolAndCookwareCrafting": true,
+    "actualPigAttackAndPorkFatLoot": true,
+    "actualLowHeatLardRendering": true,
+    "actualMincedPorkAndDicedTofu": true,
+    "porkAddedToHotOilAbove100C": true,
+    "tofuAfterPorkAtLeast60Percent": true,
+    "actualWaterChiliPepperSoyAndThreeFinalStirs": true,
+    "actualPartialDishWorldReopen": true,
+    "highestQualityDish": true,
+    "totalServings": 2,
+    "actuallyEatenServings": 1,
+    "originalCeramicPlateReturned": true,
+    "savedLastServingActuallyServed": true,
+    "cookingProgressEdited": false,
+    "processedItemsGrantedForProductionChain": false,
+    "positionTeleportsInFixture": true,
+    "hungerSetToEightBeforeEating": true,
+    "longFermentationOnlyTestClockAndTickRate": 200,
+    "testClockIncludedInProductionJar": false,
+    "separateSauceVisualFixtureUsesGrantedIntermediates": true,
+    "visualFixturesClaimedAsProductionEvidence": false,
+    "nativeFinalRendererSupplement": true,
+    "latestIrisFullFlow": true,
+    "visualReview": {
+      "vanillaReviewed": true,
+      "irisReviewed": true,
+      "vanillaSelectedImagesReviewed": [
+        "mapo-raw-mince-in-hot-oil-0.1.14.png",
+        "mapo-ready-in-wok-0.1.14.png",
+        "mapo-plated-original-model-0.1.14.png",
+        "mapo-original-model-preview-0.1.14.png",
+        "mapo-sauce-fixture-heated-0.1.14.png",
+        "mapo-sauce-fixture-covered-0.1.14.png",
+        "mapo-guide-1-0.1.14.png"
+      ],
+      "nativeProductionUsedEarlierRendererFinalVisualSupplementReviewed": true,
+      "isolatedPreviewAndSauceFixtureNotProductionEvidence": true,
+      "notes": [
+        "Stepped plated dish and separate tofu chunks readable at enlarged inventory scale",
+        "Real native production stays inside the recessed wok",
+        "Heated chili sauce is red; pepper uses four small beads",
+        "Closed lid hides ingredients and sauce",
+        "Chinese guide includes pepper, water, cuts, order, stirring and original plate return"
+      ],
+      "irisSelectedImagesReviewed": [
+        "mapo-raw-mince-in-hot-oil-0.1.14.png",
+        "mapo-ready-in-wok-0.1.14.png",
+        "mapo-original-model-preview-0.1.14.png",
+        "mapo-sauce-fixture-covered-0.1.14.png",
+        "mapo-guide-1-0.1.14.png"
+      ]
+    },
+    "logs": [
+      ".tools/mapo-0.1.14-vanilla.log",
+      ".tools/mapo-visual-0.1.14-vanilla.log",
+      ".tools/mapo-0.1.14-iris.log",
+      ".tools/build-0.1.14-final.log"
+    ]
+  },
+  "originalPlatedMapoModel": true,
+  "sauceColorFromActualHeatedChili": true,
+  "pepperRenderedAsFourSmallPieces": true,
+  "coveredPotHidesSauceAndFood": true,
+  "knownRemaining": [
+    "Loose-food seasoning and quality inheritance beyond tofu acid",
+    "Other named dishes from raw ingredients and original artwork",
+    "Device functions, husbandry and independent animal models",
+    "Independent building blueprints and restaurant systems",
+    "Multiplayer concurrency, storage and unloaded-chunk aging"
+  ],
+  "jarBytes": 955486,
+  "sha256": "efd1df1a526e665e969f56fb18e25ead2c75e05454c74123bc51b24eb1765a1f",
+  "downloadVerified": false
+}

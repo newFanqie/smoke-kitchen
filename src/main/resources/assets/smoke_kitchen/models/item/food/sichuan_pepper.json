@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "husk": "minecraft:block/red_terracotta",
+    "seed": "minecraft:block/brown_terracotta",
+    "particle": "minecraft:block/red_terracotta"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        1,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#husk"
+        },
+        "south": {
+          "texture": "#husk"
+        },
+        "east": {
+          "texture": "#husk"
+        },
+        "west": {
+          "texture": "#husk"
+        },
+        "up": {
+          "texture": "#husk"
+        },
+        "down": {
+          "texture": "#husk"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        1,
+        7.5
+      ],
+      "to": [
+        8.5,
+        1.5,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#seed"
+        },
+        "south": {
+          "texture": "#seed"
+        },
+        "east": {
+          "texture": "#seed"
+        },
+        "west": {
+          "texture": "#seed"
+        },
+        "up": {
+          "texture": "#seed"
+        },
+        "down": {
+          "texture": "#seed"
+        }
+      }
+    }
+  ]
+}

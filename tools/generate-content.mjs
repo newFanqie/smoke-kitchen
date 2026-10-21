@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {inventoryModel,stationGeometry,cropModel} from './voxel-art.mjs';
-import {vessel,vesselLid,toolModel,tofuModel,disk,foodFamilies,foodStages,foodModel} from './kitchen-art.mjs';
+import {vessel,vesselLid,toolModel,tofuModel,dishModel,disk,foodFamilies,foodStages,foodModel} from './kitchen-art.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../src/main/resources');
 const ns='smoke_kitchen';
 const write=(p,data)=>{if(p.includes('/models/')&&data.textures&&!data.textures.particle)data.textures.particle=Object.values(data.textures).find(t=>!t.startsWith('#'));const out=path.join(root,p);fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(data,null,2)+'\n');};
@@ -14,7 +14,7 @@ const plantRows=[
  ['soybean','大豆','wheat_seeds','soybean'],['rapeseed','油菜籽','melon_seeds',null],['scallion','葱','sugar_cane','scallion'],
  ['ginger','姜','potato','ginger'],['garlic','蒜','beetroot','garlic'],['cucumber','黄瓜','pickle','cucumber'],
  ['cabbage','白菜','kelp','cabbage'],['onion','洋葱','beetroot','onion'],['eggplant','茄子','chorus_fruit','eggplant'],
- ['sesame','芝麻','pumpkin_seeds',null],['sichuan_pepper','花椒','sweet_berries',null],['black_pepper','胡椒','melon_seeds',null],
+ ['sesame','芝麻','pumpkin_seeds',null],['sichuan_pepper','花椒','sweet_berries','sichuan_pepper'],['black_pepper','胡椒','melon_seeds',null],
  ['cumin','孜然','wheat_seeds',null],['shiitake','香菇','brown_mushroom','mushroom']];
 for(const [id,name,texture,ingredient] of plantRows) {
  item(id,name,texture==='pickle'?'sea_pickle':texture,{nutrition:['tomato','cucumber','cabbage'].includes(id)?2:0,...(id==='soybean'?{ingredient:'soybean',needs_water:true,resistance:1.4}:ingredient?{ingredient}: {})});
@@ -88,7 +88,7 @@ dish('beef_potato_stew','土豆炖牛肉',{potato:2,beef:2,onion:1},'STEW',3,'�
 dish('pumpkin_soup','南瓜浓汤',{pumpkin:2,milk:1},'BOIL,STEW',3,'南瓜×2、牛奶×1；煮软后混合。',{salt:true});
 dish('braised_pork','红烧肉',{pork:3,ginger:1},'STEW',3,'猪肉×3、姜×1；糖色、酱油、加水炖。',{soy:true});
 dish('braised_eggplant','烧茄子',{eggplant:3,garlic:1},'STIR_FRY',2,'茄子×3、蒜×1；油、酱油与少量糖。',{oil:true,soy:true});
-dish('mapo_tofu','麻婆豆腐',{tofu:2,pork:1,chili:1},'STIR_FRY',2,'豆腐×2、肉末×1、辣椒×1；花椒、酱油，轻推。',{oil:true,soy:true});
+dish('mapo_tofu','麻婆豆腐',{tofu:2,pork:1,chili:1,sichuan_pepper:1},'STIR_FRY',2,'豆腐×2、肉末×1、辣椒×1；花椒、酱油，轻推。',{oil:true,soy:true});
 dish('cucumber_salad','凉拌黄瓜',{cucumber:2,garlic:1},'MIX',2,'黄瓜×2、蒜×1；盐、醋、芝麻油拌匀。',{oil:true,salt:true,vinegar:true});
 dish('pickled_cabbage','泡菜',{cabbage:3,chili:1,garlic:1},'FERMENT',4,'白菜×3、辣椒×1、蒜×1；盐水密封等待。',{salt:true});
 dish('meat_skewers','烤肉串',{skewers:3},'BAKE',3,'调理台用肉×3、洋葱×1制成生肉串×3；盐、孜然，烤制翻面。',{salt:true});
@@ -120,7 +120,7 @@ const preparation={
  fried_rice:{cuts:{scallion:['DICE','SHRED','MINCE']},steps:[{ingredient:'egg',temperature:110,hot_oil:true},{ingredient:'rice_cooked',after:'egg',cooked:.4},{ingredient:'scallion',after:'rice_cooked',cooked:0}]},
  tomato_eggs:{steps:[{ingredient:'egg',temperature:110,hot_oil:true},{ingredient:'tomato',after:'egg',cooked:.4}]},
  sour_spicy_potato:{cuts:{potato:['SHRED'],garlic:['MINCE']},steps:[{ingredient:'potato',after:'garlic',temperature:100,hot_oil:true}],finish_seasonings:{vinegar:.7}},
- mapo_tofu:{cuts:{pork:['MINCE'],tofu:['DICE']},steps:[{ingredient:'pork',temperature:100,hot_oil:true},{ingredient:'tofu',after:'pork',cooked:.6}]},
+ mapo_tofu:{minimum_water:.1,cuts:{pork:['MINCE'],tofu:['DICE']},steps:[{ingredient:'pork',temperature:100,hot_oil:true},{ingredient:'tofu',after:'pork',cooked:.6}]},
  steamed_fish:{cuts:{ginger:['SLICE'],scallion:['DICE','SHRED']},minimum_water:.1,covered_seconds:15,finish_seasonings:{soy:1}},
  boiled_shrimp:{cuts:{ginger:['SLICE']},minimum_water:.1,steps:[{ingredient:'shrimp',after:'ginger',temperature:95,boiling_water:true}]},
  steamed_crab:{cuts:{ginger:['SLICE']},minimum_water:.1,covered_seconds:15},
@@ -158,7 +158,7 @@ for(const[id,guide]of Object.entries({
 }))dishes.find(r=>r.id===id).guide=guide;
 dishes.find(r=>r.id==='fried_rice').guide='米饭×2、蛋×1、切碎的葱×1。先放油，把锅预热到110°C，再下蛋炒至至少四成熟；再加两份米饭，最后下葱。全部加完后翻炒至少3次，加盐，熟透后装盘。生米须先加水煮成米饭。';
 dishes.find(r=>r.id==='sour_spicy_potato').guide='土豆丝×2、辣椒×1、蒜末×1。砧板切法：土豆切丝、蒜剁碎。先下蒜，油锅至少100°C再下土豆丝和辣椒；翻炒至少3次，七成熟后淋醋，加盐，熟透装盘。';
-dishes.find(r=>r.id==='mapo_tofu').guide='豆腐块×2、猪肉末×1、辣椒×1。砧板将猪肉剁碎、豆腐切块。油锅至少100°C下肉末，炒至至少六成熟再下豆腐；加辣椒、酱油，全部加完后轻推至少3次，熟透装盘。';
+dishes.find(r=>r.id==='mapo_tofu').guide='豆腐块×2、猪肉末×1、辣椒×1、花椒×1，油和酱油各1次。砧板默认切块，潜行持刀可切换剁碎。油锅至少100°C下肉末，炒至六成熟；再加1份水、豆腐、辣椒、花椒和酱油。保持有少量汤汁，轻推至少3次，最后加入的香料也要熟透。用碗或陶盘盛2份，食用返原餐具。';
 dishes.find(r=>r.id==='tomato_eggs').guide='番茄×2、蛋×2。放油，锅温至少110°C再下两份蛋；蛋至少四成熟再下番茄，油盐适量，全部加完后翻炒至少3次，熟透装盘。';
 for(const [id,guide]of Object.entries({
  steamed_fish:'鱼×2、姜片×1、切块或切丝的葱×1。蒸笼加水，放食材后加盖，保持蒸汽加热至少15秒并蒸至全部熟透，再淋酱油、加盐装盘。提前淋酱油不计出锅调味。',
@@ -229,6 +229,10 @@ write(`assets/${ns}/models/item/pot_water.json`,{parent:'minecraft:block/block',
 write(`assets/${ns}/items/pot_water.json`,{model:{type:'minecraft:model',model:`${ns}:item/pot_water`,tints:[{type:'minecraft:constant',value:-12618012}]}});
 write(`assets/${ns}/models/item/pot_soy_milk.json`,{parent:'minecraft:block/block',textures:{milk:'minecraft:block/white_concrete'},elements:disk(0,.01,4.4,'#milk')});
 write(`assets/${ns}/items/pot_soy_milk.json`,{model:{type:'minecraft:model',model:`${ns}:item/pot_soy_milk`}});
+write(`assets/${ns}/models/item/pot_mapo_sauce.json`,{parent:'minecraft:block/block',textures:{sauce:'minecraft:block/red_terracotta'},elements:disk(0,.01,4.4,'#sauce')});
+write(`assets/${ns}/items/pot_mapo_sauce.json`,{model:{type:'minecraft:model',model:`${ns}:item/pot_mapo_sauce`}});
+write(`assets/${ns}/models/item/food/sichuan_pepper.json`,{parent:'minecraft:block/block',textures:{husk:'minecraft:block/red_terracotta',seed:'minecraft:block/brown_terracotta'},elements:[box([7,0,7],[9,1,9],'#husk'),box([7.5,1,7.5],[8.5,1.5,8.5],'#seed')]});
+write(`assets/${ns}/items/food/sichuan_pepper.json`,{model:{type:'minecraft:model',model:`${ns}:item/food/sichuan_pepper`}});
 for(const[id,texture]of Object.entries({pot_oil:'honey_block_top',pot_caramel:'brown_concrete',pot_burnt_sugar:'black_concrete'})){
  write(`assets/${ns}/models/item/${id}.json`,{parent:'minecraft:block/block',textures:{surface:`minecraft:block/${texture}`},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#surface',uv:[0,0,16,16]}}}]});
  write(`assets/${ns}/items/${id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${id}`}});
@@ -242,7 +246,7 @@ for(const id of ['dough_sheet','raw_noodles']){
 for(const it of items){
  write(`assets/${ns}/items/${it.id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${it.id}`}});
  const vanilla=(it.variant_of||it.id)==='thermometer'?'clock_00':vanillaTools[it.variant_of||it.id];
- let model=tofuModel(it.id)||toolModel(it.id)|| (vanilla?{parent:`minecraft:item/${vanilla}`} : it.id==='fried_rice'?{parent:'minecraft:item/generated',textures:{layer0:`${ns}:item/fried_rice`}}:inventoryModel(it,items.indexOf(it)));
+ let model=dishModel(it.id)||tofuModel(it.id)||toolModel(it.id)|| (vanilla?{parent:`minecraft:item/${vanilla}`} : it.id==='fried_rice'?{parent:'minecraft:item/generated',textures:{layer0:`${ns}:item/fried_rice`}}:inventoryModel(it,items.indexOf(it)));
  if(it.id==='wooden_lid')model={parent:'minecraft:block/oak_trapdoor_bottom'};
  if(it.variant_of) {
   model={parent:`${ns}:item/${it.variant_of}`};

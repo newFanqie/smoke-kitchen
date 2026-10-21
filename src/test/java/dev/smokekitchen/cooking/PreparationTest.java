@@ -13,10 +13,10 @@ class PreparationTest {
         b.ingredients.get(1).cut=CookingBatch.Cut.WHOLE;assertEquals("cut",r.problem(b).orElseThrow().key());
     }
     @Test void actualMapoRecipeRequiresMincedMeatCookedBeforeDicedTofu(){
-        var r=catalogRecipe("mapo_tofu");var b=new CookingBatch();b.oil=1;b.soy=1;b.temperature=140;
+        var r=catalogRecipe("mapo_tofu");var b=new CookingBatch();b.oil=1;b.soy=1;b.water=1;b.temperature=140;
         b.add("pork",CookingBatch.Cut.MINCE,1,false,false);b.ingredients.getFirst().cooked=.7;
-        b.add("tofu",CookingBatch.Cut.DICE,1,false,true);b.add("tofu",CookingBatch.Cut.DICE,1,false,true);b.add("chili",CookingBatch.Cut.WHOLE,1,false,false);b.stir();b.stir();b.stir();
-        assertTrue(r.matches(b));b.ingredients.getFirst().cut=CookingBatch.Cut.SLICE;assertEquals("cut",r.problem(b).orElseThrow().key());
+        b.add("tofu",CookingBatch.Cut.DICE,1,false,true);b.add("tofu",CookingBatch.Cut.DICE,1,false,true);b.add("chili",CookingBatch.Cut.WHOLE,1,false,false);b.add("sichuan_pepper",CookingBatch.Cut.WHOLE,1,false,false);b.stir();b.stir();b.stir();
+        assertTrue(r.matches(b));b.water=0;assertEquals("water",r.problem(b).orElseThrow().key());b.water=1;var pepper=b.ingredients.removeLast();assertEquals("missing",r.problem(b).orElseThrow().key());b.ingredients.add(pepper);b.ingredients.getFirst().cut=CookingBatch.Cut.SLICE;assertEquals("cut",r.problem(b).orElseThrow().key());
         b.ingredients.getFirst().cut=CookingBatch.Cut.MINCE;b.ingredients.get(1).priorCooked.put("pork",.1);assertEquals("stage",r.problem(b).orElseThrow().key());
     }
     private DishRecipe riceRecipe(){return new DishRecipe("fried_rice",Set.of(CookingBatch.Method.STIR_FRY),Map.of("egg",1,"rice_cooked",2,"scallion",1),2,true,true,false,false,

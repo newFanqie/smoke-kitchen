@@ -90,3 +90,15 @@ export function foodModel(family,cut,stage){
  if((stage==='cooked'||stage==='browning')&&['meat','fish','root','dough'].includes(family)){const top=Math.max(...elements.map(e=>e.to[1]));elements.push(b([7,top,7],[8,top+.1,9],'#skin'));}
  return {parent:'minecraft:block/block',textures,elements};
 }
+
+// An original plated dish: stepped porcelain rim, red sauce, pale tofu and distinct mince.
+export function dishModel(id){
+ if(id!=='mapo_tofu')return null;
+ const textures={plate:'minecraft:block/white_concrete',rim:'minecraft:block/light_gray_concrete',sauce:'minecraft:block/red_terracotta',oil:'minecraft:block/orange_terracotta',tofu:'minecraft:block/white_terracotta',top:'minecraft:block/white_concrete',meat:'minecraft:block/brown_terracotta',chili:'minecraft:block/red_concrete',pepper:'minecraft:block/black_terracotta'};
+ const b=(a,z,t)=>cube(a,z,t);
+ const elements=[...disk(0,1,5,'#rim'),...disk(1,1,7,'#plate'),...disk(2,1,7,'#plate',5.8),...disk(2,.4,5.8,'#sauce')];
+ for(const [x,z,h] of [[4,4,2],[8,3,2],[10,7,2],[6,8,3],[3,8,2],[8,10,2]])elements.push(b([x,2.4,z],[x+2.5,2.4+h,z+2.5],'#tofu'),b([x,2.4+h,z],[x+2.5,2.6+h,z+2.5],'#top'));
+ for(const [x,z] of [[7,4],[4,7],[9,7],[5,11],[10,10],[11,5],[7,8]])elements.push(b([x,2.4,z],[x+1,3.2,z+1],'#meat'));
+ elements.push(b([5,2.4,3],[7,3,4],'#chili'),b([11,2.4,8],[12,3,10],'#chili'),b([6,2.4,6],[7,2.7,7],'#pepper'),b([9,2.4,10],[10,2.7,11],'#pepper'),b([3,2.4,6],[4,2.6,7],'#oil'));
+ return {parent:'minecraft:block/block',textures,elements};
+}

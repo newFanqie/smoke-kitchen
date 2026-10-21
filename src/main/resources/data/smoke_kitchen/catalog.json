@@ -94,7 +94,8 @@
       "id": "sichuan_pepper",
       "name": "花椒",
       "texture": "sweet_berries",
-      "nutrition": 0
+      "nutrition": 0,
+      "ingredient": "sichuan_pepper"
     },
     {
       "id": "black_pepper",
@@ -2964,15 +2965,17 @@
       "ingredients": {
         "tofu": 2,
         "pork": 1,
-        "chili": 1
+        "chili": 1,
+        "sichuan_pepper": 1
       },
       "methods": [
         "STIR_FRY"
       ],
       "servings": 2,
-      "guide": "豆腐块×2、猪肉末×1、辣椒×1。砧板将猪肉剁碎、豆腐切块。油锅至少100°C下肉末，炒至至少六成熟再下豆腐；加辣椒、酱油，全部加完后轻推至少3次，熟透装盘。",
+      "guide": "豆腐块×2、猪肉末×1、辣椒×1、花椒×1，油和酱油各1次。砧板默认切块，潜行持刀可切换剁碎。油锅至少100°C下肉末，炒至六成熟；再加1份水、豆腐、辣椒、花椒和酱油。保持有少量汤汁，轻推至少3次，最后加入的香料也要熟透。用碗或陶盘盛2份，食用返原餐具。",
       "oil": true,
       "soy": true,
+      "minimum_water": 0.1,
       "cuts": {
         "pork": [
           "MINCE"

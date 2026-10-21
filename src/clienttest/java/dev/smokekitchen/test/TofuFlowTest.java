@@ -10,7 +10,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Predicate;
 
 /** Continues an actually crafted and fermented kitchen. Extras are only raw beans, planks, stick and coal. */
-public final class TofuFlowTest extends FermentationFlowTest {
+public class TofuFlowTest extends FermentationFlowTest {
+    protected boolean reserveTofuForDish(){return false;}
     private static final BlockPos CROCK=new BlockPos(2,100,2),MILL=new BlockPos(-2,100,0),MIX=new BlockPos(0,100,2),POT=new BlockPos(-2,100,2);
     private static void check(boolean b,String s){if(!b)throw new AssertionError(s);}
     private static KitchenBlockEntity be(net.minecraft.server.MinecraftServer s,BlockPos p){return (KitchenBlockEntity)s.overworld().getBlockEntity(p);}
@@ -40,10 +41,12 @@ public final class TofuFlowTest extends FermentationFlowTest {
         }
         try(var world=savedWorld.open()){
             var p=new SurvivalPlayer(c,world.getServer());p.s.runOnServer(s->check(be(s,MIX).work==15&&stored(be(s,MIX),"soy_curds")==1,"Actual reopen retains partial pressing"));put(p,"wooden_lid",MIX,1);take(p,MIX);check(p.count("smoke_kitchen:tofu")==2,"Fourth real press action yields exactly two tofu");c.runOnClient(client->client.setScreen(new net.minecraft.client.gui.screens.inventory.InventoryScreen(client.player)));c.waitTicks(4);c.takeScreenshot("tofu-actual-finished-inventory-0.1.13");p.closeMenu();
+            if(!reserveTofuForDish()){
             p.s.runOnServer(s->s.getPlayerList().getPlayers().getFirst().getFoodData().setFoodLevel(8));p.select("smoke_kitchen:tofu");c.runOnClient(client->client.player.setXRot(-70));c.getInput().holdKey(o->o.keyUse);c.waitTicks(35);c.getInput().releaseKey(o->o.keyUse);c.waitTicks(4);check(p.count("smoke_kitchen:tofu")==1,"One actually produced tofu must be eaten");p.s.runOnServer(s->{var inv=s.getPlayerList().getPlayers().getFirst().getInventory();check(s.getPlayerList().getPlayers().getFirst().getFoodData().getFoodLevel()>8,"Produced tofu restores actual hunger");check(inv.countItem(KitchenContent.item("empty_jar"))==3,"The full tofu chain returns exactly the one carrier jar");var vinegar=inv.getNonEquipmentItems().stream().filter(x->ResourceStates.baseId(x).equals("rice_vinegar")).findFirst().orElseThrow();check(vinegar.getMaxDamage()-vinegar.getDamageValue()==6,"Exactly one additional vinegar measure is used for tofu");});
+            }
         }
         try(var world=savedWorld.open()){
-            var p=new SurvivalPlayer(c,world.getServer());check(p.count("smoke_kitchen:tofu")==1&&p.count("smoke_kitchen:okara")==1,"Finished tofu and okara survive final world reopen");c.takeScreenshot("tofu-after-reopen-0.1.13");
+            var p=new SurvivalPlayer(c,world.getServer());check(p.count("smoke_kitchen:tofu")== (reserveTofuForDish()?2:1)&&p.count("smoke_kitchen:okara")==1,"Finished tofu and okara survive final world reopen");c.takeScreenshot("tofu-after-reopen-0.1.13");
         }
     }
 }

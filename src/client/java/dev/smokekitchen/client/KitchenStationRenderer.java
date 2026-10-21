@@ -32,6 +32,7 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         List<Component> names=List.of();
         public List<FoodPiece> pieces=List.of();
         public boolean covered;
+        public String liquidAppearance="";
         public float vesselBase;
         float labelY,waterY,lidY;
         boolean labels;
@@ -57,6 +58,7 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
             case "rice","rice_cooked","egg" -> "grain";
             case "dough","dough_fermented","dumplings","pie" -> "dough";
             case "tofu","soy_milk" -> "tofu";
+            case "sichuan_pepper" -> "pepper";
             default -> null;
         };
     }
@@ -79,13 +81,14 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         state.lid=burner&&!entity.attachedLid.isEmpty()?model("pot_lid",entity):null;
         state.lidY=state.vesselBase+KitchenGeometry.vesselHeight(vessel)-7/16f;
         state.gas=entity.kind().equals("gas_stove")&&!entity.items.get(26).isEmpty()?resolve(entity.items.get(26),entity,ItemDisplayContext.FIXED):null;
-        state.water=null;
+        state.water=null;state.liquidAppearance="";
         float base=burner?state.vesselBase:oven?5/16f:0;
         float foodY=cook?base+(vessel.equals("wok")?2/16f:1.1f/16f):board?1.1f/16f:crock?10/16f:entity.kind().equals("plate")?1.1f/16f:1.015f;
         if(!state.covered&&!oven&&cook&&(!burner||!entity.mountedCookware.isEmpty())&&(entity.batch.water>0||entity.batch.oil>0||entity.batch.ingredients.stream().anyMatch(p->p.id.equals("fat")&&p.cooked>=.4))){
             String liquid=entity.batch.water>0?"pot_water":entity.batch.burntSugarSeconds>=5?"pot_burnt_sugar":entity.batch.caramelSeconds>=3?"pot_caramel":"pot_oil";
             if(entity.batch.water>0&&entity.batch.ingredients.stream().anyMatch(p->Set.of("bean_pulp","soy_milk").contains(p.id)))liquid="pot_soy_milk";
-            state.water=model(liquid,entity);
+            if(entity.batch.water>0&&entity.batch.oil>0&&entity.batch.soy>0&&entity.batch.count("tofu")>0&&entity.batch.ingredients.stream().anyMatch(p->p.id.equals("chili")&&p.cooked>=.3))liquid="pot_mapo_sauce";
+            state.liquidAppearance=liquid;state.water=model(liquid,entity);
             float depth=Math.min(KitchenGeometry.vesselHeight(vessel)-1.5f/16f,(float)(entity.batch.water/6)*3/16f);
             state.waterY=base+(entity.batch.water>0?Math.max(1.2f/16f,depth):1.1f/16f);
             if(vessel.equals("wok"))state.waterY=Math.max(base+2.05f/16f,state.waterY);
@@ -112,9 +115,10 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
             if(cook&&portion!=null&&(portion.id.equals("bean_pulp")||portion.id.equals("soy_milk")&&portion.cooked<.3))continue;
             String group=portion==null?null:family(portion.id);
             if(group!=null&&(cook||board)){
-                boolean curd=portion.id.equals("soy_milk");
-                int count=curd?(int)Math.ceil(portion.cooked*6):switch(portion.cut){case WHOLE->1;case DICE->4;case SLICE->3;case SHRED->5;case MINCE->6;};
+                boolean curd=portion.id.equals("soy_milk"),pepper=portion.id.equals("sichuan_pepper");
+                int count=pepper?4:curd?(int)Math.ceil(portion.cooked*6):switch(portion.cut){case WHOLE->1;case DICE->4;case SLICE->3;case SHRED->5;case MINCE->6;};
                 String appearance="food/"+group+"_"+(curd?"mince":portion.cut.name().toLowerCase(java.util.Locale.ROOT))+"_"+stage(portion,entity.batch.water>0);
+                if(pepper)appearance="food/sichuan_pepper";
                 var item=model(appearance,entity);
                 for(int n=0;n<count;n++){
                     int key=slot*17+n;
@@ -123,7 +127,7 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
                     float radius=(float)Math.sqrt(noise(seed+key*7+3))*(!curd&&portion.cut==CookingBatch.Cut.WHOLE?.14f:.23f);
                     float x=.5f+(float)Math.cos(angle)*radius,z=.5f+(float)Math.sin(angle)*radius;
                     float scale=portion.cut==CookingBatch.Cut.WHOLE?.65f:.6f;
-                    float h=curd?1.5f/16:switch(portion.cut){case WHOLE->2.2f/16;case DICE->3.1f/16;case MINCE->1.5f/16;default->1.1f/16;};
+                    float h=curd||pepper?1.5f/16:switch(portion.cut){case WHOLE->2.2f/16;case DICE->3.1f/16;case MINCE->1.5f/16;default->1.1f/16;};
                     float lift=motion*(portion.cut==CookingBatch.Cut.WHOLE?.025f:.04f);
                     pieces.add(new FoodPiece(item,x,foodY+lift,z,scale,noise(key+seed)*360+entity.batch.stirs*25+motion*35,portion.cut==CookingBatch.Cut.WHOLE?flip:motion*18,h,false,appearance));
                 }

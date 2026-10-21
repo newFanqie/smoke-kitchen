@@ -44,4 +44,8 @@ Minecraft Java 26.1.2 / Fabric Loader 0.19.2 / Fabric API 0.149.1+26.1.2。
 
 ## 发布核对
 
-本地已完成验证，上传后的源码提交、下载大小与哈希核对在发布后补记。安装时移出旧版JAR，使用smoke-kitchen-0.1.10.jar并保留对应Fabric API。
+[0.1.10开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.10)已发布，源码提交c7be1cdb71e02a60c43186729da103f2246e298d。实际从GitHub资产接口重新下载smoke-kitchen-0.1.10.jar（725964字节），本地、服务器摘要和下载文件SHA256一致。安装时移出旧版JAR，使用smoke-kitchen-0.1.10.jar并保留对应Fabric API。
+
+SHA256：ca2a514232595aab3fe0cb9aa83fe313afea9906e946c933fc736f683876fd8b
+
+[GitHub源码自动构建与游戏测试](https://github.com/newFanqie/smoke-kitchen/actions/runs/39518746179)已通过。

@@ -111,5 +111,12 @@
   "jarContainsTestCode": false,
   "sha256": "ca2a514232595aab3fe0cb9aa83fe313afea9906e946c933fc736f683876fd8b",
   "finalHeadlessLog": ".tools/headless-0.1.10-final.log",
-  "downloadVerified": false
+  "downloadVerified": true,
+  "sourceCommit": "c7be1cdb71e02a60c43186729da103f2246e298d",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.10",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.10/smoke-kitchen-0.1.10.jar",
+  "githubActions": {
+    "sourceBuildPassed": true,
+    "url": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39518746179"
+  }
 }

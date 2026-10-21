@@ -13,6 +13,6 @@
 
 ## 安装与范围
 
-Minecraft 26.1.2，Fabric Loader0.19.2，Fabric API0.149.1+26.1.2。移出旧JAR，安装smoke-kitchen-0.1.19.jar并保留对应Fabric API。安装包994543字节，SHA256 `9b7767e734d5d12c3a9d5c6b5a4a5021821ab58e50618614a6230b0fcb07a055`。源码CI与重新下载的结果在发布后补录。
+Minecraft 26.1.2，Fabric Loader0.19.2，Fabric API0.149.1+26.1.2。移出旧JAR，安装smoke-kitchen-0.1.19.jar并保留对应Fabric API。安装包994543字节，SHA256 `9b7767e734d5d12c3a9d5c6b5a4a5021821ab58e50618614a6230b0fcb07a055`。精确源码`25f0feace68fe2ebf8b69571d253ab71178d34e4`的[CI](https://github.com/newFanqie/smoke-kitchen/actions/runs/39659902096)通过；[开发版发布](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.19)后已实际重新下载安装包，与本地及服务端摘要一致。公开验证见verification/0.1.19.json。
 
 香料种植架当前仍是带固定叶片的普通收纳，**不算完成**。它与调料架不同；下一轮核对原版作物共同逻辑，补真实植株、土壤/支撑条件、生长、采收、拆除回收与存档。为使本次已完成的兼容修复独立可安装，种植架功能顺延至0.1.20。其余有限设计继续，0.1.17代表食物美术仍等待反馈。

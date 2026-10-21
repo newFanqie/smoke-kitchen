@@ -3,8 +3,8 @@
   "scope": "Legacy spice rack first-six unsupported original item display and lossless recovery only. Trellis moved to the next finite functional release.",
   "sha256": "9b7767e734d5d12c3a9d5c6b5a4a5021821ab58e50618614a6230b0fcb07a055",
   "jarBytes": 994543,
-  "downloadVerified": false,
-  "sourceCIPassed": false,
+  "downloadVerified": true,
+  "sourceCIPassed": true,
   "unitTests": 84,
   "totalGameTests": 86,
   "clientChecks": {
@@ -25,5 +25,9 @@
     "Models are fitted to shelf bounds; shader-specific materials are not promised.",
     "Spice trellis remains static decoration/general storage pending real soil/plant/support functionality.",
     "Food sample art awaits user feedback; complete design remains unfinished."
-  ]
+  ],
+  "sourceCommit": "25f0feace68fe2ebf8b69571d253ab71178d34e4",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39659902096",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.19",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.19/smoke-kitchen-0.1.19.jar"
 }

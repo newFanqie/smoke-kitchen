@@ -35,14 +35,6 @@
         "model": "smoke_kitchen:block/spice_trellis",
         "y": 270
       }
-    },
-    {
-      "when": {
-        "lid": "true"
-      },
-      "apply": {
-        "model": "smoke_kitchen:block/lid"
-      }
     }
   ]
 }

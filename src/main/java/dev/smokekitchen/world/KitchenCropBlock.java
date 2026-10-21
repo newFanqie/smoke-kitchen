@@ -16,7 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.tags.FluidTags;
 
-public final class KitchenCropBlock extends CropBlock {
+public class KitchenCropBlock extends CropBlock {
     public static final BooleanProperty WILD=BooleanProperty.create("wild");
     public final String crop;
     public KitchenCropBlock(Properties props, String crop) { super(props); this.crop = crop; registerDefaultState(defaultBlockState().setValue(WILD,false)); }
@@ -37,6 +37,7 @@ public final class KitchenCropBlock extends CropBlock {
         return false;
     }
     public boolean growingConditions(LevelReader world,BlockPos pos) {
+        if(crop.equals("black_pepper"))return SpiceTrellis.supports(world,pos)&&world.getBlockState(pos.below()).hasProperty(net.minecraft.world.level.block.FarmlandBlock.MOISTURE)&&world.getBlockState(pos.below()).getValue(net.minecraft.world.level.block.FarmlandBlock.MOISTURE)>0;
         if(crop.equals("rice_paddy"))return nearWater(world,pos);
         if(crop.equals("shiitake")) {
             var soil=world.getBlockState(pos.below());

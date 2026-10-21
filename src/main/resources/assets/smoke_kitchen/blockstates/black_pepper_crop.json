@@ -1,28 +1,156 @@
 {
   "variants": {
-    "age=0": {
-      "model": "smoke_kitchen:block/black_pepper_0"
+    "age=0,wild=true": {
+      "model": "smoke_kitchen:block/black_pepper_wild_0"
     },
-    "age=1": {
-      "model": "smoke_kitchen:block/black_pepper_1"
+    "age=0,wild=false,facing=north": {
+      "model": "smoke_kitchen:block/black_pepper_0",
+      "y": 0
     },
-    "age=2": {
-      "model": "smoke_kitchen:block/black_pepper_2"
+    "age=0,wild=false,facing=east": {
+      "model": "smoke_kitchen:block/black_pepper_0",
+      "y": 90
     },
-    "age=3": {
-      "model": "smoke_kitchen:block/black_pepper_3"
+    "age=0,wild=false,facing=south": {
+      "model": "smoke_kitchen:block/black_pepper_0",
+      "y": 180
     },
-    "age=4": {
-      "model": "smoke_kitchen:block/black_pepper_4"
+    "age=0,wild=false,facing=west": {
+      "model": "smoke_kitchen:block/black_pepper_0",
+      "y": 270
     },
-    "age=5": {
-      "model": "smoke_kitchen:block/black_pepper_5"
+    "age=1,wild=true": {
+      "model": "smoke_kitchen:block/black_pepper_wild_1"
     },
-    "age=6": {
-      "model": "smoke_kitchen:block/black_pepper_6"
+    "age=1,wild=false,facing=north": {
+      "model": "smoke_kitchen:block/black_pepper_1",
+      "y": 0
     },
-    "age=7": {
-      "model": "smoke_kitchen:block/black_pepper_7"
+    "age=1,wild=false,facing=east": {
+      "model": "smoke_kitchen:block/black_pepper_1",
+      "y": 90
+    },
+    "age=1,wild=false,facing=south": {
+      "model": "smoke_kitchen:block/black_pepper_1",
+      "y": 180
+    },
+    "age=1,wild=false,facing=west": {
+      "model": "smoke_kitchen:block/black_pepper_1",
+      "y": 270
+    },
+    "age=2,wild=true": {
+      "model": "smoke_kitchen:block/black_pepper_wild_2"
+    },
+    "age=2,wild=false,facing=north": {
+      "model": "smoke_kitchen:block/black_pepper_2",
+      "y": 0
+    },
+    "age=2,wild=false,facing=east": {
+      "model": "smoke_kitchen:block/black_pepper_2",
+      "y": 90
+    },
+    "age=2,wild=false,facing=south": {
+      "model": "smoke_kitchen:block/black_pepper_2",
+      "y": 180
+    },
+    "age=2,wild=false,facing=west": {
+      "model": "smoke_kitchen:block/black_pepper_2",
+      "y": 270
+    },
+    "age=3,wild=true": {
+      "model": "smoke_kitchen:block/black_pepper_wild_3"
+    },
+    "age=3,wild=false,facing=north": {
+      "model": "smoke_kitchen:block/black_pepper_3",
+      "y": 0
+    },
+    "age=3,wild=false,facing=east": {
+      "model": "smoke_kitchen:block/black_pepper_3",
+      "y": 90
+    },
+    "age=3,wild=false,facing=south": {
+      "model": "smoke_kitchen:block/black_pepper_3",
+      "y": 180
+    },
+    "age=3,wild=false,facing=west": {
+      "model": "smoke_kitchen:block/black_pepper_3",
+      "y": 270
+    },
+    "age=4,wild=true": {
+      "model": "smoke_kitchen:block/black_pepper_wild_4"
+    },
+    "age=4,wild=false,facing=north": {
+      "model": "smoke_kitchen:block/black_pepper_4",
+      "y": 0
+    },
+    "age=4,wild=false,facing=east": {
+      "model": "smoke_kitchen:block/black_pepper_4",
+      "y": 90
+    },
+    "age=4,wild=false,facing=south": {
+      "model": "smoke_kitchen:block/black_pepper_4",
+      "y": 180
+    },
+    "age=4,wild=false,facing=west": {
+      "model": "smoke_kitchen:block/black_pepper_4",
+      "y": 270
+    },
+    "age=5,wild=true": {
+      "model": "smoke_kitchen:block/black_pepper_wild_5"
+    },
+    "age=5,wild=false,facing=north": {
+      "model": "smoke_kitchen:block/black_pepper_5",
+      "y": 0
+    },
+    "age=5,wild=false,facing=east": {
+      "model": "smoke_kitchen:block/black_pepper_5",
+      "y": 90
+    },
+    "age=5,wild=false,facing=south": {
+      "model": "smoke_kitchen:block/black_pepper_5",
+      "y": 180
+    },
+    "age=5,wild=false,facing=west": {
+      "model": "smoke_kitchen:block/black_pepper_5",
+      "y": 270
+    },
+    "age=6,wild=true": {
+      "model": "smoke_kitchen:block/black_pepper_wild_6"
+    },
+    "age=6,wild=false,facing=north": {
+      "model": "smoke_kitchen:block/black_pepper_6",
+      "y": 0
+    },
+    "age=6,wild=false,facing=east": {
+      "model": "smoke_kitchen:block/black_pepper_6",
+      "y": 90
+    },
+    "age=6,wild=false,facing=south": {
+      "model": "smoke_kitchen:block/black_pepper_6",
+      "y": 180
+    },
+    "age=6,wild=false,facing=west": {
+      "model": "smoke_kitchen:block/black_pepper_6",
+      "y": 270
+    },
+    "age=7,wild=true": {
+      "model": "smoke_kitchen:block/black_pepper_wild_7"
+    },
+    "age=7,wild=false,facing=north": {
+      "model": "smoke_kitchen:block/black_pepper_7",
+      "y": 0
+    },
+    "age=7,wild=false,facing=east": {
+      "model": "smoke_kitchen:block/black_pepper_7",
+      "y": 90
+    },
+    "age=7,wild=false,facing=south": {
+      "model": "smoke_kitchen:block/black_pepper_7",
+      "y": 180
+    },
+    "age=7,wild=false,facing=west": {
+      "model": "smoke_kitchen:block/black_pepper_7",
+      "y": 270
     }
   }
 }

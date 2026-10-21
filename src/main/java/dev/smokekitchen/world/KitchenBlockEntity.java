@@ -69,6 +69,10 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         lastAction = now;
         settleFreshness();
         if(station().id.equals("spice_rack"))return rack(p,stack,hit);
+        if(station().id.equals("spice_trellis")&&stack.isEmpty()){
+            for(int i=items.size()-1;i>=0;i--)if(!items.get(i).isEmpty()){give(p,items.get(i));items.set(i,ItemStack.EMPTY);changed();return InteractionResult.SUCCESS;}
+            p.sendOverlayMessage(net.minecraft.network.chat.Component.literal("种植架：前方耕地种胡椒或花椒；胡椒需要架子支撑和湿润耕地。"));return InteractionResult.SUCCESS;
+        }
         if(ResourceStates.spent(stack)&&!kind().equals("compost")){say(p,"spent");return InteractionResult.SUCCESS;}
         String held = stack.isEmpty() ? "" : ResourceStates.baseId(stack);
         if (held.equals("recipe_book")) { RecipeGuide.show(p); return InteractionResult.SUCCESS; }
@@ -831,5 +835,5 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     @Override public void setItem(int slot,ItemStack stack) { settleFreshness();items.set(slot,level==null?stack:KitchenFoodItem.agedStack(stack,level.getGameTime())); changed(); }
     @Override public boolean stillValid(Player player) { return Container.stillValidBlockEntity(this,player); }
     @Override public void clearContent() { items.clear(); changed(); }
-    @Override public boolean canPlaceItem(int slot,ItemStack stack) { return station().id.equals("spice_rack")?slot>=0&&slot<6&&items.get(slot).isEmpty()&&stack.getCount()==1&&SpiceRack.accepts(stack):kind().equals("storage") || kind().equals("rack"); }
+    @Override public boolean canPlaceItem(int slot,ItemStack stack) { if(station().id.equals("spice_trellis"))return false;return station().id.equals("spice_rack")?slot>=0&&slot<6&&items.get(slot).isEmpty()&&stack.getCount()==1&&SpiceRack.accepts(stack):kind().equals("storage") || kind().equals("rack"); }
 }

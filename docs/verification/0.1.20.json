@@ -1,0 +1,44 @@
+{
+  "version": "0.1.20",
+  "scope": "Real adjacent soil-rooted pepper/sichuan-pepper planting and support, vanilla inherited growth, native geometry and old rack salvage.",
+  "sha256": "026837d8f1c0407199148bf484b27677de6ba60dc763f291f1c9dbe11cff226e",
+  "jarBytes": 1008574,
+  "downloadVerified": false,
+  "sourceCIPassed": false,
+  "unitTests": 84,
+  "totalGameTests": 88,
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "onlyEntrypointRun": "TrellisFlowTest",
+    "actualRawCrafting": true,
+    "actualCropPlacementAndSeedConsumption": true,
+    "untilledAndUnsupportedAndOccupiedNegative": true,
+    "actualDryRootBoneMealRejection": true,
+    "actualWaterBucketAndVanillaHydration": true,
+    "actualPepperHarvestAndReplant": true,
+    "actualFrameBreakPauseAndRestore": true,
+    "actualWorldReopens": 2,
+    "activeIrisAsserted": true,
+    "guideSinglePageViewed": true,
+    "vanillaSourceVersionNote": "Both final actual flows used0.1.20 metadata and unchanged final production code/resources.",
+    "oldInventoryFixture": "Separately labelled legacy frame with slot0 cobblestone64, slot5 apples17, slot26 named pickaxe damage23; saved, actually hand-recovered named tool, then actually mined frame and physically picked remaining items. Not raw-production evidence.",
+    "clockNote": "Only vanilla farmland hydration waits accelerated to200ticks/s, restored20 in finally; no moisture/age edits. Actual player bone meal grows plants.",
+    "fullManifestRestored": 29,
+    "irisDisabledAfterRun": true,
+    "actualShrubMaturesAfterItsFrameWasMined": true,
+    "actualHarvestAddsAtLeastTwoNewSeeds": true
+  },
+  "earlierFailures": [
+    "First native run stopped at a test water-ray aim hitting the neighbouring floor; moved player to a clear side angle.",
+    "Next native run found real empty-hand useItemOn interception swallowing old recovery; guard fixed and normal-block-entry server regression added.",
+    "Initial backend compile API/import fixes and final hopper-test four-argument signature correction are not counted as passes."
+  ],
+  "knownLimits": [
+    "Only pepper and Sichuan pepper crop geometry changed; other original art and the complete design remain finite unfinished work.",
+    "Existing cultivated black pepper without a correctly oriented frame/wet farmland now pauses; its seedling remains and can resume after adding support/water.",
+    "Sichuan pepper is a shrub and does not require a frame.",
+    "Native shader compatibility verified for the isolated Iris/MakeUp combination, not every shader.",
+    "Drying rack weather/clock/rendering and washing/hood/furniture/independent buildings/management/multiplayer remain queued."
+  ]
+}

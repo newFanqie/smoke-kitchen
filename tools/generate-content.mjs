@@ -297,6 +297,7 @@ for(const s of stations){
  if(s.id==='pickling_crock')ownTextures.clay='minecraft:block/green_terracotta';
  if(s.id==='steamer')ownTextures.base='minecraft:block/bamboo_planks';
  if(s.id==='cabinet')ownTextures.base='minecraft:block/spruce_planks';
+ if(s.id==='spice_trellis'){ownTextures.stake='minecraft:block/oak_log';ownTextures.twine='minecraft:block/white_wool';}
  const geometry=vessel(s.id)||stationGeometry(s,models);
  if(['clay_pot','soup_pot','wok','frying_pan'].includes(s.id)){const y={clay_pot:7,soup_pot:7,wok:4,frying_pan:3}[s.id];if(s.id==='clay_pot')ownTextures.rim='minecraft:block/orange_terracotta';for(const e of geometry)if(e.to[1]===y)e.faces.up={texture:'#rim'};}
  write(`assets/${ns}/models/block/${s.id}.json`,{parent:'minecraft:block/block',textures:ownTextures,elements:geometry});
@@ -307,7 +308,7 @@ for(const s of stations){
  if(s.kind==='stove')write(`assets/${ns}/models/block/${s.id}_lit.json`,{parent:`${ns}:block/${s.id}`,textures:{firebox:'minecraft:block/furnace_front_on',flame:'minecraft:block/campfire_fire'},elements:[...stationGeometry(s,models),{from:[4,3,-.04],to:[12,8,-.04],faces:{north:{texture:'#flame',uv:[0,0,16,16]}}}]});
  if(s.id==='gas_stove')parts.push({when:{heat:'1|2|3'},apply:{model:`${ns}:block/gas_flame`}});
  if(s.id==='oven')write(`assets/${ns}/models/block/oven_lit.json`,{parent:`${ns}:block/oven`,textures:{firebox:'minecraft:block/furnace_front_on'}});
- if(s.kind!=='stove'&&s.id!=='gas_stove'){
+ if(s.kind!=='stove'&&s.id!=='gas_stove'&&s.id!=='spice_trellis'){
   const lidModel=s.model==='crock'?'crock_lid':s.kind==='cook'?`lid_${s.id}`:'lid';
   if(s.kind==='cook'){const y={frying_pan:3,wok:4,baking_tray:2,mixing_bowl:4}[s.id]||7;write(`assets/${ns}/models/block/${lidModel}.json`,{parent:'minecraft:block/block',textures,elements:vesselLid(false,y)});}
   parts.push({when:{lid:'true'},apply:{model:`${ns}:block/${lidModel}`}});
@@ -331,7 +332,13 @@ for(const family of foodFamilies)for(const cut of ['whole','slice','dice','shred
  write(`assets/${ns}/items/${id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${id}`}});
 }
 for(const c of crops){
- const variants={};for(let age=0;age<8;age++){variants[`age=${age}`]={model:`${ns}:block/${c.id}_${age}`};write(`assets/${ns}/models/block/${c.id}_${age}.json`,cropModel(c,age,crops.indexOf(c)));}
+ const variants={};for(let age=0;age<8;age++){
+  if(c.id==='black_pepper'){
+   variants[`age=${age},wild=true`]={model:`${ns}:block/${c.id}_wild_${age}`};write(`assets/${ns}/models/block/${c.id}_wild_${age}.json`,cropModel({...c,wild:true},age,crops.indexOf(c)));
+   for(const [f,y]of [['north',0],['east',90],['south',180],['west',270]])variants[`age=${age},wild=false,facing=${f}`]={model:`${ns}:block/${c.id}_${age}`,y};
+  }else variants[`age=${age}`]={model:`${ns}:block/${c.id}_${age}`};
+  write(`assets/${ns}/models/block/${c.id}_${age}.json`,cropModel(c,age,crops.indexOf(c)));
+ }
  write(`assets/${ns}/blockstates/${c.id}_crop.json`,{variants});write(`assets/${ns}/models/item/${c.id}_seeds.json`,inventoryModel({id:c.id+'_seeds'},crops.indexOf(c)+115));write(`assets/${ns}/items/${c.id}_seeds.json`,{model:{type:'minecraft:model',model:`${ns}:item/${c.id}_seeds`}});
  const mature={condition:'minecraft:block_state_property',block:`${ns}:${c.id}_crop`,properties:{age:'7'}};
  write(`data/${ns}/loot_table/blocks/${c.id}_crop.json`,{type:'minecraft:block',pools:[{rolls:1,entries:[{type:'minecraft:item',name:`${ns}:${c.id}_seeds`}]},{rolls:1,entries:[{type:'minecraft:item',name:`${ns}:${c.id}_seeds`,functions:[{function:'minecraft:set_count',count:{type:'minecraft:uniform',min:1,max:2}}]}],conditions:[mature]},{rolls:1,entries:[{type:'minecraft:item',name:`${ns}:${c.id}`,functions:[{function:'minecraft:set_count',count:{type:'minecraft:uniform',min:2,max:3}}]}],conditions:[mature]}]});
@@ -388,6 +395,7 @@ shaped('baking_tray',['III'],{I:'minecraft:iron_ingot'});
 shaped('dining_table',['PP','SS'],{P:'minecraft:oak_planks',S:'minecraft:stick'});
 shaped('dish_rack',['SSS','P P',' S '],{P:'minecraft:oak_planks',S:'minecraft:stick'});
 shaped('spice_rack',['PPP','SGS',' S '],{P:'minecraft:oak_planks',S:'minecraft:stick',G:'minecraft:glass'});
+shaped('spice_trellis',['S S','SLS','SLS'],{S:'minecraft:stick',L:'minecraft:string'},2);
 shaped('gas_stove',['III','CFC','ICI'],{I:'minecraft:iron_ingot',C:'minecraft:copper_ingot',F:'minecraft:furnace'});
 shaped('gas_pipe',['CCC'],{C:'minecraft:copper_ingot'},6);
 shaped('gas_tank',['III','I I','III'],{I:'minecraft:iron_ingot'});

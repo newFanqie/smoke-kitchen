@@ -36,6 +36,7 @@ public class KitchenBlock extends Block implements EntityBlock {
     @Override public BlockState getStateForPlacement(BlockPlaceContext context) { return defaultBlockState().setValue(FACING,context.getHorizontalDirection().getOpposite()); }
     @Override protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
+        if(id.equals("spice_trellis")&&!stack.isEmpty()&&!stack.is(dev.smokekitchen.content.KitchenContent.item("recipe_book")))return SpiceTrellis.plant(player,hand,level,pos);
         if(hit.getDirection()==Direction.UP && stack.getItem() instanceof net.minecraft.world.item.BlockItem placed && placed.getBlock() instanceof KitchenBlock block
                 && java.util.Set.of("cook","board","plate").contains(block.kind) && kind.equals("storage")) return InteractionResult.PASS;
         boolean coolingIce=id.equals("icebox")&&(stack.is(net.minecraft.world.item.Items.ICE)||stack.is(net.minecraft.world.item.Items.PACKED_ICE)||stack.is(net.minecraft.world.item.Items.BLUE_ICE));
@@ -58,6 +59,9 @@ public class KitchenBlock extends Block implements EntityBlock {
     }
     @Override protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, CollisionContext context) {
         if(id.equals("oven"))return Shapes.block();
+        if(id.equals("spice_trellis"))return switch(state.getValue(FACING)){
+            case NORTH->Block.box(1,0,0,15,16,2);case EAST->Block.box(14,0,1,16,16,15);case SOUTH->Block.box(1,0,14,15,16,16);default->Block.box(0,0,1,2,16,15);
+        };
         if(kind.equals("stove")||kind.equals("gas_stove"))return Block.box(0,0,0,16,16*KitchenGeometry.burnerTop(level.getBlockEntity(pos) instanceof KitchenBlockEntity station?station.mountedCookware:"",state.getValue(LID)),16);
         return switch (kind) {
             case "stove","gas_stove" -> Block.box(0,0,0,16,14,16);

@@ -98,6 +98,7 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         state.labels=!state.covered&&!cook&&!board&&!crock&&!Set.of("plate","mix").contains(entity.kind());
         int visible=entity.batch.remainingServings>=0&&entity.batch.totalServings>0?(int)Math.ceil((double)entity.batch.ingredients.size()*entity.batch.remainingServings/entity.batch.totalServings):26;
         var names=new ArrayList<Component>();var pieces=new ArrayList<FoodPiece>();
+        if(entity.station().id.equals("spice_trellis")){state.labels=false;state.names=List.of();state.pieces=List.of();return;}
         if(entity.station().id.equals("spice_rack")){
             state.labels=false;
             for(int i=0;i<6;i++)if(!entity.items.get(i).isEmpty()){

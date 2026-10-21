@@ -112,7 +112,7 @@ export function stationGeometry(s,models) {
  if(s.id==='grain_bin')return [b([0,0,0],[16,14,16]),b([0,14,2],[16,15,16]),b([2,13,0],[14,14,14],'#grain'),b([0,3,-.1],[16,5,0],'#metal')];
  if(s.id==='spice_rack')return base;
  if(s.id==='dish_rack')return [...base,...[3,7,11].map(x=>b([x,3,6],[x+1,7,13],'#clay'))];
- if(s.id==='spice_trellis')return [...base,b([6,0,7],[7,16,8],'#leaf'),b([3,5,7],[12,7,8],'#leaf'),b([8,10,7],[13,12,8],'#leaf')];
+ if(s.id==='spice_trellis')return [b([1,0,0],[3,16,2],'#stake'),b([13,0,0],[15,16,2],'#stake'),...[4,9,14].map(y=>b([3,y,.75],[13,y+.5,1.25],'#twine')),b([7.75,1,.75],[8.25,15,1.25],'#twine')];
  if(s.id==='drying_rack')return [...base,b([4,15,7],[6,20,8],'#clay'),b([10,15,7],[12,20,8],'#grain')];
  if(s.id==='mixing_table')return [...base,b([5,16,5],[11,18,11],'#clay'),b([2,16,3],[4,17,13])];
  if(s.id==='soup_pot')return [...base,b([-1,4,6],[1,6,10],'#metal'),b([15,4,6],[17,6,10],'#metal')];
@@ -129,6 +129,20 @@ export function stationGeometry(s,models) {
 
 export function cropModel(crop,age,index) {
  if(crop.id==='rice_paddy')return {parent:`minecraft:block/wheat_stage${age}`,textures:{particle:`minecraft:block/wheat_stage${age}`}};
+ if(crop.id==='black_pepper'&&!crop.wild){
+  const b=cube,h=2+age*1.7,stem=[];
+  stem.push(b([7,-1,7],[9,Math.max(.5,h*.25),9],'#stem'));
+  for(let n=0;n<4;n++){const z=7-n*2,y=h*(n+1)/4;stem.push(b([7,y-h/4,z],[8,y,z+1],'#stem'));if(n<3)stem.push(b([7,y-.5,z-2],[8,y,z+1],'#stem'));}
+  if(age>0)stem.push(b([7,h-.5,-1],[8,h,1],'#stem'));
+  for(const [x,z,k]of [[3,7,.35],[8,4,.55],[3,1,.8]]){const y=Math.max(.5,h*k);stem.push(b([x,y,z],[x+4,y+.5,z+3],'#leaf'));}
+  if(age>=4)for(const [x,z]of [[5,0],[9,2]])for(let n=0;n<3;n++)stem.push(b([x,h-1.4-n*1.1,z],[x+1,h-.5-n*1.1,z+1],'#fruit'));
+  return {parent:'minecraft:block/block',textures:{stem:'minecraft:block/green_terracotta',leaf:'minecraft:block/moss_block',fruit:age===7?'minecraft:block/black_terracotta':'minecraft:block/green_terracotta',particle:'minecraft:block/moss_block'},elements:stem};
+ }
+ if(crop.id==='sichuan_pepper'){
+  const b=cube,h=2+age*1.6,e=[b([7,-1,7],[9,h,9],'#stem')];
+  for(const [x,z]of [[3,4],[9,3],[4,10],[10,9]]){const y=h*.6;e.push(b([Math.min(x,8),y,Math.min(z,8)],[Math.max(x+1,9),y+1,Math.max(z+1,9)],'#stem'),b([x,y+1,z],[x+3,y+2,z+3],'#leaf'));if(age>3)for(let n=0;n<2;n++)e.push(b([x+n*1.5,y+.2,z-.5],[x+1+n*1.5,y+1.2,z+.5],'#fruit'));}
+  return {parent:'minecraft:block/block',textures:{stem:'minecraft:block/brown_terracotta',leaf:'minecraft:block/moss_block',fruit:age===7?'minecraft:block/red_terracotta':'minecraft:block/green_terracotta',particle:'minecraft:block/moss_block'},elements:e};
+ }
  const b=cube,h=2+age*1.6;
  const colors={tomato:'red',chili:'red',soybean:'lime',rapeseed:'yellow',scallion:'green',ginger:'yellow',garlic:'white',cucumber:'green',cabbage:'lime',onion:'pink',eggplant:'purple',sesame:'white',sichuan_pepper:'red',black_pepper:'black',cumin:'brown',shiitake:'brown',rice_paddy:'yellow'};
  const textures={stem:material('green'),leaf:material(age<4?'lime':'green'),fruit:material(colors[crop.id]),particle:material('green')};

@@ -57,7 +57,7 @@ public final class KitchenContent {
             var d = e.getAsJsonObject(); String name = ContentCatalog.str(d,"id");
             var props = BlockBehaviour.Properties.of().noCollision().randomTicks().instabreak().sound(SoundType.CROP)
                     .setId(ResourceKey.create(Registries.BLOCK, SmokeKitchen.id(name+"_crop")));
-            var crop = Registry.register(BuiltInRegistries.BLOCK, SmokeKitchen.id(name+"_crop"), new KitchenCropBlock(props, name));
+            var crop = Registry.register(BuiltInRegistries.BLOCK, SmokeKitchen.id(name+"_crop"), name.equals("black_pepper")?new dev.smokekitchen.world.PepperCropBlock(props):new KitchenCropBlock(props, name));
             CROPS.put(name,crop);
             registerBlockItem(name+"_seeds",crop);
         }

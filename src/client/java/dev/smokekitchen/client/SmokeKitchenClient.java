@@ -15,6 +15,9 @@ public final class SmokeKitchenClient implements ClientModInitializer {
                 if(portion!=null&&portion.seasonings!=null&&portion.seasonings.values().stream().anyMatch(x->x>0)){lines.add(net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.attached_seasoning",String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("salt",0d)),String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("oil",0d)),String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("soy",0d))));lines.add(net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.attached_seasoning_extra",String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("sugar",0d)),String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("vinegar",0d)),String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("spice",0d))));}
             }catch(RuntimeException ignored){}
             String id=KitchenContent.name(stack.getItem());
+            if(id.equals("spice_trellis"))lines.add(net.minecraft.network.chat.Component.literal("6木棍+2线制作2架；朝向的一侧需真实耕地，持胡椒/花椒种子右键播种。"));
+            if(id.equals("black_pepper_seeds"))lines.add(net.minecraft.network.chat.Component.literal("胡椒藤需要朝向正确的种植架与湿润耕地；干土或撤架暂停生长，不吞骨粉。"));
+            if(id.equals("sichuan_pepper_seeds"))lines.add(net.minecraft.network.chat.Component.literal("花椒是灌木，可独立种在耕地；也可持种子对准架子前方播种。"));
             if(id.endsWith("_seeds")) {
                 String crop=id.substring(0,id.length()-6);var habitat=dev.smokekitchen.world.KitchenWildCrops.HABITATS.get(crop);
                 if(habitat!=null){lines.add(net.minecraft.network.chat.Component.literal("野生来源："+habitat.description()));lines.add(net.minecraft.network.chat.Component.literal(crop.equals("rice_paddy")?"种在耕地，根旁两格内留水；缺水停长":crop.equals("shiitake")?"种在灰化土、菌丝体或近水耕地；遮阴，亮度≤12":"种在耕地；成熟收获可留种扩种"));}

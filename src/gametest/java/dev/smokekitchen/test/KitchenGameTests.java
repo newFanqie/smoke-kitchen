@@ -1,6 +1,7 @@
 package dev.smokekitchen.test;
 
 import dev.smokekitchen.content.*;
+import dev.smokekitchen.world.KitchenBlock;
 import dev.smokekitchen.cooking.CookingBatch;
 import dev.smokekitchen.entity.KitchenEntities;
 import dev.smokekitchen.world.KitchenBlockEntity;
@@ -13,6 +14,28 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void trellisEmptyHandUsesNormalBlockEntryToRecoverOldInventory(GameTestHelper t){
+        var at=new BlockPos(1,1,1);t.setBlock(at,KitchenContent.BLOCKS.get("spice_trellis"));var e=t.getBlockEntity(at,KitchenBlockEntity.class);var old=new ItemStack(Items.IRON_PICKAXE);old.setDamageValue(23);e.items.set(26,old);e.items.set(0,new ItemStack(Items.COBBLESTONE,13));
+        var player=t.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);use(t,at,player,ItemStack.EMPTY,net.minecraft.core.Direction.NORTH);
+        t.assertTrue(e.items.get(26).isEmpty()&&player.getInventory().getNonEquipmentItems().stream().anyMatch(x->x.is(Items.IRON_PICKAXE)&&x.getDamageValue()==23),"Empty useItemOn must reach old-inventory recovery rather than swallowing useWithoutItem");
+        var rejected=net.minecraft.world.level.block.entity.HopperBlockEntity.addItem(null,e,new ItemStack(Items.APPLE,64),null);t.assertTrue(rejected.getCount()==64&&e.items.get(0).getCount()==13,"Actual hopper transfer rejects all new generic cargo while retaining legacy stacks");t.succeed();
+    }
+    @GameTest public void pepperNeedsOrientedFrameAndWetRootsWithoutDeletingSeedling(GameTestHelper t){
+        var frame=new BlockPos(2,1,2);var abs=t.absolutePos(frame);var block=KitchenContent.BLOCKS.get("spice_trellis");var crop=KitchenContent.CROPS.get("black_pepper");
+        for(var face:net.minecraft.core.Direction.Plane.HORIZONTAL){
+            var plant=frame.relative(face);var at=t.absolutePos(plant);
+            t.setBlock(frame,block.defaultBlockState().setValue(KitchenBlock.FACING,face));
+            t.setBlock(plant.below(),net.minecraft.world.level.block.Blocks.FARMLAND.defaultBlockState().setValue(net.minecraft.world.level.block.FarmlandBlock.MOISTURE,7));t.setBlock(plant,crop);
+            t.assertTrue(dev.smokekitchen.world.SpiceTrellis.supports(t.getLevel(),at)&&crop.growingConditions(t.getLevel(),at),"Frame front supports real wet-rooted pepper in every facing");
+            crop.growCrops(t.getLevel(),at,t.getLevel().getBlockState(at));t.assertTrue(t.getLevel().getBlockState(at).getValue(dev.smokekitchen.world.PepperCropBlock.FACING)==face.getOpposite(),"Vanilla crop growth retains the visible direction of its real support");
+            t.setBlock(frame,block.defaultBlockState().setValue(KitchenBlock.FACING,face.getOpposite()));
+            t.assertTrue(!crop.isValidBonemealTarget(t.getLevel(),at,t.getLevel().getBlockState(at)),"Rear-facing frame cannot enable pepper bonemeal");
+            t.setBlock(frame,block.defaultBlockState().setValue(KitchenBlock.FACING,face));t.setBlock(plant.below(),net.minecraft.world.level.block.Blocks.FARMLAND);
+            t.assertTrue(!crop.growingConditions(t.getLevel(),at)&&t.getLevel().getBlockState(at).is(crop),"Dry roots pause an existing seedling without deleting it");
+            t.setBlock(plant,net.minecraft.world.level.block.Blocks.AIR);
+        }
+        var e=t.getBlockEntity(frame,KitchenBlockEntity.class);t.assertTrue(!e.canPlaceItem(0,new ItemStack(Items.APPLE)),"A planting frame no longer admits generic hopper storage");t.succeed();
+    }
     @GameTest public void riceSoilUsesVanillaWaterloggingAndPausesWhenDrained(GameTestHelper t){
         var p=new BlockPos(1,1,1);var soil=(dev.smokekitchen.world.RiceSoilBlock)KitchenContent.BLOCKS.get("rice_soil");var crop=KitchenContent.CROPS.get("rice_paddy");
         t.setBlock(p,soil.defaultBlockState().setValue(dev.smokekitchen.world.RiceSoilBlock.WATERLOGGED,true));t.setBlock(p.above(),crop);

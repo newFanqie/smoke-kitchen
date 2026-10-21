@@ -15,6 +15,34 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public final class KitchenInteractions {
     public static void register() {
+        net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.register((player,world,hand,hit)->{
+            var stack=player.getItemInHand(hand);var pos=hit.getBlockPos();
+            var soilPos=world.getBlockState(pos).getBlock() instanceof RiceSoilBlock?pos:pos.below();
+            if(hand==InteractionHand.MAIN_HAND&&(stack.is(Items.BUCKET)||stack.is(Items.WATER_BUCKET))&&world.getBlockState(soilPos).getBlock() instanceof RiceSoilBlock soil&&(pos.equals(soilPos)||world.getBlockState(pos).is(KitchenContent.CROPS.get("rice_paddy")))&&player.mayBuild()&&player.mayUseItemAt(soilPos,hit.getDirection(),stack)){
+                if(!world.isClientSide()){
+                    var state=world.getBlockState(soilPos);
+                    if(stack.is(Items.BUCKET)&&state.getValue(RiceSoilBlock.WATERLOGGED)){
+                        var filled=soil.pickupBlock(player,world,soilPos,state);
+                        player.setItemInHand(hand,net.minecraft.world.item.ItemUtils.createFilledResult(stack,player,filled));
+                        world.playSound(null,soilPos,net.minecraft.sounds.SoundEvents.BUCKET_FILL,net.minecraft.sounds.SoundSource.BLOCKS,1,1);
+                    }else if(stack.is(Items.WATER_BUCKET)&&!state.getValue(RiceSoilBlock.WATERLOGGED)&&soil.placeLiquid(world,soilPos,state,net.minecraft.world.level.material.Fluids.WATER.getSource(false))){
+                        player.setItemInHand(hand,net.minecraft.world.item.ItemUtils.createFilledResult(stack,player,new ItemStack(Items.BUCKET)));
+                        world.playSound(null,soilPos,net.minecraft.sounds.SoundEvents.BUCKET_EMPTY,net.minecraft.sounds.SoundSource.BLOCKS,1,1);
+                    }
+                }
+                return InteractionResult.SUCCESS;
+            }
+            if(hand!=InteractionHand.MAIN_HAND||!stack.is(Items.WATER_BUCKET)||hit.getDirection()!=net.minecraft.core.Direction.UP||!world.getBlockState(pos).is(net.minecraft.world.level.block.Blocks.FARMLAND)||!player.mayBuild()||!player.mayUseItemAt(pos,hit.getDirection(),stack))return InteractionResult.PASS;
+            var above=world.getBlockState(pos.above());
+            if(!above.isAir()&&!above.is(KitchenContent.CROPS.get("rice_paddy")))return InteractionResult.PASS;
+            if(!world.isClientSide()){
+                world.setBlock(pos,KitchenContent.BLOCKS.get("rice_soil").defaultBlockState().setValue(RiceSoilBlock.WATERLOGGED,true),net.minecraft.world.level.block.Block.UPDATE_ALL);
+                if(!player.isCreative())player.setItemInHand(hand,new ItemStack(Items.BUCKET));
+                world.playSound(null,pos,net.minecraft.sounds.SoundEvents.BUCKET_EMPTY,net.minecraft.sounds.SoundSource.BLOCKS,1,1);
+                player.sendOverlayMessage(net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.rice_soil"));
+            }
+            return InteractionResult.SUCCESS;
+        });
         UseItemCallback.EVENT.register((player,world,hand)->{
             if(hand!=InteractionHand.MAIN_HAND)return InteractionResult.PASS;
             ItemStack held=player.getItemInHand(hand);String name=KitchenContent.name(held.getItem());

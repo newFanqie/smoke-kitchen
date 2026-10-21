@@ -110,7 +110,7 @@ export function stationGeometry(s,models) {
  if(s.id==='gas_deposit')return [b([0,0,0],[16,16,16],'#stone'),b([3,5,-.01],[6,12,0],'#blue'),b([10,2,-.01],[13,8,0],'#dark'),b([16,6,5],[16.01,13,8],'#blue')];
  if(s.id==='icebox')return [b([0,0,0],[16,16,16],'#metal'),b([1,2,-.1],[15,15,0],'#ice'),b([12,6,-1],[13,11,0],'#dark')];
  if(s.id==='grain_bin')return [b([0,0,0],[16,14,16]),b([0,14,2],[16,15,16]),b([2,13,0],[14,14,14],'#grain'),b([0,3,-.1],[16,5,0],'#metal')];
- if(s.id==='spice_rack')return [...base,...[2,6,10].map((x,i)=>b([x,3,7],[x+2,7,10],['#clay','#dark','#grain'][i]))];
+ if(s.id==='spice_rack')return base;
  if(s.id==='dish_rack')return [...base,...[3,7,11].map(x=>b([x,3,6],[x+1,7,13],'#clay'))];
  if(s.id==='spice_trellis')return [...base,b([6,0,7],[7,16,8],'#leaf'),b([3,5,7],[12,7,8],'#leaf'),b([8,10,7],[13,12,8],'#leaf')];
  if(s.id==='drying_rack')return [...base,b([4,15,7],[6,20,8],'#clay'),b([10,15,7],[12,20,8],'#grain')];

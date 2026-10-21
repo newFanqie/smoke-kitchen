@@ -23,6 +23,7 @@ public final class KitchenCropBlock extends CropBlock {
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block,BlockState> builder) { super.createBlockStateDefinition(builder);builder.add(WILD); }
     @Override protected ItemLike getBaseSeedId() { return KitchenContent.item(crop+"_seeds"); }
     @Override protected boolean mayPlaceOn(BlockState state, BlockGetter world, BlockPos pos) {
+        if(crop.equals("rice_paddy")&&state.getBlock() instanceof RiceSoilBlock)return true;
         if (crop.equals("shiitake")) return state.is(Blocks.FARMLAND) || state.is(Blocks.PODZOL) || state.is(Blocks.MYCELIUM);
         return super.mayPlaceOn(state,world,pos);
     }

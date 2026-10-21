@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "moisture=0,waterlogged=true": {
+      "model": "smoke_kitchen:block/rice_soil_dry"
+    },
+    "moisture=0,waterlogged=false": {
+      "model": "smoke_kitchen:block/rice_soil_dry"
+    },
+    "moisture=1,waterlogged=true": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=1,waterlogged=false": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=2,waterlogged=true": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=2,waterlogged=false": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=3,waterlogged=true": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=3,waterlogged=false": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=4,waterlogged=true": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=4,waterlogged=false": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=5,waterlogged=true": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=5,waterlogged=false": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=6,waterlogged=true": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=6,waterlogged=false": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=7,waterlogged=true": {
+      "model": "smoke_kitchen:block/rice_soil"
+    },
+    "moisture=7,waterlogged=false": {
+      "model": "smoke_kitchen:block/rice_soil"
+    }
+  }
+}

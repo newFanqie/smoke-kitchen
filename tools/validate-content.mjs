@@ -6,8 +6,13 @@ const ns='smoke_kitchen';
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8'));
 const catalog=read(`data/${ns}/catalog.json`);
 const eggs=['duck','goose','boar','river_shrimp','river_crab','grain_raider','cellar_silverfish'].map(x=>x+'_spawn_egg');
-const allIds=[...catalog.items.map(x=>x.id),...catalog.stations.map(x=>x.id),...catalog.crops.map(x=>x.id+'_seeds'),'salt_ore','shrimp_bucket','crab_bucket',...eggs];
+const allIds=[...catalog.items.map(x=>x.id),...catalog.stations.map(x=>x.id),...catalog.crops.map(x=>x.id+'_seeds'),'salt_ore','rice_soil','shrimp_bucket','crab_bucket',...eggs];
 const known=new Set(allIds),errors=[];
+// ITEM_MODEL lookup needs an items/ descriptor, even for a renderer-only block model.
+for(const id of ['empty_empty',...['salt','oil','soy','vinegar','spice','honey'].flatMap(type=>[type+'_full',type+'_used'])]){
+ const p=`assets/${ns}/items/rack/${id}.json`;
+ if(!fs.existsSync(path.join(root,p))||read(p).model?.model!==`${ns}:block/rack/${id}`||!fs.existsSync(path.join(root,`assets/${ns}/models/block/rack/${id}.json`)))errors.push(`Unresolvable rack ITEM_MODEL ${id}`);
+}
 if(known.size!==allIds.length)errors.push('Duplicate item registration.');
 const checkItem=(id,source)=>{if(typeof id==='string' && id.startsWith(ns+':')&&!known.has(id.slice(ns.length+1)))errors.push(`${source}: unknown item ${id}`);};
 for(const r of catalog.processes){Object.keys(r.inputs).forEach(id=>checkItem(id,'processing input'));Object.keys(r.outputs).forEach(id=>checkItem(id,'processing output'));}

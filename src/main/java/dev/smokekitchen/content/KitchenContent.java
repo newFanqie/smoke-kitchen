@@ -51,6 +51,8 @@ public final class KitchenContent {
         }
         STATION_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, SmokeKitchen.id("station"),
                 FabricBlockEntityTypeBuilder.create(KitchenBlockEntity::new, BLOCKS.values().toArray(Block[]::new)).build());
+        var soil=Registry.register(BuiltInRegistries.BLOCK,SmokeKitchen.id("rice_soil"),new dev.smokekitchen.world.RiceSoilBlock(BlockBehaviour.Properties.ofFullCopy(net.minecraft.world.level.block.Blocks.FARMLAND).noOcclusion().setId(ResourceKey.create(Registries.BLOCK,SmokeKitchen.id("rice_soil")))));
+        BLOCKS.put("rice_soil",soil);registerBlockItem("rice_soil",soil);
         for (var e : ContentCatalog.DATA.getAsJsonArray("crops")) {
             var d = e.getAsJsonObject(); String name = ContentCatalog.str(d,"id");
             var props = BlockBehaviour.Properties.of().noCollision().randomTicks().instabreak().sound(SoundType.CROP)

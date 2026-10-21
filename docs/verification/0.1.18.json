@@ -1,0 +1,85 @@
+{
+  "version": "0.1.18",
+  "date": "2026-10-22",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "registeredItems": 323,
+  "kitchenEquipment": 40,
+  "riceSoilBlocks": 1,
+  "processingRecipes": 31,
+  "namedDishes": 29,
+  "unitTests": {
+    "passed": 84,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 85,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "scopePerRenderer": [
+      "FarmRackFlowTest inherits actual FirstMealFlowTest",
+      "FarmRackGuideTest: actual book crafting/navigation"
+    ],
+    "fullManifestEntrypoints": 27,
+    "allTwentySevenRerunClaimed": false,
+    "fullManifestRestored": true,
+    "isolatedIrisDisabledAfterValidation": true,
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "shaderActuallyActive": true,
+    "rawMaterialsOnly": true,
+    "processedItemsGranted": false,
+    "cropAgeEdited": false,
+    "cookingProgressEdited": false,
+    "preparedTimeEdited": false,
+    "seasoningAmountEdited": false,
+    "actualCraftingKillsSaltMiningMillingLardCuttingSoupEatingAndBowlReturn": true,
+    "actualExtraGlassAndHoeRackJarsCrafted": true,
+    "actualWaterBucketsIrrigateDrainRefill": true,
+    "dryRiceDoesNotConsumeBoneMeal": true,
+    "actualRiceGrownHarvestedAndReplanted": true,
+    "sixTargetedCellsWithActualUsedSaltAndLard": true,
+    "exactUsedSaltDamage": 13,
+    "exactUsedLardDamage": 5,
+    "rawPorkRejectedWithoutConsumption": true,
+    "multipleActualWorldReopens": true,
+    "finalSoilHeightPixels": 13,
+    "vanillaFluidAboveSoil": true,
+    "allFourFacingRulesGameTested": true,
+    "clientActualRackFacing": "south",
+    "legacyOverflowGameTested": true,
+    "realVanillaHopperSingleTransfersTested": true,
+    "cropClickBucketAccessTested": true,
+    "nativeCleanFullRunClaimed": false,
+    "nativeEvidence": "Actual production/cooking/eating/glass/tools/rack in save111 completed before facing-fixture assertion; same original offline profile resumed stored inventory, irrigation/growth passed before unrelated underground-loot driver failed; actual harvest/replant/retrieve/reopen and guide completed in final same-save continuation. No inventory, dates or maturity injected.",
+    "nativeProductionLog": ".tools/farm-rack-0.1.18-native-production-before-facing-fixture-failure.log",
+    "nativeGrowthLog": ".tools/farm-rack-0.1.18-native-grown-before-loot-driver-failure.log",
+    "excludedInterimFailures": [
+      "initial furnace fuel fixture insufficient",
+      "second fixture needed to craft additional sticks",
+      "attempted native109 continuation used a new test avatar identity; no processed items substituted; native111 original offline profile later used for actual same-save continuation",
+      "test stick crafting grid and placed-facing assumptions corrected",
+      "missing rack model indices/native texture path fixed and finally visually verified",
+      "below-floor unrelated loot pathfinding driver corrected; actual existing crop drops physically collected in the same save"
+    ],
+    "logs": [
+      ".tools/farm-rack-0.1.18-native-profile-continuation.log",
+      ".tools/farm-rack-0.1.18-iris.log",
+      ".tools/farm-rack-final-0.1.18.log"
+    ],
+    "visualReview": {
+      "vanillaReviewed": true,
+      "irisReviewed": true
+    }
+  },
+  "sha256": "56772e82bd3bba2745fe458c32b820f6d42bc62b5eff3585a26f96f3df5d374c",
+  "jarBytes": 993999,
+  "downloadVerified": false,
+  "sourceCIPassed": false
+}

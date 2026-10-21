@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {inventoryModel,stationGeometry,cropModel} from './voxel-art.mjs';
 import {vessel,vesselLid,toolModel,tofuModel,dishModel,disk,foodFamilies,foodStages,foodModel} from './kitchen-art.mjs';
 import {sampleFoodModel,writeFoodSampleTextures,sampleBases} from './food-samples.mjs';
+import {farmRackResources} from './farm-rack.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../src/main/resources');
 const ns='smoke_kitchen';
 const write=(p,data)=>{if(p.includes('/models/')&&data.textures&&!data.textures.particle)data.textures.particle=Object.values(data.textures).find(t=>!t.startsWith('#'));const out=path.join(root,p);fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(data,null,2)+'\n');};
@@ -386,6 +387,7 @@ for(const [id,ingredients]of Object.entries({
 shaped('baking_tray',['III'],{I:'minecraft:iron_ingot'});
 shaped('dining_table',['PP','SS'],{P:'minecraft:oak_planks',S:'minecraft:stick'});
 shaped('dish_rack',['SSS','P P',' S '],{P:'minecraft:oak_planks',S:'minecraft:stick'});
+shaped('spice_rack',['PPP','SGS',' S '],{P:'minecraft:oak_planks',S:'minecraft:stick',G:'minecraft:glass'});
 shaped('gas_stove',['III','CFC','ICI'],{I:'minecraft:iron_ingot',C:'minecraft:copper_ingot',F:'minecraft:furnace'});
 shaped('gas_pipe',['CCC'],{C:'minecraft:copper_ingot'},6);
 shaped('gas_tank',['III','I I','III'],{I:'minecraft:iron_ingot'});
@@ -440,6 +442,10 @@ for(const[key,value]of Object.entries({egg:'蛋',rice:'生米',rice_cooked:'米�
 for(const definition of items)if(definition.ingredient&&!definition.variant_of&&!lang[`ingredient.${ns}.${definition.ingredient}`])lang[`ingredient.${ns}.${definition.ingredient}`]=definition.name;
 for(const[key,value]of Object.entries({fish:'鱼',beef:'牛肉',chicken:'鸡肉',carrot:'胡萝卜',pumpkin:'南瓜',apple:'苹果',mushroom:'菌菇'}))lang[`ingredient.${ns}.${key}`]=value;
 lang['itemGroup.smoke_kitchen']='烟火厨房';en['itemGroup.smoke_kitchen']='Smoke Kitchen';
+lang['block.smoke_kitchen.rice_soil']='稻田土';en['block.smoke_kitchen.rice_soil']='Flooded Rice Soil';
+messages.rice_soil='浅水稻田已形成；可种稻谷。空桶可排水，水桶可重新灌水。';
+messages.rack_help='调料架：准星对准上/下层的左、中、右格，持瓶罐存放，空手取回；潜行可取出旧版溢出内容。';
+messages.rack_only='调料架仅收纳调料瓶罐、蜂蜜和空瓶罐。';messages.rack_occupied='此格已有瓶罐；请先空手取回。';
 for(const[k,v]of Object.entries(messages)){lang[`message.${ns}.${k}`]=v;en[`message.${ns}.${k}`]=v;}
 for(const[k,v]of Object.entries({empty:'空锅',raw:'未熟',cooked:'已熟',burnt:'焦黑'}))lang[`state.${ns}.${k}`]=v;
 lang[`state.${ns}.heating`]='加热中';lang[`state.${ns}.no_heat`]='未供热（检查燃料或开关）';
@@ -498,3 +504,4 @@ for(const file of fs.readdirSync(path.join(root,`data/${ns}/recipe`)).filter(fil
 console.log(`Generated ${items.length} items, ${stations.length} stations, ${crops.length} crops, ${dishes.length} dishes, ${processes.length} processing recipes.`);
 
 writeFoodSampleTextures(root);
+farmRackResources(root);

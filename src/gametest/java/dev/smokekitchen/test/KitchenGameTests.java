@@ -13,6 +13,49 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void riceSoilUsesVanillaWaterloggingAndPausesWhenDrained(GameTestHelper t){
+        var p=new BlockPos(1,1,1);var soil=(dev.smokekitchen.world.RiceSoilBlock)KitchenContent.BLOCKS.get("rice_soil");var crop=KitchenContent.CROPS.get("rice_paddy");
+        t.setBlock(p,soil.defaultBlockState().setValue(dev.smokekitchen.world.RiceSoilBlock.WATERLOGGED,true));t.setBlock(p.above(),crop);
+        var abs=t.absolutePos(p);t.assertTrue(crop.defaultBlockState().canSurvive(t.getLevel(),abs.above())&&crop.growingConditions(t.getLevel(),abs.above()),"Rice can use retained shallow water on vanilla-derived farmland");
+        var bucket=soil.pickupBlock(null,t.getLevel(),abs,t.getLevel().getBlockState(abs));
+        t.assertTrue(bucket.is(Items.WATER_BUCKET)&&!t.getLevel().getBlockState(abs).getValue(dev.smokekitchen.world.RiceSoilBlock.WATERLOGGED)&&!crop.growingConditions(t.getLevel(),abs.above()),"Draining returns exactly the retained water and pauses isolated rice");
+        t.assertTrue(soil.pickupBlock(null,t.getLevel(),abs,t.getLevel().getBlockState(abs)).isEmpty(),"Cannot extract the same water twice");
+        t.assertTrue(soil.placeLiquid(t.getLevel(),abs,t.getLevel().getBlockState(abs),net.minecraft.world.level.material.Fluids.WATER.getSource(false))&&crop.growingConditions(t.getLevel(),abs.above()),"Refilling uses vanilla waterlogged behavior");
+        var player=t.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND,new ItemStack(Items.BUCKET));var hit=new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(abs.above()),net.minecraft.core.Direction.UP,abs.above(),false);
+        net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.invoker().interact(player,t.getLevel(),net.minecraft.world.InteractionHand.MAIN_HAND,hit);
+        t.assertTrue(player.getMainHandItem().is(Items.WATER_BUCKET)&&!t.getLevel().getBlockState(abs).getValue(dev.smokekitchen.world.RiceSoilBlock.WATERLOGGED)&&t.getLevel().getBlockState(abs.above()).is(crop),"Actual crop-click entry drains roots without removing the plant");
+        net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.invoker().interact(player,t.getLevel(),net.minecraft.world.InteractionHand.MAIN_HAND,hit);t.assertTrue(player.getMainHandItem().is(Items.BUCKET)&&t.getLevel().getBlockState(abs).getValue(dev.smokekitchen.world.RiceSoilBlock.WATERLOGGED),"Crop-click refills using the original bucket, no duplication");t.succeed();
+    }
+    @GameTest public void shallowSoilSurfaceLeavesVanillaFluidVisible(GameTestHelper t){
+        var p=new BlockPos(1,1,1);var block=KitchenContent.BLOCKS.get("rice_soil");t.setBlock(p,block.defaultBlockState().setValue(dev.smokekitchen.world.RiceSoilBlock.WATERLOGGED,true));
+        var s=t.getLevel().getBlockState(t.absolutePos(p));double top=s.getShape(t.getLevel(),t.absolutePos(p)).max(net.minecraft.core.Direction.Axis.Y);
+        t.assertTrue(top==13/16.0&&s.getFluidState().getHeight(t.getLevel(),t.absolutePos(p))>top,"Shallow soil must not conceal water below the original15px farmland surface");t.succeed();
+    }
+    @GameTest public void targetedRackPreservesAmountsAndRejectsNonContainers(GameTestHelper t){
+        var p=new BlockPos(1,1,1);t.setBlock(p,KitchenContent.BLOCKS.get("spice_rack"));var rack=t.getBlockEntity(p,KitchenBlockEntity.class);var player=t.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);var salt=new ItemStack(KitchenContent.item("used_salt"));salt.setDamageValue(13);
+        var abs=t.absolutePos(p);var hit=new net.minecraft.world.phys.BlockHitResult(new net.minecraft.world.phys.Vec3(abs.getX()+.5,abs.getY()+.7,abs.getZ()),net.minecraft.core.Direction.NORTH,abs,false);
+        rack.interact(player,salt,hit);t.assertTrue(salt.isEmpty()&&rack.items.get(4).getDamageValue()==13&&rack.getContainerSize()==6&&rack.getMaxStackSize()==1,"Targeted upper middle cell stores one exact used jar");
+        t.assertTrue(!rack.canPlaceItem(0,new ItemStack(Items.EGG))&&!rack.canPlaceItem(6,new ItemStack(Items.GLASS_BOTTLE))&&rack.canPlaceItem(5,new ItemStack(Items.GLASS_BOTTLE)),"Hopper admission matches six bottle cells");
+        var restored=(KitchenBlockEntity)BlockEntity.loadStatic(abs,rack.getBlockState(),rack.saveWithFullMetadata(t.getLevel().registryAccess()),t.getLevel().registryAccess());restored.setLevel(t.getLevel());t.assertTrue(restored.items.get(4).getDamageValue()==13,"Serialization preserves exact remaining salt");
+        var rejected=net.minecraft.world.level.block.entity.HopperBlockEntity.addItem(null,rack,new ItemStack(Items.EGG),net.minecraft.core.Direction.DOWN);
+        t.assertTrue(rejected.getCount()==1&&rack.items.get(0).isEmpty(),"Real vanilla hopper insertion rejects ordinary food");
+        var bulk=net.minecraft.world.level.block.entity.HopperBlockEntity.addItem(null,rack,new ItemStack(Items.GLASS_BOTTLE,7),net.minecraft.core.Direction.DOWN);t.assertTrue(bulk.getCount()==7,"Bulk external insertion is rejected without truncating the original stack");
+        int excess=0;for(int i=0;i<7;i++)excess+=net.minecraft.world.level.block.entity.HopperBlockEntity.addItem(null,rack,new ItemStack(Items.GLASS_BOTTLE),net.minecraft.core.Direction.DOWN).getCount();
+        t.assertTrue(excess==2&&rack.items.stream().filter(x->!x.isEmpty()).count()==6&&rack.items.stream().allMatch(x->x.isEmpty()||x.getCount()==1),"Vanilla hopper single-item transfer fills only five remaining cells, one bottle each");t.succeed();
+    }
+    @GameTest public void rackFacingLayoutMatchesEveryTargetCell(GameTestHelper t){
+        var pos=new BlockPos(0,0,0);var block=KitchenContent.BLOCKS.get("spice_rack");
+        for(var facing:net.minecraft.core.Direction.Plane.HORIZONTAL)for(int i=0;i<6;i++){
+            var xz=dev.smokekitchen.world.SpiceRack.position(i,facing);var hit=new net.minecraft.world.phys.BlockHitResult(new net.minecraft.world.phys.Vec3(xz[0],i<3?.3:.7,xz[1]),facing,pos,false);
+            t.assertTrue(dev.smokekitchen.world.SpiceRack.slot(pos,block.defaultBlockState().setValue(dev.smokekitchen.world.KitchenBlock.FACING,facing),hit)==i,"Rendered bottle and targeted slot match in all four orientations");
+        }t.succeed();
+    }
+    @GameTest public void legacyRackOverflowRemainsRecoverable(GameTestHelper t){
+        var p=new BlockPos(1,1,1);t.setBlock(p,KitchenContent.BLOCKS.get("spice_rack"));var rack=t.getBlockEntity(p,KitchenBlockEntity.class);rack.items.set(20,new ItemStack(Items.APPLE,4));var abs=t.absolutePos(p);
+        var restored=(KitchenBlockEntity)BlockEntity.loadStatic(abs,rack.getBlockState(),rack.saveWithFullMetadata(t.getLevel().registryAccess()),t.getLevel().registryAccess());restored.setLevel(t.getLevel());var player=t.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);player.setShiftKeyDown(true);
+        restored.interact(player,ItemStack.EMPTY,new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(abs),net.minecraft.core.Direction.NORTH,abs,false));
+        t.assertTrue(restored.items.get(20).isEmpty()&&player.getInventory().countItem(Items.APPLE)==4,"Old slots beyond the six new cells survive serialization and can be recovered without deletion or duplication");t.succeed();
+    }
     @GameTest public void allThreeIceBlocksEnterIceboxThroughRealBlockInteraction(GameTestHelper test){
         var pos=new BlockPos(1,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("icebox"));var box=test.getBlockEntity(pos,KitchenBlockEntity.class);var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
         for(var item:new net.minecraft.world.item.Item[]{Items.ICE,Items.PACKED_ICE,Items.BLUE_ICE}){var stack=new ItemStack(item);use(test,pos,player,stack,net.minecraft.core.Direction.UP);test.assertTrue(stack.isEmpty()&&box.items.stream().anyMatch(x->x.is(item)),"Actual block interaction inserts cooling ice instead of falling through to external placement");}

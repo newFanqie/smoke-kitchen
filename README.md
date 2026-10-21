@@ -2,7 +2,7 @@
 
 Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配、锅具投料、调火和翻炒，把食材做成可以装盘分享的饭菜。
 
-**当前版本：0.1.17 开发版。** 家常炖汤与熟鸭肉采用独立原创立体外观，连同生鸭肉共九种新鲜/变味/腐坏模型和21张16px贴图；有体积食物直立放在台面上。原版与实际启用Iris从基础材料合成、击杀取肉、炖煮与烤熟，验证摆放重开、取回食用返碗和剩菜保存。见[本版更新](docs/UPDATE-0.1.17.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)和[玩法设计](docs/DESIGN.md)。其余美术、设备、生态、建筑、经营及多人验收继续推进。
+**当前版本：0.1.18 开发版。** 用锄头和水桶建浅水稻田，支持排水、重灌与稻谷生长；调料架两层六格按准星存取，保留精确调味余量。原版与实际启用Iris完成基础材料合成、炖汤食用、灌排种植采收、六格瓶罐取放及多次重开。见[本版更新](docs/UPDATE-0.1.18.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)和[玩法设计](docs/DESIGN.md)。其余美术、设备、生态、建筑、经营及多人验收继续推进。
 
 ## 当前玩法
 
@@ -17,11 +17,11 @@ Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配
 
 ## 安装
 
-[下载 0.1.17 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.17) · [本次更新与实测记录](docs/UPDATE-0.1.17.md)
+[下载 0.1.18 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.18) · [本次更新与实测记录](docs/UPDATE-0.1.18.md)
 
 1. 使用 Minecraft Java **26.1.2**、Fabric Loader **0.19.2** 或更高的兼容版本。
 2. 安装对应版本的 Fabric API；本工程验证使用 **0.149.1+26.1.2**。
-3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.17.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
+3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.18.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
 4. 联机时服务器与客户端均安装本模组及 Fabric API。
 
 实际客户端检查截图：

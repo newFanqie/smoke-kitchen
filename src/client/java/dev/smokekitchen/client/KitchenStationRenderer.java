@@ -98,6 +98,17 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         state.labels=!state.covered&&!cook&&!board&&!crock&&!Set.of("plate","mix").contains(entity.kind());
         int visible=entity.batch.remainingServings>=0&&entity.batch.totalServings>0?(int)Math.ceil((double)entity.batch.ingredients.size()*entity.batch.remainingServings/entity.batch.totalServings):26;
         var names=new ArrayList<Component>();var pieces=new ArrayList<FoodPiece>();
+        if(entity.station().id.equals("spice_rack")){
+            state.labels=false;
+            for(int i=0;i<6;i++)if(!entity.items.get(i).isEmpty()){
+                var stack=entity.items.get(i);String material=dev.smokekitchen.world.SpiceRack.material(stack);
+                String fill=material.equals("empty")?"empty":stack.isDamaged()?"used":"full";
+                var p=dev.smokekitchen.world.SpiceRack.position(i,entity.getBlockState().getValue(KitchenBlock.FACING));
+                String appearance="rack/"+material+"_"+fill;
+                pieces.add(new FoodPiece(model(appearance,entity),p[0],(i<3?3:9)/16f,p[1],1,0,0,5/16f,false,appearance));
+            }
+            state.names=List.of();state.pieces=List.copyOf(pieces);return;
+        }
         double age=entity.getLevel().getGameTime()+partialTick-entity.lastStirTime;
         float mix=(float)Math.clamp(age/16,0,1),motion=age>=0&&age<16?(float)Math.sin(mix*Math.PI):0;
         float flipPhase=Math.clamp((entity.getLevel().getGameTime()+partialTick-entity.lastFlipTime)/12f,0,1);

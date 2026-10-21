@@ -32,6 +32,7 @@ public final class KitchenContent {
             int nutrition = ContentCatalog.num(d,"nutrition",0);
             if (nutrition > 0) props.food(new FoodProperties.Builder().nutrition(nutrition).saturationModifier(.5f).build());
             if (ContentCatalog.flag(d,"meal")) props.usingConvertsTo(Items.BOWL);
+            if(d.has("container"))props.usingConvertsTo(item(ContentCatalog.str(d,"container")));
             int uses = ContentCatalog.num(d,"uses",0);
             if (uses > 0) props.durability(uses);
             else if (ContentCatalog.flag(d,"unstackable")) props.stacksTo(1);

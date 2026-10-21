@@ -2,7 +2,7 @@
 
 Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配、锅具投料、调火和翻炒，把食材做成可以装盘分享的饭菜。
 
-**当前版本：0.1.12 开发版。** 修复锅具与灶面的接触、锅盖高度和密封缸盖外材料；加入阶梯圆锅、锅内切块与真实翻动、炒煎烤的分阶段外观，以及第一批独立刀铲、豆粒和调料瓶图标。酱油改为熟豆酿成醪液后过滤，米醋同样需过滤并回收容器。原版与实际启用Iris完成工艺和画面检查；已读取用户提供的八个厨房模组JAR作为设计参考，未把参考素材打包。完整设计仍有豆腐工艺、独立生物美术、建筑、经营及设备功能等有限待办，自动续做保持启用。见[本版更新](docs/UPDATE-0.1.12.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)、[参考研究](docs/REFERENCE-KITCHEN-MODS.md)和[玩法设计](docs/DESIGN.md)。
+**当前版本：0.1.13 开发版。** 豆腐现在需要泡豆、湿磨、煮浆、筛浆、温热点制和木盖压模，配有独立工序模型、锅内凝块和翻页教程；空罐循环使用，散装豆浆不补回蒸发水，过量醋的低品质保留到压好的豆腐。原版与实际启用Iris完成基础材料合成、酿醋、制作豆腐、食用与多次存档重开，煤气和全部322物品分类回归通过。此前的低高度阶梯圆锅、翻动与生熟焦化保留。独立生物美术、建筑、经营及其他设备等有限待办仍在继续。见[本版更新](docs/UPDATE-0.1.13.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)、[参考研究](docs/REFERENCE-KITCHEN-MODS.md)和[玩法设计](docs/DESIGN.md)。
 
 ## 当前玩法
 
@@ -17,14 +17,18 @@ Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配
 
 ## 安装
 
-[下载 0.1.12 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.12) · [本次更新与实测记录](docs/UPDATE-0.1.12.md)
+[下载 0.1.13 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.13) · [本次更新与实测记录](docs/UPDATE-0.1.13.md)
 
 1. 使用 Minecraft Java **26.1.2**、Fabric Loader **0.19.2** 或更高的兼容版本。
 2. 安装对应版本的 Fabric API；本工程验证使用 **0.149.1+26.1.2**。
-3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.12.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
+3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.13.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
 4. 联机时服务器与客户端均安装本模组及 Fabric API。
 
 实际客户端检查截图：
+
+![原创豆腐工序模型预览（仅为外观展示）](docs/images/tofu-original-model-preview-vanilla-0.1.13.png)
+![实际基础原料制作出的豆腐](docs/images/tofu-actual-finished-inventory-iris-0.1.13.png)
+![独立视觉夹具中的凝块（不是整链制作证据）](docs/images/tofu-fluid-fixture-ready-iris-0.1.13.png)
 
 ![自然河岸的野生稻谷](docs/images/ecology-rice-vanilla-0.1.9.png)
 ![最终锅具接触和盖子](docs/images/fit-pan-lid-side-iris-0.1.12.png)

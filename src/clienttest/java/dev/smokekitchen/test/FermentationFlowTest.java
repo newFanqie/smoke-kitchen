@@ -13,7 +13,9 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Predicate;
 
 /** Raw recipe ingredients only. Vanilla tick-rate acceleration runs the complete long fermentation, without editing work. */
-public final class FermentationFlowTest implements FabricClientGameTest {
+public class FermentationFlowTest implements FabricClientGameTest {
+    protected TestWorldSave savedWorld;
+    protected String[] extraRawMaterials(){return new String[0];}
     public static volatile boolean fastClock;
     private static void rate(ClientGameTestContext c,TestServerContext s,boolean fast){c.runOnClient(client->{fastClock=fast;if(fast){client.options.enableVsync().set(false);client.options.framerateLimit().set(260);client.options.inactivityFpsLimit().set(net.minecraft.client.InactivityFpsLimit.MINIMIZED);client.options.pauseOnLostFocus=false;}});s.runCommand("tick rate "+(fast?200:20));}
     private static final BlockPos TABLE=new BlockPos(0,100,-2),MILL=new BlockPos(-2,100,0),MIX=new BlockPos(0,100,2),SOY=new BlockPos(2,100,2),VINEGAR=new BlockPos(3,100,2),BEANS=new BlockPos(2,100,0),RICE=new BlockPos(-2,100,2),WATER=new BlockPos(4,99,-1);
@@ -41,9 +43,10 @@ public final class FermentationFlowTest implements FabricClientGameTest {
     @Override public void runTest(ClientGameTestContext c){
         TestWorldSave save;int[] partial={0};long[] begun={0};
         try(var world=c.worldBuilder().create()){
-            save=world.getWorldSave();var s=world.getServer();var p=new SurvivalPlayer(c,s);c.runOnClient(client->client.options.guiScale().set(2));
+            save=world.getWorldSave();savedWorld=save;var s=world.getServer();var p=new SurvivalPlayer(c,s);c.runOnClient(client->client.options.guiScale().set(2));
             s.runCommand("fill -6 99 -5 7 99 6 minecraft:smooth_stone");s.runCommand("fill -6 100 -5 7 105 6 minecraft:air");s.runCommand("time set day");s.runCommand("weather clear");s.runCommand("gamemode survival @a");s.runCommand("tp @a 0.5 100 -3.5 0 35");s.runCommand("fill 4 99 -1 5 99 0 minecraft:water");
             for(String raw:new String[]{"minecraft:oak_planks 40","minecraft:stick 24","minecraft:cobblestone 24","minecraft:clay_ball 24","minecraft:terracotta 6","minecraft:string 6","minecraft:smooth_stone 1","minecraft:glass 8","minecraft:iron_ingot 6","minecraft:coal 12","smoke_kitchen:soybean 4","smoke_kitchen:rice_paddy 6","minecraft:wheat 2","smoke_kitchen:shiitake 1","minecraft:sugar 1","minecraft:apple 1","smoke_kitchen:salt_crystals 4","minecraft:potato 2","minecraft:book 1","minecraft:wheat_seeds 1"})s.runCommand("give @a "+raw);c.waitTicks(8);
+            for(String raw:extraRawMaterials())s.runCommand("give @a "+raw);c.waitTicks(4);
             if(net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("iris"))c.runOnClient(client->{try{var api=Class.forName("net.irisshaders.iris.api.v0.IrisApi");check((Boolean)api.getMethod("isShaderPackInUse").invoke(api.getMethod("getInstance").invoke(null)),"Iris shader must really be active");}catch(ReflectiveOperationException e){throw new AssertionError(e);}});
             p.craft("crafting_table","oak_planks","oak_planks","oak_planks","oak_planks");p.closeMenu();place(p,"crafting_table",TABLE);p.emptyHand();tap(p,TABLE,Direction.UP);
             for(int i=0;i<4;i++)p.craft("smoke_kitchen:wooden_lid","oak_planks","oak_planks","","","stick","");

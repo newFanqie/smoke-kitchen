@@ -833,6 +833,45 @@
       "unstackable": true
     },
     {
+      "id": "soaked_soybean",
+      "name": "泡发大豆",
+      "texture": "wheat_seeds"
+    },
+    {
+      "id": "raw_bean_pulp",
+      "name": "生豆糊",
+      "texture": "clay_ball",
+      "ingredient": "bean_pulp",
+      "needs_water": true,
+      "resistance": 1.5
+    },
+    {
+      "id": "boiled_bean_pulp",
+      "name": "煮熟豆糊",
+      "texture": "clay_ball"
+    },
+    {
+      "id": "soy_milk",
+      "name": "熟豆浆（待点制）",
+      "texture": "honey_bottle",
+      "ingredient": "soy_milk",
+      "unstackable": true,
+      "container": "empty_jar",
+      "liquid_water": 1
+    },
+    {
+      "id": "soy_curds",
+      "name": "豆花（待压模）",
+      "texture": "snowball"
+    },
+    {
+      "id": "okara",
+      "name": "熟豆渣",
+      "texture": "wheat",
+      "ingredient": "okara",
+      "ready": true
+    },
+    {
       "id": "stale_tomato",
       "name": "不新鲜的番茄",
       "texture": "apple",
@@ -3536,16 +3575,53 @@
       "tool": "sieve"
     },
     {
+      "station": "ferment",
+      "inputs": {
+        "smoke_kitchen:soybean": 4
+      },
+      "outputs": {
+        "smoke_kitchen:soaked_soybean": 4
+      },
+      "seconds": 120,
+      "water": 1,
+      "exclusive": true
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:soaked_soybean": 4
+      },
+      "outputs": {
+        "smoke_kitchen:raw_bean_pulp": 1
+      },
+      "seconds": 10,
+      "water": 1
+    },
+    {
       "station": "mix",
       "inputs": {
-        "smoke_kitchen:soybean": 4,
-        "smoke_kitchen:rice_vinegar": 1
+        "smoke_kitchen:boiled_bean_pulp": 1,
+        "smoke_kitchen:empty_jar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:soy_milk": 1,
+        "smoke_kitchen:okara": 1
+      },
+      "seconds": 5,
+      "water": 0,
+      "tool": "sieve"
+    },
+    {
+      "station": "mix",
+      "inputs": {
+        "smoke_kitchen:soy_curds": 1
       },
       "outputs": {
         "smoke_kitchen:tofu": 2
       },
       "seconds": 20,
-      "water": 1
+      "water": 0,
+      "tool": "wooden_lid"
     },
     {
       "station": "pickle",

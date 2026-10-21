@@ -1,0 +1,117 @@
+{
+  "version": "0.1.13",
+  "date": "2026-10-21",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "registeredItems": 322,
+  "catalogItems": 255,
+  "processingRecipes": 31,
+  "namedDishes": 29,
+  "discoveryAdvancements": 84,
+  "unitTests": {
+    "passed": 77,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 73,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "nativeAssetReferences": {
+    "textures": 52,
+    "parents": 22,
+    "missing": []
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "scopePerRenderer": [
+      "TofuFlowTest (includes full FermentationFlowTest)",
+      "TofuGuideTest",
+      "KitchenVisualTest"
+    ],
+    "fullManifestEntrypoints": 17,
+    "allSeventeenRerunClaimed": false,
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "shaderActuallyActive": true,
+    "rawMaterialsOnlyForProductionChain": true,
+    "vinegarActuallyProducedFromFirstCulture": true,
+    "soakingGameSeconds": 120,
+    "wetMillPlayerActions": 2,
+    "actualWetCookingAndFiltering": true,
+    "warmAcidGameSeconds": 10,
+    "pressLidPlayerActions": 4,
+    "partialSoakActualWorldReopen": true,
+    "partialCoagulationActualWorldReopen": true,
+    "partialPressActualWorldReopen": true,
+    "finalWorldReopen": true,
+    "producedTofu": 2,
+    "actuallyEatenTofu": 1,
+    "remainingTofuAfterReopen": 1,
+    "okaraAfterReopen": 1,
+    "returnedJarsAfterFullVinegarAndTofuChain": 3,
+    "remainingVinegarMeasuresAfterReopen": 6,
+    "hungerSetToEightBeforeEating": true,
+    "positionTeleportsInFixture": true,
+    "renewableWaterPoolFixture": true,
+    "processingWorkEdited": false,
+    "cookingProgressEdited": false,
+    "processedOutputGrantedForProductionChain": false,
+    "longFermentationOnlyTestClockAndTickRate": 200,
+    "testClockIncludedInProductionJar": false,
+    "separateFluidVisualFixtureUsesGrantedIntermediates": true,
+    "fluidFixtureClaimedAsProductionEvidence": false,
+    "finalVanillaAppearanceAndHudSupplement": true,
+    "latestIrisFullFlow": true,
+    "visualReview": {
+      "vanillaReviewed": true,
+      "irisReviewed": true,
+      "reviewedSelections": [
+        "tofu-actual-finished-inventory-vanilla-0.1.13.png",
+        "tofu-original-model-preview-vanilla-0.1.13.png",
+        "tofu-guide-1-vanilla-0.1.13.png",
+        "tofu-guide-2-vanilla-0.1.13.png",
+        "tofu-fluid-fixture-ready-vanilla-0.1.13.png",
+        "tofu-fluid-fixture-covered-vanilla-0.1.13.png",
+        "tofu-actual-finished-inventory-iris-0.1.13.png",
+        "tofu-ready-curds-iris-0.1.13.png",
+        "tofu-fluid-fixture-partial-iris-0.1.13.png",
+        "tofu-fluid-fixture-ready-iris-0.1.13.png",
+        "tofu-fluid-fixture-covered-iris-0.1.13.png",
+        "tofu-guide-2-iris-0.1.13.png"
+      ],
+      "findings": "HUD clipping corrected and rechecked. Guide excess-acid text corrected and rechecked on both renderers. Fragment accumulation and covered-pot hiding verified. Contact sheet and granted-intermediate fluid fixtures remain explicitly separate from production proof."
+    },
+    "logs": [
+      ".tools/tofu-0.1.13-vanilla.log",
+      ".tools/tofu-visual-0.1.13-vanilla.log",
+      ".tools/tofu-0.1.13-iris.log",
+      ".tools/tofu-visual-0.1.13-iris.log",
+      ".tools/build-0.1.13-final.log"
+    ]
+  },
+  "tofuExcessAcidQualitySurvivesPressing": true,
+  "looseMilkPreservesActualWater": true,
+  "carrierJarReturnedOnlyOnce": true,
+  "foodAppearanceFamilies": 8,
+  "foodAppearanceModels": 240,
+  "newOriginalTofuProcessInventoryModels": 7,
+  "knownRemaining": [
+    "Loose-food seasoning/quality inheritance beyond this tofu acid rule",
+    "Other named dishes from raw ingredients",
+    "Device functions and original dish/animal artwork",
+    "Independent building blueprints, husbandry and restaurant play",
+    "Multiplayer concurrency, storage and unloaded-chunk aging"
+  ],
+  "automation": {
+    "id": "automation",
+    "status": "ACTIVE"
+  },
+  "jarBytes": 952809,
+  "jarContainsTestCode": false,
+  "sha256": "a0fc30d89f73c47c636cc6d03f8bbb507098360788effe039123366a75d2ba58",
+  "downloadVerified": false
+}

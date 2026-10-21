@@ -143,6 +143,12 @@ public final class CookingBatch {
         boolean wetMethod = (method == Method.BOIL || method == Method.STEAM || method == Method.STEW)&&!renderingFat();
         for (Portion p : ingredients) {
             p.maximumTemperature=Math.max(p.maximumTemperature,temperature);
+            // This portion represents cooked, filtered soy milk. Heating alone cannot set it.
+            if(p.id.equals("soy_milk")) {
+                if(ingredients.size()==1&&vinegar>=1&&water>0&&temperature>=80&&temperature<=100&&method!=Method.MIX)p.cooked=Math.min(1,p.cooked+.1000000001);
+                if(temperature>165)p.charred+=(temperature-165)/4200;
+                continue;
+            }
             if(marinating&&p.cooked<.1)p.marinatedSeconds++;
             double cutFactor = switch (p.cut) {
                 case WHOLE -> .75;

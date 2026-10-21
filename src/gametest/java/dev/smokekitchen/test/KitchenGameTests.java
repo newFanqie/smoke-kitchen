@@ -13,6 +13,50 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void excessAcidStillSetsButPressRetainsPoorQuality(GameTestHelper test){
+        var pot=new BlockPos(1,1,1);var table=new BlockPos(2,1,1);test.setBlock(pot,KitchenContent.BLOCKS.get("clay_pot"));test.setBlock(table,KitchenContent.BLOCKS.get("mixing_table"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,pot,player,new ItemStack(KitchenContent.item("soy_milk")),net.minecraft.core.Direction.UP);for(int i=0;i<2;i++)use(test,pot,player,new ItemStack(KitchenContent.item("rice_vinegar")),net.minecraft.core.Direction.UP);
+        var vat=test.getBlockEntity(pot,KitchenBlockEntity.class);for(int i=0;i<30;i++)vat.batch.tick(2,false);test.assertTrue(vat.batch.ready(),"Extra acid must not magically prevent coagulation");player.setShiftKeyDown(true);use(test,pot,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);player.setShiftKeyDown(false);
+        var curds=player.getInventory().getNonEquipmentItems().stream().filter(s->s.is(KitchenContent.item("soy_curds"))).findFirst().orElseThrow();test.assertTrue(curds.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag().getIntOr("kitchen_tofu_acid",0)==2,"Retrieved curds retain both acid measures");
+        use(test,table,player,curds,net.minecraft.core.Direction.UP);for(int i=0;i<4;i++)use(test,table,player,new ItemStack(KitchenContent.item("wooden_lid")),net.minecraft.core.Direction.UP);var result=test.getBlockEntity(table,KitchenBlockEntity.class).items.stream().filter(s->s.is(KitchenContent.item("tofu"))).findFirst().orElseThrow();test.assertTrue(result.getCount()==2&&result.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag().getIntOr("kitchen_quality",3)==1&&result.get(net.minecraft.core.component.DataComponents.FOOD).nutrition()==1,"Pressing cannot erase excess-acid quality or restore full nutrition");test.succeed();
+    }
+    @GameTest public void looseMilkCannotDuplicateWaterOrJarsAndNeedsAVessel(GameTestHelper test){
+        var pos=new BlockPos(1,1,1);var bare=new BlockPos(2,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("clay_pot"));test.setBlock(bare,KitchenContent.BLOCKS.get("brick_stove"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        var jar=new ItemStack(KitchenContent.item("soy_milk"));use(test,bare,player,jar,net.minecraft.core.Direction.UP);test.assertTrue(jar.getCount()==1&&test.getBlockEntity(bare,KitchenBlockEntity.class).batch.water==0,"Liquid cannot be poured on a bare burner");
+        use(test,pos,player,jar,net.minecraft.core.Direction.UP);var pot=test.getBlockEntity(pos,KitchenBlockEntity.class);pot.batch.water=.4; // Isolated evaporation fixture, not an end-to-end cooking claim.
+        var carrier=player.getInventory().getNonEquipmentItems().stream().filter(s->s.is(KitchenContent.item("empty_jar"))).findFirst().orElseThrow();var keep=carrier.copy();carrier.shrink(carrier.getCount());player.getInventory().setItem(9,keep); // The mock helper replaces its selected slot on every click.
+        for(int n=0;n<3;n++){
+            player.setShiftKeyDown(true);use(test,pos,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);player.setShiftKeyDown(false);
+            test.assertTrue(pot.batch.water<.00001,"Retrieving loose milk transfers only its remaining liquid out of the pot");
+            var loose=player.getInventory().getNonEquipmentItems().stream().filter(s->s.is(KitchenContent.item("soy_milk"))).findFirst().orElseThrow();
+            use(test,pos,player,loose,net.minecraft.core.Direction.UP);test.assertTrue(Math.abs(pot.batch.water-.4)<.00001,"Reinserting must not refill evaporated liquid");
+        }
+        test.assertTrue(player.getInventory().countItem(KitchenContent.item("empty_jar"))==1,"Repeated retrieval and pouring cannot duplicate the original carrier jar");test.succeed();
+    }
+    @GameTest(maxTicks=2600) public void soySoakingNeedsWaterLidAndRealElapsedTime(GameTestHelper test){
+        var pos=new BlockPos(1,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("fermentation_crock"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        for(int i=0;i<4;i++)use(test,pos,player,new ItemStack(KitchenContent.item("soybean")),net.minecraft.core.Direction.UP);
+        use(test,pos,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);
+        var crock=test.getBlockEntity(pos,KitchenBlockEntity.class);
+        test.runAfterDelay(60,()->{test.assertTrue(stored(crock,"soybean")==4,"No water cannot soak beans");use(test,pos,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(Items.WATER_BUCKET),net.minecraft.core.Direction.UP);use(test,pos,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);});
+        test.runAfterDelay(1240,()->{test.assertTrue(stored(crock,"soaked_soybean")==0&&crock.work>0,"Partial real soaking must stay incomplete");var saved=(KitchenBlockEntity)BlockEntity.loadStatic(test.absolutePos(pos),crock.getBlockState(),crock.saveWithFullMetadata(test.getLevel().registryAccess()),test.getLevel().registryAccess());test.assertTrue(saved.work==crock.work,"Soaking progress survives serialization");});
+        test.runAfterDelay(2500,()->{test.assertTrue(stored(crock,"soaked_soybean")==4&&stored(crock,"soybean")==0&&crock.batch.water==5,"Full actual soaking converts exactly four beans and consumes one water");test.succeed();});
+    }
+    @GameTest public void tofuShortcutAndRawFilteringAreRejectedAndPressNeedsFourLidActions(GameTestHelper test){
+        var pos=new BlockPos(1,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("mixing_table"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);var table=test.getBlockEntity(pos,KitchenBlockEntity.class);
+        for(int i=0;i<4;i++)use(test,pos,player,new ItemStack(KitchenContent.item("soybean")),net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(KitchenContent.item("rice_vinegar")),net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(Items.WATER_BUCKET),net.minecraft.core.Direction.UP);for(int i=0;i<8;i++)use(test,pos,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);test.assertTrue(stored(table,"tofu")==0&&stored(table,"soybean")==4,"Old shortcut cannot produce tofu");
+        table.items.clear();use(test,pos,player,new ItemStack(KitchenContent.item("raw_bean_pulp")),net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(KitchenContent.item("empty_jar")),net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(KitchenContent.item("sieve")),net.minecraft.core.Direction.UP);test.assertTrue(stored(table,"soy_milk")==0&&stored(table,"raw_bean_pulp")==1,"Only boiled pulp can be filtered");
+        table.items.clear();use(test,pos,player,new ItemStack(KitchenContent.item("soy_curds")),net.minecraft.core.Direction.UP);for(int i=0;i<8;i++){use(test,pos,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(KitchenContent.item("sieve")),net.minecraft.core.Direction.UP);}test.assertTrue(stored(table,"tofu")==0&&table.work==0,"Hand and sieve spam cannot prepay pressing");
+        for(int i=0;i<3;i++)use(test,pos,player,new ItemStack(KitchenContent.item("wooden_lid")),net.minecraft.core.Direction.UP);test.assertTrue(stored(table,"tofu")==0&&table.work==15,"Three lid actions leave a partial press");
+        var saved=(KitchenBlockEntity)BlockEntity.loadStatic(test.absolutePos(pos),table.getBlockState(),table.saveWithFullMetadata(test.getLevel().registryAccess()),test.getLevel().registryAccess());test.assertTrue(saved.work==15&&saved.lastTool.equals("wooden_lid"),"Partial press and tool serialize");
+        use(test,pos,player,new ItemStack(KitchenContent.item("wooden_lid")),net.minecraft.core.Direction.UP);test.assertTrue(stored(table,"tofu")==2&&stored(table,"soy_curds")==0&&player.getMainHandItem().is(KitchenContent.item("wooden_lid")),"Fourth lid action gives exactly two tofu and retains the reusable lid");test.succeed();
+    }
+    @GameTest public void filteredMilkReturnsOneJarOnlyWhenPouredAndCurdsNeedNoExtraContainer(GameTestHelper test){
+        var pos=new BlockPos(1,1,1);var pot=new BlockPos(2,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("mixing_table"));test.setBlock(pot,KitchenContent.BLOCKS.get("clay_pot"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);var table=test.getBlockEntity(pos,KitchenBlockEntity.class);
+        use(test,pos,player,new ItemStack(KitchenContent.item("boiled_bean_pulp")),net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(KitchenContent.item("empty_jar")),net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(KitchenContent.item("sieve")),net.minecraft.core.Direction.UP);test.assertTrue(stored(table,"soy_milk")==1&&stored(table,"okara")==1&&stored(table,"empty_jar")==0,"Filtering fills the supplied jar without also returning an empty duplicate");
+        use(test,pot,player,new ItemStack(KitchenContent.item("soy_milk")),net.minecraft.core.Direction.UP);var vat=test.getBlockEntity(pot,KitchenBlockEntity.class);test.assertTrue(vat.batch.water==1&&player.getInventory().countItem(KitchenContent.item("empty_jar"))==1,"Pouring returns exactly one original jar and transfers milk's liquid");test.assertTrue(!vat.items.getFirst().has(net.minecraft.core.component.DataComponents.USE_REMAINDER),"Stored milk cannot return another jar upon breaking");
+        var portion=vat.batch.ingredients.getFirst();for(int i=0;i<30;i++)vat.batch.tick(2,false);test.assertTrue(portion.cooked==0,"Heat without acid does not set milk");vat.batch.vinegar=1;for(int i=0;i<20;i++)vat.batch.tick(2,false);test.assertTrue(vat.batch.ready()&&ResourceStates.cookedStack(vat.items.getFirst(),true,false).is(KitchenContent.item("soy_curds")),"Warm acid treatment yields curds, not finished tofu");test.succeed();
+    }
     @GameTest public void mountedVesselBoundsAndStirClockSurviveSave(GameTestHelper test){
         var pos=new BlockPos(1,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("brick_stove"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
         use(test,pos,player,new ItemStack(KitchenContent.item("wok")),net.minecraft.core.Direction.UP);
@@ -499,3 +543,4 @@ public final class KitchenGameTests {
         test.succeed();
     }
 }
+

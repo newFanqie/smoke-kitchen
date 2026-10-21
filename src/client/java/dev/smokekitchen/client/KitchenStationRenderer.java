@@ -56,11 +56,13 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
             case "cabbage","cucumber","scallion","kelp" -> "leaf";
             case "rice","rice_cooked","egg" -> "grain";
             case "dough","dough_fermented","dumplings","pie" -> "dough";
+            case "tofu","soy_milk" -> "tofu";
             default -> null;
         };
     }
     public static String stage(CookingBatch.Portion p,boolean wet){
         if(p.charred>=.25)return "charred";
+        if(p.id.equals("tofu"))return wet?"poached":p.maximumTemperature<120?"raw":p.maximumTemperature<155?"setting":p.cooked<2?"browning":"cooked";
         if(p.cooked>=1)return wet?"poached":"cooked";
         if(p.cooked>=.7&&!wet)return "browning";
         return p.cooked>=.3?"setting":"raw";
@@ -82,6 +84,7 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         float foodY=cook?base+(vessel.equals("wok")?2/16f:1.1f/16f):board?1.1f/16f:crock?10/16f:entity.kind().equals("plate")?1.1f/16f:1.015f;
         if(!state.covered&&!oven&&cook&&(!burner||!entity.mountedCookware.isEmpty())&&(entity.batch.water>0||entity.batch.oil>0||entity.batch.ingredients.stream().anyMatch(p->p.id.equals("fat")&&p.cooked>=.4))){
             String liquid=entity.batch.water>0?"pot_water":entity.batch.burntSugarSeconds>=5?"pot_burnt_sugar":entity.batch.caramelSeconds>=3?"pot_caramel":"pot_oil";
+            if(entity.batch.water>0&&entity.batch.ingredients.stream().anyMatch(p->Set.of("bean_pulp","soy_milk").contains(p.id)))liquid="pot_soy_milk";
             state.water=model(liquid,entity);
             float depth=Math.min(KitchenGeometry.vesselHeight(vessel)-1.5f/16f,(float)(entity.batch.water/6)*3/16f);
             state.waterY=base+(entity.batch.water>0?Math.max(1.2f/16f,depth):1.1f/16f);
@@ -106,19 +109,21 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
                 CookingBatch.Cut cut=CookingBatch.Cut.WHOLE;try{cut=CookingBatch.Cut.valueOf(data.getStringOr("kitchen_cut","WHOLE"));}catch(IllegalArgumentException ignored){}
                 portion=new CookingBatch.Portion(ingredient.id(),cut,1,false,ingredient.ready());
             }
+            if(cook&&portion!=null&&(portion.id.equals("bean_pulp")||portion.id.equals("soy_milk")&&portion.cooked<.3))continue;
             String group=portion==null?null:family(portion.id);
             if(group!=null&&(cook||board)){
-                int count=switch(portion.cut){case WHOLE->1;case DICE->4;case SLICE->3;case SHRED->5;case MINCE->6;};
-                String appearance="food/"+group+"_"+portion.cut.name().toLowerCase(java.util.Locale.ROOT)+"_"+stage(portion,entity.batch.water>0);
+                boolean curd=portion.id.equals("soy_milk");
+                int count=curd?(int)Math.ceil(portion.cooked*6):switch(portion.cut){case WHOLE->1;case DICE->4;case SLICE->3;case SHRED->5;case MINCE->6;};
+                String appearance="food/"+group+"_"+(curd?"mince":portion.cut.name().toLowerCase(java.util.Locale.ROOT))+"_"+stage(portion,entity.batch.water>0);
                 var item=model(appearance,entity);
                 for(int n=0;n<count;n++){
                     int key=slot*17+n;
                     // Stable scattered locations. A real stir moves and turns pieces, then settles them.
                     double angle=key*2.399963+noise(seed+key)*.6+(entity.batch.stirs-(1-mix))*1.05;
-                    float radius=(float)Math.sqrt(noise(seed+key*7+3))*(portion.cut==CookingBatch.Cut.WHOLE?.14f:.23f);
+                    float radius=(float)Math.sqrt(noise(seed+key*7+3))*(!curd&&portion.cut==CookingBatch.Cut.WHOLE?.14f:.23f);
                     float x=.5f+(float)Math.cos(angle)*radius,z=.5f+(float)Math.sin(angle)*radius;
                     float scale=portion.cut==CookingBatch.Cut.WHOLE?.65f:.6f;
-                    float h=switch(portion.cut){case WHOLE->2.2f/16;case DICE->3.1f/16;case MINCE->1.5f/16;default->1.1f/16;};
+                    float h=curd?1.5f/16:switch(portion.cut){case WHOLE->2.2f/16;case DICE->3.1f/16;case MINCE->1.5f/16;default->1.1f/16;};
                     float lift=motion*(portion.cut==CookingBatch.Cut.WHOLE?.025f:.04f);
                     pieces.add(new FoodPiece(item,x,foodY+lift,z,scale,noise(key+seed)*360+entity.batch.stirs*25+motion*35,portion.cut==CookingBatch.Cut.WHOLE?flip:motion*18,h,false,appearance));
                 }

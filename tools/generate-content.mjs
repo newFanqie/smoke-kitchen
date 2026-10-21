@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {inventoryModel,stationGeometry,cropModel} from './voxel-art.mjs';
-import {vessel,vesselLid,toolModel,foodFamilies,foodStages,foodModel} from './kitchen-art.mjs';
+import {vessel,vesselLid,toolModel,tofuModel,disk,foodFamilies,foodStages,foodModel} from './kitchen-art.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../src/main/resources');
 const ns='smoke_kitchen';
 const write=(p,data)=>{if(p.includes('/models/')&&data.textures&&!data.textures.particle)data.textures.particle=Object.values(data.textures).find(t=>!t.startsWith('#'));const out=path.join(root,p);fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(data,null,2)+'\n');};
@@ -194,7 +194,10 @@ process('ferment',{cooked_soybean:4,flour:2,salt:2,starter:1,empty_jar:1},{soy_m
 process('mix',{soy_mash:1,'minecraft:glass_bottle':1},{soy_sauce:1,empty_jar:1});processes[processes.length-1].tool='sieve';
 process('ferment',{cooked_rice:4,vinegar_starter:1,empty_jar:1},{vinegar_mash:1,vinegar_starter:1},2400,1);
 process('mix',{vinegar_mash:1,'minecraft:glass_bottle':1},{rice_vinegar:1,empty_jar:1});processes[processes.length-1].tool='sieve';
-process('mix',{soybean:4,rice_vinegar:1},{tofu:2},20,1);
+process('ferment',{soybean:4},{soaked_soybean:4},120,1);processes[processes.length-1].exclusive=true;
+process('mill',{soaked_soybean:4},{raw_bean_pulp:1},10,1);
+process('mix',{boiled_bean_pulp:1,empty_jar:1},{soy_milk:1,okara:1});processes[processes.length-1].tool='sieve';
+process('mix',{soy_curds:1},{tofu:2},20);processes[processes.length-1].tool='wooden_lid';
 process('pickle',{cabbage:3,chili:1,garlic:1,salt:2},{pickled_cabbage:4},1200,1);
 Object.assign(processes[processes.length-1],{cuts:{[q('cabbage')]:['SHRED'],[q('chili')]:['SLICE','DICE'],[q('garlic')]:['MINCE']}});
 process('evaporate',{}, {salt_crystals:4},120,6);processes[processes.length-1].saltwater=true;
@@ -204,6 +207,12 @@ item('lard','猪油罐','glass_bottle',{seasoning:'oil',uses:8});
 item('cooked_soybean','熟大豆','cocoa_beans',{ingredient:'soybean_cooked',ready:true,nutrition:3});
 item('soy_mash','酱醪（待过滤）','honey_bottle',{unstackable:true});
 item('vinegar_mash','醋醪（待过滤）','honey_bottle',{unstackable:true});
+item('soaked_soybean','泡发大豆','wheat_seeds');
+item('raw_bean_pulp','生豆糊','clay_ball',{ingredient:'bean_pulp',needs_water:true,resistance:1.5});
+item('boiled_bean_pulp','煮熟豆糊','clay_ball');
+item('soy_milk','熟豆浆（待点制）','honey_bottle',{ingredient:'soy_milk',unstackable:true,container:'empty_jar',liquid_water:1});
+item('soy_curds','豆花（待压模）','snowball');
+item('okara','熟豆渣','wheat',{ingredient:'okara',ready:true});
 for(const original of [...items]) {
  if(original.uses>0){
   item('used_'+original.id,original.name+(original.seasoning||original.id==='water_jug'?'（50%）':'（已使用）'),original.texture,{...original,id:'used_'+original.id,name:original.name+'（已使用）',variant_of:original.id,state:'used'});
@@ -218,6 +227,8 @@ write(`data/${ns}/catalog.json`,{items,stations,crops,dishes,processes});
 const vanillaTools={rice_paddy:'wheat',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle',pan_fried_fish:'cooked_cod',roast_potatoes:'baked_potato'};
 write(`assets/${ns}/models/item/pot_water.json`,{parent:'minecraft:block/block',textures:{water:'minecraft:block/water_still'},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#water',tintindex:0,uv:[0,0,16,16]}}}]});
 write(`assets/${ns}/items/pot_water.json`,{model:{type:'minecraft:model',model:`${ns}:item/pot_water`,tints:[{type:'minecraft:constant',value:-12618012}]}});
+write(`assets/${ns}/models/item/pot_soy_milk.json`,{parent:'minecraft:block/block',textures:{milk:'minecraft:block/white_concrete'},elements:disk(0,.01,4.4,'#milk')});
+write(`assets/${ns}/items/pot_soy_milk.json`,{model:{type:'minecraft:model',model:`${ns}:item/pot_soy_milk`}});
 for(const[id,texture]of Object.entries({pot_oil:'honey_block_top',pot_caramel:'brown_concrete',pot_burnt_sugar:'black_concrete'})){
  write(`assets/${ns}/models/item/${id}.json`,{parent:'minecraft:block/block',textures:{surface:`minecraft:block/${texture}`},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#surface',uv:[0,0,16,16]}}}]});
  write(`assets/${ns}/items/${id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${id}`}});
@@ -231,7 +242,7 @@ for(const id of ['dough_sheet','raw_noodles']){
 for(const it of items){
  write(`assets/${ns}/items/${it.id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${it.id}`}});
  const vanilla=(it.variant_of||it.id)==='thermometer'?'clock_00':vanillaTools[it.variant_of||it.id];
- let model=toolModel(it.id)|| (vanilla?{parent:`minecraft:item/${vanilla}`} : it.id==='fried_rice'?{parent:'minecraft:item/generated',textures:{layer0:`${ns}:item/fried_rice`}}:inventoryModel(it,items.indexOf(it)));
+ let model=tofuModel(it.id)||toolModel(it.id)|| (vanilla?{parent:`minecraft:item/${vanilla}`} : it.id==='fried_rice'?{parent:'minecraft:item/generated',textures:{layer0:`${ns}:item/fried_rice`}}:inventoryModel(it,items.indexOf(it)));
  if(it.id==='wooden_lid')model={parent:'minecraft:block/oak_trapdoor_bottom'};
  if(it.variant_of) {
   model={parent:`${ns}:item/${it.variant_of}`};
@@ -385,6 +396,11 @@ messages.ferment_ready='已成待过滤醪液，空手开盖后潜行取出；�
 messages.ferment_missing='材料未齐，请按食谱检查水、熟原料、盐、引子和空罐；时间不会代替缺料。';
 messages.ferment_check='若产物已就绪，先空手开盖再潜行取出；未完成则按食谱检查缺料。';
 messages.ferment_progress='密封发酵 %s%%｜经过 %s / %s 游戏秒；未密封暂停。';
+messages.soy_soak='大豆浸泡 %s%%｜%s/120秒｜豆×4、水≥1，密封';
+messages.tofu_filter='熟豆糊＋空罐，筛子过滤；生糊先煮透';
+messages.tofu_press='豆花压模 %s%%｜木盖压4次，保留木盖';
+messages.tofu_milk='点浆 %s%%｜%s°C｜水%s｜醋%s次；温区80–100°C';
+messages.tofu_chain='豆腐工艺：4豆加水密封泡发120秒→加水手磨→锅内加水煮透→调理台配空罐用筛子过滤→熟豆浆回锅加1次米醋，80–100°C点制→豆花在调理台用木盖压4次，得2豆腐。';
 messages.board_status='切配：%s｜进度 %s/4';
 messages.stove_help='火力 %s｜燃料 %s。锅具右键嵌入灶面，也可直接烤食物；空手点侧面调火。';
 messages.burner_status='%s｜%s°C｜熟度 %s%%｜燃料 %s%s';messages.water_status='｜水%s（%s）';

@@ -44,6 +44,8 @@ public final class ResourceStates {
     }
     private static final Map<String,String> COOKED=Map.ofEntries(
         Map.entry("smoke_kitchen:soybean","smoke_kitchen:cooked_soybean"),
+        Map.entry("smoke_kitchen:raw_bean_pulp","smoke_kitchen:boiled_bean_pulp"),
+        Map.entry("smoke_kitchen:soy_milk","smoke_kitchen:soy_curds"),
         Map.entry("minecraft:chicken","minecraft:cooked_chicken"),Map.entry("minecraft:beef","minecraft:cooked_beef"),
         Map.entry("minecraft:porkchop","minecraft:cooked_porkchop"),Map.entry("minecraft:mutton","minecraft:cooked_mutton"),
         Map.entry("minecraft:rabbit","minecraft:cooked_rabbit"),Map.entry("minecraft:cod","minecraft:cooked_cod"),

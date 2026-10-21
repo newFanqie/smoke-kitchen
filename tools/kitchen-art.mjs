@@ -57,10 +57,23 @@ export function toolModel(id){
  return model;
 }
 
-export const foodFamilies=['meat','fish','root','red','leaf','grain','dough'];
+export function tofuModel(id){
+ const t={cream:'minecraft:block/white_concrete',shade:'minecraft:block/white_terracotta',bean:'minecraft:block/yellow_terracotta',wood:'minecraft:block/spruce_planks',dark:'minecraft:block/brown_terracotta'};
+ const b=(from,to,texture='#cream')=>cube(from,to,texture);
+ let elements;
+ if(id==='soaked_soybean')elements=[[2,3],[9,4],[5,10]].flatMap(([x,z])=>[b([x,3,z],[x+5,5,z+4],'#bean'),b([x+1,5,z],[x+4,6,z+4]),b([x+2,6,z+1],[x+3,6.1,z+3],'#shade')]);
+ else if(id==='raw_bean_pulp'||id==='boiled_bean_pulp'||id==='okara')elements=[...disk(2,1,6,'#wood'),b([4,3,4],[12,5,12],id==='raw_bean_pulp'?'#bean':'#shade'),...[[4,5],[8,4],[7,9]].map(([x,z])=>b([x,5,z],[x+3,6,z+3],id==='okara'?'#bean':'#cream'))];
+ else if(id==='soy_milk')elements=[...disk(2,1,4.5,'#wood'),...disk(3,8,5.5,'#shade',4.3),...disk(10,1,5.5,'#wood',4.3),...disk(10,0.1,4.3,'#cream')];
+ else if(id==='soy_curds')elements=[...disk(2,1,6,'#wood'),b([3,3,4],[8,5,9],'#shade'),b([7,3,8],[13,6,12]),b([6,3,3],[12,7,7]),b([4,5,5],[7,6,8])];
+ else if(id==='tofu')elements=[b([2,2,3],[9,6,10],'#shade'),b([2,6,3],[9,7,10]),b([8,3,7],[15,7,14],'#shade'),b([8,7,7],[15,8,14]),b([3,7,4],[4,7.1,5],'#shade'),b([10,8,10],[11,8.1,11],'#shade')];
+ else return null;
+ return {parent:'minecraft:block/block',textures:t,elements};
+}
+export const foodFamilies=['meat','fish','root','red','leaf','grain','dough','tofu'];
 export const foodStages=['raw','setting','browning','cooked','poached','charred'];
 export function foodModel(family,cut,stage){
  const colors={meat:['pink','white','orange','brown','white','black'],fish:['light_gray','white','yellow','brown','white','black'],root:['yellow','yellow','orange','orange','yellow','black'],red:['red','red','orange','red','red','black'],leaf:['lime','green','green','green','green','black'],grain:['white','white','yellow','yellow','white','black'],dough:['white','white','yellow','brown','white','black']};
+ colors.tofu=['white','white','yellow','yellow','white','black'];
  const color=colors[family][foodStages.indexOf(stage)];
  const body=`minecraft:block/${color}_${stage==='raw'&&['meat','fish','red','leaf'].includes(family)?'concrete':'terracotta'}`;
  const textures={body,fat:stage==='charred'?'minecraft:block/black_concrete':'minecraft:block/white_terracotta',skin:stage==='charred'?'minecraft:block/black_concrete':'minecraft:block/brown_terracotta',leaf:'minecraft:block/green_terracotta',eye:'minecraft:block/black_concrete'};

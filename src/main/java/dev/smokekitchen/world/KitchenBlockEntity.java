@@ -96,7 +96,8 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if (kind().startsWith("gas_")) return gas(p,stack,held);
         if (kind().equals("board")) return board(p,stack,held);
         if (kind().equals("cook")) return cook(p,stack,held);
-        if(kind().equals("mix") && (held.equals("rolling_pin") || held.equals("sieve") || held.equals("chopsticks") || held.contains("knife"))) {
+        if(kind().equals("mix") && (held.equals("wooden_lid") || held.equals("rolling_pin") || held.equals("sieve") || held.equals("chopsticks") || held.contains("knife"))) {
+            if(items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soy_curds"))&&!held.equals("wooden_lid")){showStatus(p);return InteractionResult.SUCCESS;}
             lastTool=held;work+=5;tryProcess();wear(p,stack,Items.AIR);changed();sound();if(held.equals("sieve")&&items.stream().anyMatch(x->Set.of("soy_mash","vinegar_mash").contains(ResourceStates.baseId(x))))say(p,"filter_help");return InteractionResult.SUCCESS;
         }
         if(kind().equals("compost") && !stack.isEmpty()) {
@@ -119,6 +120,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         }
         if (stack.isEmpty() && p.isShiftKeyDown()) { if(Set.of("ferment","pickle").contains(kind())&&getBlockState().getValue(KitchenBlock.LID)){say(p,"open_first");return InteractionResult.SUCCESS;}retrieve(p); return InteractionResult.SUCCESS; }
         if (stack.isEmpty()) {
+            if(kind().equals("mix")&&items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soy_curds"))){showStatus(p);return InteractionResult.SUCCESS;}
             if (Set.of("mill","press","mix").contains(kind())) work += 5;
             if (kind().equals("ferment") || kind().equals("pickle")) {
                 level.setBlock(worldPosition,getBlockState().cycle(KitchenBlock.LID),Block.UPDATE_ALL);
@@ -131,7 +133,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if(kind().equals("evaporate")&&stack.is(Items.BUCKET)&&batch.water>=6) {
             replaceContainer(p,stack,saltwater?KitchenContent.item("saltwater_bucket"):Items.WATER_BUCKET);batch.water=0;saltwater=false;work=0;lastProcessTime=now;changed();return InteractionResult.SUCCESS;
         }
-        if(held.equals("water_jug")&&Set.of("mix","ferment","pickle","evaporate").contains(kind())) {
+        if(held.equals("water_jug")&&Set.of("mill","mix","ferment","pickle","evaporate").contains(kind())) {
             if(batch.water>=6||saltwater&&batch.water>0){say(p,"full");return InteractionResult.SUCCESS;}
             saltwater=false;batch.addWater(1);work=0;lastProcessTime=now;wear(p,stack,KitchenContent.item("empty_water_jug"));changed();return InteractionResult.SUCCESS;
         }
@@ -286,6 +288,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             changed(); return InteractionResult.SUCCESS;
         }
         var def = KitchenContent.DEFINITIONS.get(held);
+        if(def!=null&&ContentCatalog.num(def,"liquid_water",0)>0&&(isBurner()&&mountedCookware.isEmpty()||isOven()||cookingId().equals("baking_tray"))){say(p,"water_vessel");return InteractionResult.SUCCESS;}
         if (def != null && def.has("seasoning")) {
             String seasoning = ContentCatalog.str(def,"seasoning");
             boolean accepted = switch (seasoning) {
@@ -326,6 +329,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             var remainder=stack.get(DataComponents.USE_REMAINDER);
             if(remainder!=null)stored.remove(DataComponents.USE_REMAINDER);
             items.set(index,stored);
+            if(def!=null)batch.addWater(Math.clamp(data.getDoubleOr("kitchen_liquid_water",ContentCatalog.num(def,"liquid_water",0)),0,ContentCatalog.num(def,"liquid_water",0)));
             if(stack.is(Items.MILK_BUCKET)) replaceContainer(p,stack,Items.BUCKET);
             else {take(p,stack);if(!p.isCreative()&&remainder!=null)give(p,remainder.convertInto().create());}
             changed(); sound();showRecipeHint(p);
@@ -457,14 +461,20 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     }
     private void retrieveCooked(Player player) {
         for(int i=batch.ingredients.size()-1;i>=0;i--)if(!items.get(i).isEmpty()) {
-            var portion=batch.ingredients.remove(i);var result=ResourceStates.cookedStack(items.get(i),portion.cooked>=1,portion.charred>=.75,level);
+            var result=displayedFood(i);var portion=batch.ingredients.remove(i);
+            if(ResourceStates.baseId(result).equals("soy_milk"))batch.water=Math.max(0,batch.water-result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getDoubleOr("kitchen_liquid_water",0));
             applyPortion(result,portion);give(player,result);items.set(i,ItemStack.EMPTY);batch.refreshTemperatureHistory();changed();return;
         }
         say(player,"empty");
     }
     public ItemStack displayedFood(int slot) {
         var input=items.get(slot);
-        if(slot<batch.ingredients.size()){var portion=batch.ingredients.get(slot);return ResourceStates.cookedStack(input,portion.cooked>=1,portion.charred>=.75,level);}
+        if(slot<batch.ingredients.size()){
+            var portion=batch.ingredients.get(slot);var result=ResourceStates.cookedStack(input,portion.cooked>=1,portion.charred>=.75,level);
+            if(ResourceStates.baseId(result).equals("soy_milk")){var data=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();data.putDouble("kitchen_liquid_water",Math.min(1,batch.water/Math.max(1,batch.count("soy_milk"))));result.set(DataComponents.CUSTOM_DATA,CustomData.of(data));}
+            if(portion.id.equals("soy_milk")&&ResourceStates.baseId(result).equals("soy_curds")){var data=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();data.putInt("kitchen_tofu_acid",batch.vinegar);result.set(DataComponents.CUSTOM_DATA,CustomData.of(data));}
+            return result;
+        }
         return input.copy();
     }
 
@@ -491,6 +501,10 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         say(p,"empty");
     }
     public void showStatus(Player p) {
+        if(kind().equals("ferment")&&items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soybean"))&&items.stream().filter(x->!x.isEmpty()).allMatch(x->ResourceStates.baseId(x).equals("soybean"))){say(p,"soy_soak",Math.min(100,100*work/120),work);return;}
+        if(kind().equals("mix")&&items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soy_curds"))){say(p,"tofu_press",Math.min(100,100*work/20));return;}
+        if(kind().equals("mix")&&items.stream().anyMatch(x->Set.of("raw_bean_pulp","boiled_bean_pulp").contains(ResourceStates.baseId(x)))){say(p,"tofu_filter");return;}
+        if(batch.count("soy_milk")>0){say(p,"tofu_milk",batch.progress(1),batch.displayedTemperature(),String.format(Locale.ROOT,"%.1f",batch.water),batch.vinegar);return;}
         if(kind().equals("ferment")){
             if(items.stream().anyMatch(x->Set.of("soy_mash","vinegar_mash").contains(ResourceStates.baseId(x)))){say(p,"ferment_ready");return;}
             if(items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soybean"))){say(p,"ferment_raw_soy");return;}
@@ -626,12 +640,14 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             if(ContentCatalog.flag(recipe,"saltwater") && !saltwater) continue;
             if(work<ContentCatalog.num(recipe,"seconds",5) || batch.water<ContentCatalog.num(recipe,"water",0)) continue;
             var inputs=recipe.getAsJsonObject("inputs");
+            if(ContentCatalog.flag(recipe,"exclusive")&&items.stream().filter(s->!s.isEmpty()).anyMatch(s->inputs.entrySet().stream().noneMatch(input->processInputMatches(s,input.getKey(),recipe))))continue;
             boolean matches=true;
             for(var input:inputs.entrySet()) {
                 int found=items.stream().filter(s->processInputMatches(s,input.getKey(),recipe)).mapToInt(this::units).sum();
                 if(found<input.getValue().getAsInt()) { matches=false; break; }
             }
             if(!matches) continue;
+            boolean excessTofuAcid=recipe.getAsJsonObject("outputs").has("smoke_kitchen:tofu")&&items.stream().anyMatch(s->ResourceStates.baseId(s).equals("soy_curds")&&s.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("kitchen_tofu_acid",1)>1);
             // Only mutate after every input and every output slot has been validated.
             var backup=NonNullList.withSize(items.size(),ItemStack.EMPTY);
             for(int i=0;i<items.size();i++) backup.set(i,items.get(i).copy());
@@ -655,6 +671,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             for(var output:recipe.getAsJsonObject("outputs").entrySet()) {
                 var item=net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(output.getKey()));
                 var result=new ItemStack(item);
+                if(excessTofuAcid&&output.getKey().equals("smoke_kitchen:tofu"))dev.smokekitchen.content.KitchenFoodItem.stampMeal(result,1,List.of("strong"),level.getGameTime());
                 if(recipe.has("output_uses")&&recipe.getAsJsonObject("output_uses").has(output.getKey())) {
                     int uses=recipe.getAsJsonObject("output_uses").get(output.getKey()).getAsInt();
                     if(!result.isDamageableItem()||uses<1||uses>result.getMaxDamage()){fit=false;continue;}

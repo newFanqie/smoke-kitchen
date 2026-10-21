@@ -55,11 +55,11 @@ public record DishRecipe(String id,Set<CookingBatch.Method> methods,Map<String,I
         }
         for(var entry:ingredients.entrySet())if(batch.count(entry.getKey())<entry.getValue())return issue("missing",entry.getKey(),Integer.toString(entry.getValue()-(int)batch.count(entry.getKey())));
         if(distance(batch)!=0)return issue("extra","","");
-        if(oil&&batch.oil<1)return issue("seasoning","oil","");
-        if(salt&&batch.salt<1)return issue("seasoning","salt","");
-        if(soy&&batch.soy<1)return issue("seasoning","soy","");
-        if(vinegar&&batch.vinegar<1)return issue("seasoning","vinegar","");
-        if(batch.sugar<staple.sugar)return issue("seasoning","sugar","");
+        if(oil&&batch.oil<1-1e-9)return issue("seasoning","oil","");
+        if(salt&&batch.salt<1-1e-9)return issue("seasoning","salt","");
+        if(soy&&batch.soy<1-1e-9)return issue("seasoning","soy","");
+        if(vinegar&&batch.vinegar<1-1e-9)return issue("seasoning","vinegar","");
+        if(batch.sugar<staple.sugar-1e-9)return issue("seasoning","sugar","");
         for(var condiment:finishing.condiments)if(!batch.seasoningCounts.containsKey(condiment))return issue("seasoning",condiment,"");
         if(batch.maximumFoodTemperature>finishing.maximumTemperature)return issue("cold","",Integer.toString((int)finishing.maximumTemperature));
         if(batch.coldMixes<finishing.coldMixes)return issue("cold_mix","",Integer.toString(finishing.coldMixes));

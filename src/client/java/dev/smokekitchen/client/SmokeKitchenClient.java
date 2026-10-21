@@ -9,6 +9,11 @@ public final class SmokeKitchenClient implements ClientModInitializer {
         net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.register((stack,context,flag,lines)->{
             var data=stack.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA,net.minecraft.world.item.component.CustomData.EMPTY).copyTag();
             if(data.contains("kitchen_cut"))lines.add(net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.cut",net.minecraft.network.chat.Component.translatable("cut.smoke_kitchen."+data.getStringOr("kitchen_cut","WHOLE"))));
+            if(!(stack.getItem() instanceof dev.smokekitchen.content.KitchenFoodItem))dev.smokekitchen.content.KitchenFoodItem.appendQuality(stack,lines::add);
+            if(data.contains("kitchen_portion"))try{
+                var portion=new com.google.gson.Gson().fromJson(data.getStringOr("kitchen_portion",""),dev.smokekitchen.cooking.CookingBatch.Portion.class);
+                if(portion!=null&&portion.seasonings!=null&&portion.seasonings.values().stream().anyMatch(x->x>0)){lines.add(net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.attached_seasoning",String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("salt",0d)),String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("oil",0d)),String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("soy",0d))));lines.add(net.minecraft.network.chat.Component.translatable("message.smoke_kitchen.attached_seasoning_extra",String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("sugar",0d)),String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("vinegar",0d)),String.format(java.util.Locale.ROOT,"%.2f",portion.seasonings.getOrDefault("spice",0d))));}
+            }catch(RuntimeException ignored){}
             String id=KitchenContent.name(stack.getItem());
             if(id.endsWith("_seeds")) {
                 String crop=id.substring(0,id.length()-6);var habitat=dev.smokekitchen.world.KitchenWildCrops.HABITATS.get(crop);

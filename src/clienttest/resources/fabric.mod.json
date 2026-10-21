@@ -5,6 +5,8 @@
   "environment": "client",
   "entrypoints": {
     "fabric-client-gametest": [
+      "dev.smokekitchen.test.SeasoningTransferTest",
+      "dev.smokekitchen.test.TransferGuideTest",
       "dev.smokekitchen.test.MapoFlowTest",
       "dev.smokekitchen.test.MapoGuideTest",
       "dev.smokekitchen.test.TofuFlowTest",

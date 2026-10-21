@@ -325,6 +325,10 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
                 } catch (RuntimeException ignored) {}
                 batch.normalize();
             }
+            if(data.contains("kitchen_quality")){
+                int grade=data.getIntOr("kitchen_quality",3);String reasons=data.getStringOr("kitchen_quality_reasons","");
+                if(reasons.contains("stale")||grade<=1&&reasons.contains("strong")){var portion=batch.ingredients.get(index);portion.qualityLimit=grade;portion.inheritedReasons=new ArrayList<>(List.of(reasons.contains("stale")?"stale":"strong"));}
+            }
             var stored=stack.is(Items.MILK_BUCKET)?new ItemStack(KitchenContent.item("milk_portion")):stack.copyWithCount(1);
             var remainder=stack.get(DataComponents.USE_REMAINDER);
             if(remainder!=null)stored.remove(DataComponents.USE_REMAINDER);
@@ -461,18 +465,23 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     }
     private void retrieveCooked(Player player) {
         for(int i=batch.ingredients.size()-1;i>=0;i--)if(!items.get(i).isEmpty()) {
-            var result=displayedFood(i);var portion=batch.ingredients.remove(i);
+            var result=displayedFood(i);stampLoose(result,batch.portionBatch(i));var portion=batch.removePortion(i);
             if(ResourceStates.baseId(result).equals("soy_milk"))batch.water=Math.max(0,batch.water-result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getDoubleOr("kitchen_liquid_water",0));
             applyPortion(result,portion);give(player,result);items.set(i,ItemStack.EMPTY);batch.refreshTemperatureHistory();changed();return;
         }
         say(player,"empty");
+    }
+    private void stampLoose(ItemStack result,CookingBatch individual){
+        if(!result.has(DataComponents.FOOD))return;
+        var data=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
+        dev.smokekitchen.content.KitchenFoodItem.stampMeal(result,individual.quality(),individual.qualityReasons(),data.getLongOr("kitchen_prepared",level.getGameTime()));
     }
     public ItemStack displayedFood(int slot) {
         var input=items.get(slot);
         if(slot<batch.ingredients.size()){
             var portion=batch.ingredients.get(slot);var result=ResourceStates.cookedStack(input,portion.cooked>=1,portion.charred>=.75,level);
             if(ResourceStates.baseId(result).equals("soy_milk")){var data=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();data.putDouble("kitchen_liquid_water",Math.min(1,batch.water/Math.max(1,batch.count("soy_milk"))));result.set(DataComponents.CUSTOM_DATA,CustomData.of(data));}
-            if(portion.id.equals("soy_milk")&&ResourceStates.baseId(result).equals("soy_curds")){var data=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();data.putInt("kitchen_tofu_acid",batch.vinegar);result.set(DataComponents.CUSTOM_DATA,CustomData.of(data));}
+            if(portion.id.equals("soy_milk")&&ResourceStates.baseId(result).equals("soy_curds")){var data=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();data.putInt("kitchen_tofu_acid",(int)Math.ceil(batch.vinegar));result.set(DataComponents.CUSTOM_DATA,CustomData.of(data));}
             return result;
         }
         return input.copy();
@@ -712,7 +721,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             if(!items.get(26).isEmpty())Block.popResource(level,worldPosition,items.get(26));
         } else {
             for(int i=0;i<items.size();i++) if(!items.get(i).isEmpty()) {
-                var result=displayedFood(i);if(i<batch.ingredients.size())applyPortion(result,batch.ingredients.get(i));
+                var result=displayedFood(i);if(i<batch.ingredients.size()){stampLoose(result,batch.portionBatch(i));applyPortion(result,batch.prepareTransfer(i));}
                 Block.popResource(level,worldPosition,result);
             }
         }

@@ -18,7 +18,7 @@ public final class CookingBatch {
         public boolean needsWater;
         public boolean additionRecorded;
         public double temperatureOnAdd;
-        public int oilOnAdd;
+        public double oilOnAdd;
         public double waterOnAdd;
         public int coveredCookingSeconds;
         public int lowHeatSeconds;
@@ -28,6 +28,9 @@ public final class CookingBatch {
         public double cookedAtTurn;
         public int marinatedSeconds;
         public double maximumTemperature;
+        public Map<String,Double> seasonings = new HashMap<>();
+        public Integer qualityLimit;
+        public List<String> inheritedReasons = new ArrayList<>();
         public Map<String,Integer> priorCounts = new HashMap<>();
         public Map<String,Double> priorCooked = new HashMap<>();
         public Portion(String id, Cut cut, double resistance, boolean needsWater, boolean ready) {
@@ -43,12 +46,12 @@ public final class CookingBatch {
     public Method method = Method.STIR_FRY;
     public double temperature = 20;
     public double water;
-    public int oil;
-    public int salt;
-    public int sugar;
-    public int soy;
-    public int vinegar;
-    public int spice;
+    public double oil;
+    public double salt;
+    public double sugar;
+    public double soy;
+    public double vinegar;
+    public double spice;
     public int seconds;
     public int lastStir;
     public int stirs;
@@ -86,7 +89,7 @@ public final class CookingBatch {
         seasoningCounts.put(seasoning,ingredients.size());
     }
 
-    /** Loose food retains its preparation evidence; liquids and seasoning stay in the pot. */
+    /** Loose food carries an actual share of seasoning; entry order belongs to the new pot. */
     public void restorePortion(int index,Portion saved) {
         var fresh=ingredients.get(index);
         if(saved==null||!(fresh.id.equals(saved.id)||fresh.id.equals("rice_cooked")&&saved.id.equals("rice")&&saved.cooked>=1))return;
@@ -95,8 +98,31 @@ public final class CookingBatch {
         fresh.turnedAfterSetting=saved.turnedAfterSetting;fresh.cookedAtTurn=saved.cookedAtTurn;
         fresh.marinatedSeconds=saved.marinatedSeconds;fresh.coveredCookingSeconds=saved.coveredCookingSeconds;fresh.lowHeatSeconds=saved.lowHeatSeconds;
         fresh.caramelOnAdd|=saved.caramelOnAdd;fresh.rolled|=saved.rolled;
+        fresh.qualityLimit=saved.qualityLimit;fresh.inheritedReasons=saved.inheritedReasons==null?new ArrayList<>():new ArrayList<>(saved.inheritedReasons);
+        if(saved.seasonings!=null)for(String key:SEASONINGS)setSeasoning(key,seasoning(key)+bounded(saved.seasonings.get(key)==null?0:saved.seasonings.get(key),32));
         // Order and entry temperature belong to this pot; old neighbours cannot prove a new recipe step.
         normalize();
+    }
+    public static final List<String> SEASONINGS=List.of("oil","salt","sugar","soy","vinegar","spice");
+    public double seasoning(String key){return switch(key){case "oil"->oil;case "salt"->salt;case "sugar"->sugar;case "soy"->soy;case "vinegar"->vinegar;case "spice"->spice;default->0;};}
+    private void setSeasoning(String key,double value){switch(key){case "oil"->oil=value;case "salt"->salt=value;case "sugar"->sugar=value;case "soy"->soy=value;case "vinegar"->vinegar=value;case "spice"->spice=value;default->{}}}
+    private static double bounded(double value,double max){return Math.clamp(Double.isFinite(value)?value:0,0,max);}
+    /** Used only when actually retrieving/dropping, never while rendering a preview. */
+    public Portion prepareTransfer(int index){
+        var p=ingredients.get(index);p.seasonings=new HashMap<>();
+        for(String key:SEASONINGS)p.seasonings.put(key,seasoning(key)/ingredients.size());
+        return p;
+    }
+    public Portion removePortion(int index){
+        var p=prepareTransfer(index);
+        for(String key:SEASONINGS)setSeasoning(key,Math.max(0,seasoning(key)-p.seasonings.get(key)));
+        ingredients.remove(index);if(ingredients.isEmpty()){seasoningProgress.clear();seasoningCounts.clear();caramelSeconds=0;burntSugarSeconds=0;ovenSeconds=0;roastSeconds=0;}refreshTemperatureHistory();return p;
+    }
+    /** Individual doneness plus this portion's concentration, rather than a raw neighbour's quality. */
+    public CookingBatch portionBatch(int index){
+        var b=new CookingBatch();b.method=method;b.ingredients.add(ingredients.get(index));b.stirs=stirs;b.stirsAtLastAddition=stirsAtLastAddition;
+        for(String key:SEASONINGS)b.setSeasoning(key,seasoning(key)/ingredients.size());
+        return b;
     }
     public void refreshTemperatureHistory(){maximumFoodTemperature=ingredients.stream().mapToDouble(p->p.maximumTemperature).max().orElse(0);}
 
@@ -190,20 +216,22 @@ public final class CookingBatch {
     public int quality() {
         if (!ready() || burnt()) return 0;
         var reasons=qualityReasons();
-        if(reasons.contains("salty")||reasons.contains("overcooked")||reasons.contains("scorched"))return 1;
-        return reasons.isEmpty()?3:2;
+        if(reasons.contains("salty")||reasons.contains("overcooked")||reasons.contains("scorched"))return Math.min(1,ingredients.stream().mapToInt(p->p.qualityLimit==null?3:p.qualityLimit).min().orElse(3));
+        int limit=ingredients.stream().mapToInt(p->p.qualityLimit==null?3:p.qualityLimit).min().orElse(3);
+        return Math.min(limit,reasons.isEmpty()?3:2);
     }
     public List<String> qualityReasons() {
         var reasons=new ArrayList<String>();
         if(!ready())reasons.add("raw");
         if(burnt())reasons.add("burnt");
         double ratio=(double)salt/Math.max(1,ingredients.size());
-        if(ratio>.8||soy>ingredients.size())reasons.add("salty");
-        else if(ratio>.5)reasons.add("strong");
-        else if(ratio<.1&&soy==0&&!ingredients.stream().allMatch(p->java.util.Set.of("rice","dough","dough_fermented","pie").contains(p.id)))reasons.add("bland");
+        if(ratio>.8+1e-9||soy>ingredients.size()+1e-9)reasons.add("salty");
+        else if(ratio>.5+1e-9)reasons.add("strong");
+        else if(ratio<.1-1e-9&&soy==0&&!ingredients.stream().allMatch(p->java.util.Set.of("rice","dough","dough_fermented","pie").contains(p.id)))reasons.add("bland");
         if(ingredients.stream().anyMatch(p->p.cooked>3.2))reasons.add("overcooked");
         if(!burnt()&&ingredients.stream().anyMatch(p->p.charred>=.25))reasons.add("scorched");
         if(method==Method.STIR_FRY&&stirs-stirsAtLastAddition<3 || method==Method.FRY&&ingredients.stream().anyMatch(p->!p.turnedAfterSetting||p.cooked-p.cookedAtTurn<.3))reasons.add("uneven");
+        for(var p:ingredients)if(p.inheritedReasons!=null)for(String reason:p.inheritedReasons)if(!reasons.contains(reason))reasons.add(reason);
         return reasons;
     }
     public long count(String id) { return ingredients.stream().filter(p -> p.id.equals(id)).count(); }
@@ -233,6 +261,10 @@ public final class CookingBatch {
         ingredients.removeIf(p -> p == null || p.id == null || p.id.isBlank());
         ingredients = new ArrayList<>(ingredients.subList(0, Math.min(12, ingredients.size())));
         for (Portion p : ingredients) {
+            if(p.seasonings==null)p.seasonings=new HashMap<>();
+            if(p.inheritedReasons==null)p.inheritedReasons=new ArrayList<>();
+            p.inheritedReasons.removeIf(reason->!List.of("strong","stale","scorched","overcooked","burnt").contains(reason));
+            if(p.qualityLimit!=null)p.qualityLimit=Math.clamp(p.qualityLimit,0,3);
             if (p.cut == null) p.cut = Cut.WHOLE;
             if(p.priorCounts==null)p.priorCounts=new HashMap<>();
             if(p.priorCooked==null)p.priorCooked=new HashMap<>();
@@ -250,12 +282,12 @@ public final class CookingBatch {
         refreshTemperatureHistory();
         temperature = Math.clamp(Double.isFinite(temperature) ? temperature : 20, 0, 500);
         water = Math.clamp(Double.isFinite(water) ? water : 0, 0, 12);
-        oil = Math.clamp(oil, 0, 16);
-        salt = Math.clamp(salt, 0, 32);
-        sugar = Math.clamp(sugar, 0, 32);
-        soy = Math.clamp(soy, 0, 32);
-        vinegar = Math.clamp(vinegar, 0, 32);
-        spice = Math.clamp(spice, 0, 32);
+        oil = bounded(oil,32*Math.max(1,ingredients.size()));
+        salt = bounded(salt,32*Math.max(1,ingredients.size()));
+        sugar = bounded(sugar,32*Math.max(1,ingredients.size()));
+        soy = bounded(soy,32*Math.max(1,ingredients.size()));
+        vinegar = bounded(vinegar,32*Math.max(1,ingredients.size()));
+        spice = bounded(spice,32*Math.max(1,ingredients.size()));
         capacity = Math.clamp(capacity, 1, 12);
         remainingServings = Math.clamp(remainingServings, -1, 24);
         totalServings=Math.clamp(Math.max(totalServings,remainingServings),0,24);

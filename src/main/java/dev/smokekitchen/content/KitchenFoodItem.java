@@ -15,6 +15,9 @@ public final class KitchenFoodItem extends Item {
     public KitchenFoodItem(Properties props,int nutrition) {super(props);this.nutrition=nutrition;}
     @Override public void appendHoverText(ItemStack stack,TooltipContext context,net.minecraft.world.item.component.TooltipDisplay display,java.util.function.Consumer<Component> lines,TooltipFlag flag) {
         super.appendHoverText(stack,context,display,lines,flag);
+        appendQuality(stack,lines);
+    }
+    public static void appendQuality(ItemStack stack,java.util.function.Consumer<Component> lines) {
         var data=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();
         if(data.contains("kitchen_quality")) {
             int quality=Math.clamp(data.getIntOr("kitchen_quality",0),0,3);
@@ -27,8 +30,9 @@ public final class KitchenFoodItem extends Item {
         tag.putInt("kitchen_quality",quality);tag.putString("kitchen_quality_reasons",String.join(",",reasons));tag.putLong("kitchen_prepared",now);
         stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
         var definition=KitchenContent.DEFINITIONS.get(ResourceStates.baseId(stack));
-        if(definition!=null) {
-            int base=ContentCatalog.num(definition,"nutrition",1);
+        var original=stack.getItem().components().get(DataComponents.FOOD);
+        if(definition!=null||original!=null) {
+            int base=definition!=null?ContentCatalog.num(definition,"nutrition",1):original.nutrition();
             int nutrition=quality<=1?Math.max(1,(int)Math.floor(base*.6)):base;
             stack.set(DataComponents.FOOD,new FoodProperties.Builder().nutrition(nutrition).saturationModifier(quality>=3?.5f:quality==2?.4f:.2f).build());
         }

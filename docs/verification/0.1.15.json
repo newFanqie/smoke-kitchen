@@ -1,0 +1,94 @@
+{
+  "version": "0.1.15",
+  "date": "2026-10-21",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "registeredItems": 322,
+  "processingRecipes": 31,
+  "namedDishes": 29,
+  "unitTests": {
+    "passed": 83,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 76,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "modelResourcesUnchangedSince": "0.1.14",
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "scopePerRenderer": [
+      "SeasoningTransferTest (inherits actual FirstMealFlowTest production)",
+      "TransferGuideTest and final concise guide supplement"
+    ],
+    "fullManifestEntrypoints": 21,
+    "allTwentyOneRerunClaimed": false,
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "shaderActuallyActive": true,
+    "rawMaterialsOnly": true,
+    "actualCraftingKillsSaltMiningMillingLardAndCutting": true,
+    "processedItemsGranted": false,
+    "cookingProgressEdited": false,
+    "saltDosesTotal": 4,
+    "oilDosesTotal": 1,
+    "actualFoodPortions": 4,
+    "looseShareSalt": 1,
+    "looseShareOil": 0.25,
+    "actualLooseInventoryReopen": true,
+    "actualFullNewPotReopen": true,
+    "actualTwoPlusTwoPotReopen": true,
+    "actualServings": 2,
+    "actuallyEatenServings": 1,
+    "actualBowlReturn": true,
+    "actualLastMealReopen": true,
+    "qualityAfterTransfers": 1,
+    "actualNutritionPenalty": true,
+    "positionTeleportsInFixture": true,
+    "hungerSetToEightBeforeEating": true,
+    "initialNativeWrongBowlTestIdFailureExcluded": true,
+    "logs": [
+      ".tools/transfer-0.1.15-vanilla.log",
+      ".tools/transfer-0.1.15-iris.log",
+      ".tools/transfer-guide-0.1.15-vanilla.log",
+      ".tools/transfer-guide-0.1.15-iris.log"
+    ],
+    "visualReview": {
+      "vanillaReviewed": true,
+      "irisReviewed": true,
+      "finalGuideReviewedBoth": true,
+      "selectedPerRenderer": [
+        "transfer-actual-loose-tooltip-0.1.15.png",
+        "transfer-two-pots-half-each-0.1.15.png",
+        "transfer-guide-1-0.1.15.png"
+      ],
+      "additionalIrisReviewed": [
+        "transfer-last-serving-after-reopen-0.1.15.png"
+      ],
+      "notes": [
+        "Actual retrieved food tooltip shows salt1.00/oil0.25, all six shares and poor/salty quality",
+        "Final concise guide fits one page in native and actual enabled Iris",
+        "Normal cold cookware appearance and final emptied pot checked",
+        "Figures accompany real player-operation and repeated-world-reopen assertions, no granted processed outputs"
+      ]
+    }
+  },
+  "sixSeasoningFractionalConservation": true,
+  "oldIntegerSaveMigration": true,
+  "vanillaNutritionPenaltyDoesNotCompound": true,
+  "individualDonenessForLooseQuality": true,
+  "irreversibleSourAndStaleQualityRetained": true,
+  "unservedBlockDropsCarryOnlyActualShares": true,
+  "knownRemaining": [
+    "Storage and unloaded-chunk freshness clocks, prepared time for unserved batches",
+    "Independent artwork and device functions",
+    "Independent buildings, restaurant systems and multiplayer concurrency"
+  ],
+  "jarBytes": 959382,
+  "sha256": "568eb460197e03adf1452799ff90a2ba6fab9f1c991ea43ceff65998d254dc4a",
+  "downloadVerified": false
+}

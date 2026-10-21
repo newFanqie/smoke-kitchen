@@ -18,7 +18,10 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Predicate;
 
 /** User-authorized raw fixture. Tools, devices, loot, processing, cooking and meals are actual player actions. */
-public final class FirstMealFlowTest implements FabricClientGameTest {
+public class FirstMealFlowTest implements FabricClientGameTest {
+    protected TestWorldSave savedWorld;
+    protected String[] extraRawMaterials(){return new String[0];}
+    protected boolean continueWithTransfer(SurvivalPlayer p){return false;}
     private static final BlockPos TABLE=new BlockPos(0,100,0),FURNACE=new BlockPos(-2,100,-1),STOVE=new BlockPos(2,100,0),BOARD=new BlockPos(2,100,-2),MILL=new BlockPos(-2,100,1),ORE=new BlockPos(-3,100,3),WATER=new BlockPos(4,99,2);
     private static void check(boolean value,String message){if(!value)throw new AssertionError(message);}
     private static KitchenBlockEntity station(MinecraftServer g,BlockPos pos){return (KitchenBlockEntity)g.overworld().getBlockEntity(pos);}
@@ -45,11 +48,12 @@ public final class FirstMealFlowTest implements FabricClientGameTest {
     @Override public void runTest(ClientGameTestContext c){
         TestWorldSave save;double[] savedWater={0};int[] savedFuel={0};
         try(var world=c.worldBuilder().create()){
-            save=world.getWorldSave();var s=world.getServer();var p=new SurvivalPlayer(c,s);
+            save=world.getWorldSave();savedWorld=save;var s=world.getServer();var p=new SurvivalPlayer(c,s);
             c.runOnClient(client->client.options.guiScale().set(2));
             s.runCommand("time set day");s.runCommand("weather clear");s.runCommand("fill -6 99 -5 7 99 6 minecraft:smooth_stone");s.runCommand("fill -6 100 -5 7 105 6 minecraft:air");s.runCommand("tp @a 0.5 100 -2 0 25");s.runCommand("gamemode survival @a");
             // Base resources only. No tools, kitchen blocks, processed seasoning, meat or meals are granted.
             for(String raw:new String[]{"minecraft:oak_log 8","minecraft:cobblestone 32","minecraft:clay_ball 12","minecraft:coal 5","minecraft:iron_ingot 3","minecraft:sand 3","smoke_kitchen:tomato 2","minecraft:book 1","minecraft:wheat_seeds 1"})s.runCommand("give @a "+raw);c.waitTicks(10);
+            for(String raw:extraRawMaterials())s.runCommand("give @a "+raw);c.waitTicks(4);
             if(net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("iris"))c.runOnClient(client->{try{var api=Class.forName("net.irisshaders.iris.api.v0.IrisApi");check((Boolean)api.getMethod("isShaderPackInUse").invoke(api.getMethod("getInstance").invoke(null)),"The first-meal Iris check must use an active shader pack");}catch(ReflectiveOperationException e){throw new AssertionError(e);}});
             while(p.count("oak_planks")<24)p.craft("oak_planks","oak_log");while(p.count("stick")<16)p.craft("stick","oak_planks","","oak_planks","");p.craft("crafting_table","oak_planks","oak_planks","oak_planks","oak_planks");p.closeMenu();mount(p,"crafting_table",TABLE);p.emptyHand();p.click(TABLE,Direction.UP);
             p.craft("stone_pickaxe","cobblestone","cobblestone","cobblestone","","stick","","","stick","");
@@ -81,6 +85,7 @@ public final class FirstMealFlowTest implements FabricClientGameTest {
             p.select("smoke_kitchen:used_salt");p.click(STOVE,Direction.UP);p.select("smoke_kitchen:used_lard");p.click(STOVE,Direction.UP);p.select("smoke_kitchen:duck_meat");p.click(STOVE,Direction.UP);p.click(STOVE,Direction.UP);p.select("smoke_kitchen:tomato");p.click(STOVE,Direction.UP);p.click(STOVE,Direction.UP);p.select("smoke_kitchen:wooden_lid");p.click(STOVE,Direction.UP);p.emptyHand();p.click(STOVE,Direction.NORTH);p.click(STOVE,Direction.NORTH);
             int bowls=p.count("bowl");p.select("bowl");p.click(STOVE,Direction.UP);check(p.count("bowl")==bowls&&p.count("smoke_kitchen:mixed_stew")==0,"Early serving must not consume the bowl or invent a cooked meal");
             p.select("smoke_kitchen:wooden_spatula");for(int i=0;i<3;i++){p.click(STOVE,Direction.UP);c.waitTicks(180);}until(c,s,g->station(g,STOVE).batch.ready(),4000,"The real duck and tomato must heat and cook independently before serving");
+            if(continueWithTransfer(p))return;
             p.emptyHand();p.click(STOVE,Direction.UP);p.look(Vec3.atCenterOf(STOVE));world.getClientLevel().waitForChunksRender();c.takeScreenshot("first-meal-ready-clay-stove-0.1.11");p.select("bowl");p.click(STOVE,Direction.UP);check(p.count("smoke_kitchen:mixed_stew")==1,"The real cooked batch must serve one complete meal");p.emptyHand();p.click(STOVE,Direction.NORTH);p.click(STOVE,Direction.NORTH);
             s.runOnServer(g->g.getPlayerList().getPlayers().getFirst().getFoodData().setFoodLevel(8));p.select("smoke_kitchen:mixed_stew");c.runOnClient(client->client.player.setXRot(-70));c.getInput().holdKey(o->o.keyUse);c.waitTicks(40);c.getInput().releaseKey(o->o.keyUse);c.waitTicks(6);
             s.runOnServer(g->{var player=g.getPlayerList().getPlayers().getFirst();var pot=station(g,STOVE);check(player.getFoodData().getFoodLevel()>8&&player.getInventory().countItem(KitchenContent.item("mixed_stew"))==0,"Actual use must eat the cooked meal and restore hunger");check(player.getInventory().countItem(Items.BOWL)==4&&pot.batch.remainingServings==1&&pot.heat==0,"Eating returns the original bowl while one serving remains in a shut-off pot");savedWater[0]=pot.batch.water;savedFuel[0]=pot.fuelSeconds;});inventory(c,"first-meal-after-actual-eating-0.1.11");

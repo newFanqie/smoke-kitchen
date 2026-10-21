@@ -19,3 +19,5 @@
 
 ![实际启用Iris的台面接触](screenshots/0.1.17/iris/food-samples-actual-counter-contact-0.1.17.png)
 ![九状态模型预览，仅检查外观，不是实际变质证据](screenshots/0.1.17/vanilla/food-samples-model-states-preview-only-0.1.17.png)
+
+发布核对：实际重新下载972472字节JAR，SHA256 `4a549ad433c8b5dc52449c63a58b624f27efa3327646ad414ac4ef402e3c241e`，与本地及服务器摘要一致。[发布页](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.17)；[精确源码CI](https://github.com/newFanqie/smoke-kitchen/actions/runs/39638728658)成功，源码 `c75447055c36fb522dca2876a9739a9f1a9c4938`。Git域名连接失败时改用官方Git数据接口，按已提交文件字节、树及提交SHA精确核对后上传，未重写源码。

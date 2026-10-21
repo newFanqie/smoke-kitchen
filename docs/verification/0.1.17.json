@@ -69,6 +69,10 @@
   },
   "sha256": "4a549ad433c8b5dc52449c63a58b624f27efa3327646ad414ac4ef402e3c241e",
   "jarBytes": 972472,
-  "downloadVerified": false,
-  "sourceCIPassed": false
+  "downloadVerified": true,
+  "sourceCIPassed": true,
+  "sourceCommit": "c75447055c36fb522dca2876a9739a9f1a9c4938",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39638728658",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.17",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.17/smoke-kitchen-0.1.17.jar"
 }

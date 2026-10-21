@@ -29,6 +29,6 @@
 
 ## 安装与后续
 
-Minecraft26.1.2 / Fabric Loader0.19.2 / Fabric API0.149.1+26.1.2。移出旧JAR，安装smoke-kitchen-0.1.22.jar并保留Fabric API。JAR1045592字节，SHA256 `e2c9e5671dec07ae5b5310003b4fa98c5e6f18fb669664e44bd3c1275483bd61`。精确源码CI与发布后实际重新下载结果待补录。
+Minecraft26.1.2 / Fabric Loader0.19.2 / Fabric API0.149.1+26.1.2。移出旧JAR，安装smoke-kitchen-0.1.22.jar并保留Fabric API。JAR1045592字节，SHA256 `e2c9e5671dec07ae5b5310003b4fa98c5e6f18fb669664e44bd3c1275483bd61`。精确源码`1f1102776b33dc18fade1938ff05d96d17d0841e`的[CI](https://github.com/newFanqie/smoke-kitchen/actions/runs/39694682414)已通过；[发布开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.22)后实际重新下载，SHA256与本地/服务端摘要一致。验证见verification/0.1.22.json。
 
 下一轮0.1.23独立处理设计中的肉类盐腌风干：真实动物击杀取肉、切配/用盐、逐份腌制、干制与保存边界，不能晒成原版熟肉。先核对既有保鲜/切配数据，再实现有限可验收流程。清洗、排烟、家具、农牧/动物美术、九种独立建筑、职业交易/品质订单/宴席收藏、多人并发、迁移及性能待办保留。整体设计尚未完成，自动续做保持启用。

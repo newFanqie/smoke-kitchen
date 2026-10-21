@@ -3,8 +3,8 @@
   "scope": "Black/Sichuan pepper and cumin drying, original native fruit/pod models, real finite jar filling and same-spice refilling for four powders.",
   "sha256": "e2c9e5671dec07ae5b5310003b4fa98c5e6f18fb669664e44bd3c1275483bd61",
   "jarBytes": 1045592,
-  "downloadVerified": false,
-  "sourceCIPassed": false,
+  "downloadVerified": true,
+  "sourceCIPassed": true,
   "unitTests": 84,
   "totalGameTests": 93,
   "clientChecks": {
@@ -44,6 +44,11 @@
     "Need at least4 free doses to refill a whole dry unit; no partial-unit discard or overfill.",
     "Existing old full powder jars remain valid16-use jars; new recipes do not issue free new containers.",
     "0.1.21 real unload/weather-history regression remains covered by backend suite; not falsely claimed as new full long client rerun.",
-    "Only stated Iris/Sodium/MakeUp combination tested; all confirmed design still has finite device/ecology/independent-building/management/multiplayer/performance work."
-  ]
+    "Only stated Iris/Sodium/MakeUp combination tested; all confirmed design still has finite device/ecology/independent-building/management/multiplayer/performance work.",
+    "Generic hand-mill stored-item display still needs support-surface contact calibration; actual milling acceptance does not claim this legacy display art is fully optimized. Refill custom-name contract is scoped to refill, not all empty-container component migration."
+  ],
+  "sourceCommit": "1f1102776b33dc18fade1938ff05d96d17d0841e",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39694682414",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.22",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.22/smoke-kitchen-0.1.22.jar"
 }

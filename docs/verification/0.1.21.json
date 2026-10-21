@@ -3,8 +3,8 @@
   "scope": "Six independently timed drying slots, real rain/shelter, persisted weather history and partial-transfer state for chili/shiitake.",
   "sha256": "bbaabb682f53390a02dae6055af49b8613ff6c9d318bccde692ffe195fc34fb8",
   "jarBytes": 1026629,
-  "downloadVerified": false,
-  "sourceCIPassed": false,
+  "downloadVerified": true,
+  "sourceCIPassed": true,
   "unitTests": 84,
   "totalGameTests": 90,
   "clientChecks": {
@@ -41,5 +41,9 @@
     "No real-time offline aging; only game-world time.",
     "Iris1.11.4/Sodium0.9.2/MakeUpUltraFast9.6 verified, not every shader.",
     "All confirmed design not complete; remaining devices/ecology/buildings/management/multiplayer/performance retained."
-  ]
+  ],
+  "sourceCommit": "b312e35c5d6fcad079e2f058ed4eb54d0a3fc825",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39689562681",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.21",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.21/smoke-kitchen-0.1.21.jar"
 }

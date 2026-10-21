@@ -24,6 +24,6 @@
 
 ## 安装与剩余范围
 
-Minecraft26.1.2 / Fabric Loader0.19.2 / Fabric API0.149.1+26.1.2。移出旧版，安装smoke-kitchen-0.1.21.jar并保留Fabric API。JAR1026629字节，SHA256 `bbaabb682f53390a02dae6055af49b8613ff6c9d318bccde692ffe195fc34fb8`。精确源码CI与发布后实际重新下载结果待补录。
+Minecraft26.1.2 / Fabric Loader0.19.2 / Fabric API0.149.1+26.1.2。移出旧版，安装smoke-kitchen-0.1.21.jar并保留Fabric API。JAR1026629字节，SHA256 `bbaabb682f53390a02dae6055af49b8613ff6c9d318bccde692ffe195fc34fb8`。精确源码`b312e35c5d6fcad079e2f058ed4eb54d0a3fc825`的[CI](https://github.com/newFanqie/smoke-kitchen/actions/runs/39689562681)已通过；[发布开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.21)后实际重新下载，SHA256与本地/服务端摘要一致。验证见verification/0.1.21.json。
 
-本轮完成两条既有植物干制链，不把肉晾干等同做熟。下一轮0.1.22先核对设计中的盐腌风干肉及胡椒/孜然干制和调料容器，补有限真实保存/加工路线；不能把晾晒架整个设计标为完成。其余清洗、排烟、家具、农牧、九种独立建筑、交易订单宴席、多人及性能待办保留。0.1.17食品代表样例仍待反馈，不盲目扩展大批同风格成菜。
+本轮完成两条既有植物干制链，不把肉晾干等同做熟。下一轮0.1.22先核对设计中的盐腌风干肉及胡椒/花椒/孜然干制和调料容器，补有限真实保存/加工路线；不能把晾晒架整个设计标为完成。其余清洗、排烟、家具、农牧、九种独立建筑、交易订单宴席、多人及性能待办保留。0.1.17食品代表样例仍待反馈，不盲目扩展大批同风格成菜。

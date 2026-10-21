@@ -543,4 +543,3 @@ public final class KitchenGameTests {
         test.succeed();
     }
 }
-

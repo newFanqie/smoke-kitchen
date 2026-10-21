@@ -22,6 +22,6 @@
 
 ## 安装与后续
 
-Minecraft26.1.2 / Fabric Loader0.19.2 / Fabric API0.149.1+26.1.2。移出旧模组JAR，安装smoke-kitchen-0.1.20.jar并保留Fabric API。JAR1008574字节，SHA256 `026837d8f1c0407199148bf484b27677de6ba60dc763f291f1c9dbe11cff226e`。精确源码CI与发布后实际重新下载结果待补录。
+Minecraft26.1.2 / Fabric Loader0.19.2 / Fabric API0.149.1+26.1.2。移出旧模组JAR，安装smoke-kitchen-0.1.20.jar并保留Fabric API。JAR1008574字节，SHA256 `026837d8f1c0407199148bf484b27677de6ba60dc763f291f1c9dbe11cff226e`。精确源码`803fbe7a3cd71c261adc95172235bfbc52ac50dc`的[CI](https://github.com/newFanqie/smoke-kitchen/actions/runs/39680601669)已通过；[发布开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.20)后实际重新下载，SHA256与本地/服务端摘要一致。验证见verification/0.1.20.json。
 
 下一轮0.1.21聚焦晾晒架：先读现有加工/晾晒实现，核对真实内容显示、露天雨水影响、原料取出以及区块卸载后的时钟，再完成有限可验收范围。清洗、烟道、家具、农牧、九种独立建筑、经营、多人及性能等继续按有限清单推进。0.1.17食品代表样例仍待反馈，不据此停掉独立功能，也不盲目扩展一大批食品美术。

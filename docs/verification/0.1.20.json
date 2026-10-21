@@ -3,8 +3,8 @@
   "scope": "Real adjacent soil-rooted pepper/sichuan-pepper planting and support, vanilla inherited growth, native geometry and old rack salvage.",
   "sha256": "026837d8f1c0407199148bf484b27677de6ba60dc763f291f1c9dbe11cff226e",
   "jarBytes": 1008574,
-  "downloadVerified": false,
-  "sourceCIPassed": false,
+  "downloadVerified": true,
+  "sourceCIPassed": true,
   "unitTests": 84,
   "totalGameTests": 88,
   "clientChecks": {
@@ -40,5 +40,9 @@
     "Sichuan pepper is a shrub and does not require a frame.",
     "Native shader compatibility verified for the isolated Iris/MakeUp combination, not every shader.",
     "Drying rack weather/clock/rendering and washing/hood/furniture/independent buildings/management/multiplayer remain queued."
-  ]
+  ],
+  "sourceCommit": "803fbe7a3cd71c261adc95172235bfbc52ac50dc",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39680601669",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.20",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.20/smoke-kitchen-0.1.20.jar"
 }

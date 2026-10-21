@@ -104,6 +104,20 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
                 var stack=entity.items.get(i);String material=dev.smokekitchen.world.SpiceRack.material(stack);
                 String fill=material.equals("empty")?"empty":stack.isDamaged()?"used":"full";
                 var p=dev.smokekitchen.world.SpiceRack.position(i,entity.getBlockState().getValue(KitchenBlock.FACING));
+                if(!dev.smokekitchen.world.SpiceRack.accepts(stack)){
+                    // Old saves may contain any item. Keep its own model/components and fit its
+                    // actual bounds between the shelves, with the bottom resting on the board.
+                    var item=resolve(stack,entity,ItemDisplayContext.NONE);
+                    var bounds=item.getModelBoundingBox();
+                    float scale=(float)Math.min(.26/Math.max(.001,Math.max(bounds.getXsize(),bounds.getZsize())),.28/Math.max(.001,bounds.getYsize()));
+                    float yaw=entity.getBlockState().getValue(KitchenBlock.FACING).toYRot();
+                    double angle=Math.toRadians(yaw),cx=(bounds.minX+bounds.maxX)/2,cz=(bounds.minZ+bounds.maxZ)/2;
+                    float x=p[0]-(float)(cx*Math.cos(angle)+cz*Math.sin(angle))*scale;
+                    float z=p[1]-(float)(cz*Math.cos(angle)-cx*Math.sin(angle))*scale;
+                    float y=(i<3?3:9)/16f-scale*(.5f+(float)bounds.minY);
+                    pieces.add(new FoodPiece(item,x,y,z,scale,yaw,0,1,false,"rack/legacy_item"));
+                    continue;
+                }
                 String appearance="rack/"+material+"_"+fill;
                 pieces.add(new FoodPiece(model(appearance,entity),p[0],(i<3?3:9)/16f,p[1],1,0,0,5/16f,false,appearance));
             }

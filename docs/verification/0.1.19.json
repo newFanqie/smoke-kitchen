@@ -1,0 +1,29 @@
+{
+  "version": "0.1.19",
+  "scope": "Legacy spice rack first-six unsupported original item display and lossless recovery only. Trellis moved to the next finite functional release.",
+  "sha256": "9b7767e734d5d12c3a9d5c6b5a4a5021821ab58e50618614a6230b0fcb07a055",
+  "jarBytes": 994543,
+  "downloadVerified": false,
+  "sourceCIPassed": false,
+  "unitTests": 84,
+  "totalGameTests": 86,
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "onlyEntrypointRun": "LegacyRackTest",
+    "fourFacings": true,
+    "allSixCellsActuallyRetrieved": true,
+    "actualWorldReopens": 2,
+    "countsNamesDamageComponentsPreserved": true,
+    "activeIrisAsserted": true,
+    "fixtureOnly": "Explicit old-save fixture contains apple17, named damaged iron pickaxe23, planks3, used salt damage7, glass bottle and stairs2. This is compatibility/render/retrieval evidence, not raw-material production or natural aging.",
+    "fullManifestRestored": 28,
+    "irisDisabledAfterRun": true
+  },
+  "knownLimits": [
+    "Only first-six unsupported legacy item appearance is changed; no new unsupported items can be inserted.",
+    "Models are fitted to shelf bounds; shader-specific materials are not promised.",
+    "Spice trellis remains static decoration/general storage pending real soil/plant/support functionality.",
+    "Food sample art awaits user feedback; complete design remains unfinished."
+  ]
+}

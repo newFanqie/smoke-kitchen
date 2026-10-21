@@ -5,6 +5,10 @@
   "environment": "client",
   "entrypoints": {
     "fabric-client-gametest": [
+      "dev.smokekitchen.test.FermentationFlowTest",
+      "dev.smokekitchen.test.FermentationGuideTest",
+      "dev.smokekitchen.test.CookingAppearanceTest",
+      "dev.smokekitchen.test.CookwareFitVisualTest",
       "dev.smokekitchen.test.FirstMealFlowTest",
       "dev.smokekitchen.test.CraftingCompatibilityTest",
       "dev.smokekitchen.test.EcologyFlowTest",
@@ -21,5 +25,8 @@
   "depends": {
     "smoke_kitchen": "*",
     "fabric-client-gametest-api-v1": "*"
-  }
+  },
+  "mixins": [
+    "smoke-kitchen-clienttest.mixins.json"
+  ]
 }

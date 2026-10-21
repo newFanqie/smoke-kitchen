@@ -43,6 +43,7 @@ public final class ResourceStates {
         else {old.shrink(1);if(!replacement.isEmpty()&&!player.getInventory().add(replacement))player.drop(replacement,false);}
     }
     private static final Map<String,String> COOKED=Map.ofEntries(
+        Map.entry("smoke_kitchen:soybean","smoke_kitchen:cooked_soybean"),
         Map.entry("minecraft:chicken","minecraft:cooked_chicken"),Map.entry("minecraft:beef","minecraft:cooked_beef"),
         Map.entry("minecraft:porkchop","minecraft:cooked_porkchop"),Map.entry("minecraft:mutton","minecraft:cooked_mutton"),
         Map.entry("minecraft:rabbit","minecraft:cooked_rabbit"),Map.entry("minecraft:cod","minecraft:cooked_cod"),

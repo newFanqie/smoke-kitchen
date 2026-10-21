@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {inventoryModel,stationGeometry,cropModel} from './voxel-art.mjs';
+import {vessel,vesselLid,toolModel,foodFamilies,foodStages,foodModel} from './kitchen-art.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../src/main/resources');
 const ns='smoke_kitchen';
 const write=(p,data)=>{if(p.includes('/models/')&&data.textures&&!data.textures.particle)data.textures.particle=Object.values(data.textures).find(t=>!t.startsWith('#'));const out=path.join(root,p);fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(data,null,2)+'\n');};
@@ -16,7 +17,7 @@ const plantRows=[
  ['sesame','芝麻','pumpkin_seeds',null],['sichuan_pepper','花椒','sweet_berries',null],['black_pepper','胡椒','melon_seeds',null],
  ['cumin','孜然','wheat_seeds',null],['shiitake','香菇','brown_mushroom','mushroom']];
 for(const [id,name,texture,ingredient] of plantRows) {
- item(id,name,texture==='pickle'?'sea_pickle':texture,{nutrition:['tomato','cucumber','cabbage'].includes(id)?2:0,...(ingredient?{ingredient}: {})});
+ item(id,name,texture==='pickle'?'sea_pickle':texture,{nutrition:['tomato','cucumber','cabbage'].includes(id)?2:0,...(id==='soybean'?{ingredient:'soybean',needs_water:true,resistance:1.4}:ingredient?{ingredient}: {})});
  crops.push({id,name});lang[`block.${ns}.${id}_crop`]=name;lang[`item.${ns}.${id}_seeds`]=`${name}种子`;
 }
 item('rice','米','sugar',{ingredient:'rice',needs_water:true});
@@ -54,7 +55,7 @@ for(const [id,name,texture,uses] of [
 for(const [id,name,texture] of [
  ['wooden_lid','木盖','oak_trapdoor'],['pot_lid','铁锅盖','iron_ingot'],['empty_jar','空调料罐','glass_bottle'],
  ['ceramic_plate','陶盘','bowl'],['ceramic_bowl','陶碗','bowl'],['thermometer','温度计','clock'],
- ['recipe_book','厨师食谱','book'],['sealed_jar','密封罐','glass_bottle'],['food_basket','食物篮','bundle'],['sieve','筛子','string']]) item(id,name,texture,{unstackable:id==='recipe_book'});
+ ['recipe_book','厨师食谱','book'],['sealed_jar','密封罐','glass_bottle'],['food_basket','食物篮','bundle'],['sieve','筛子','string']]) item(id,name,texture,{unstackable:id==='recipe_book',...(id==='sieve'?{uses:128}:{})});
 for(const [id,name,kind,model] of [
  ['clay_stove','简易泥灶','stove','stove'],['brick_stove','砖砌灶台','stove','stove'],['double_stove','双眼灶台','stove','stove'],['oven','烤炉','cook','oven'],
  ['cutting_board','砧板','board','board'],['clay_pot','陶锅','cook','pot'],['soup_pot','铁汤锅','cook','pot'],['wok','炒锅','cook','wok'],['frying_pan','平底锅','cook','pan'],
@@ -189,8 +190,10 @@ process('ferment',{dough:2,starter:1},{fermented_dough:2,starter:1},120);
 process('dry',{chili:1},{dried_chili:1},120);process('dry',{shiitake:1},{dried_shiitake:1},120);
 process('ferment',{cooked_rice:1,shiitake:1,'minecraft:sugar':1},{starter:2},1200);
 process('ferment',{cooked_rice:1,'minecraft:apple':1},{vinegar_starter:2},1200,1);
-process('ferment',{soybean:4,flour:2,salt:2,starter:1,'minecraft:glass_bottle':1},{soy_sauce:1,starter:1},2400,1);
-process('ferment',{cooked_rice:4,vinegar_starter:1,'minecraft:glass_bottle':1},{rice_vinegar:1,vinegar_starter:1},2400,1);
+process('ferment',{cooked_soybean:4,flour:2,salt:2,starter:1,empty_jar:1},{soy_mash:1,starter:1},2400,1);
+process('mix',{soy_mash:1,'minecraft:glass_bottle':1},{soy_sauce:1,empty_jar:1});processes[processes.length-1].tool='sieve';
+process('ferment',{cooked_rice:4,vinegar_starter:1,empty_jar:1},{vinegar_mash:1,vinegar_starter:1},2400,1);
+process('mix',{vinegar_mash:1,'minecraft:glass_bottle':1},{rice_vinegar:1,empty_jar:1});processes[processes.length-1].tool='sieve';
 process('mix',{soybean:4,rice_vinegar:1},{tofu:2},20,1);
 process('pickle',{cabbage:3,chili:1,garlic:1,salt:2},{pickled_cabbage:4},1200,1);
 Object.assign(processes[processes.length-1],{cuts:{[q('cabbage')]:['SHRED'],[q('chili')]:['SLICE','DICE'],[q('garlic')]:['MINCE']}});
@@ -198,6 +201,9 @@ process('evaporate',{}, {salt_crystals:4},120,6);processes[processes.length-1].s
 
 item('fat_cracklings','油渣','cooked_porkchop',{nutrition:2});
 item('lard','猪油罐','glass_bottle',{seasoning:'oil',uses:8});
+item('cooked_soybean','熟大豆','cocoa_beans',{ingredient:'soybean_cooked',ready:true,nutrition:3});
+item('soy_mash','酱醪（待过滤）','honey_bottle',{unstackable:true});
+item('vinegar_mash','醋醪（待过滤）','honey_bottle',{unstackable:true});
 for(const original of [...items]) {
  if(original.uses>0){
   item('used_'+original.id,original.name+(original.seasoning||original.id==='water_jug'?'（50%）':'（已使用）'),original.texture,{...original,id:'used_'+original.id,name:original.name+'（已使用）',variant_of:original.id,state:'used'});
@@ -209,7 +215,7 @@ for(const original of [...items]) {
  }
 }
 write(`data/${ns}/catalog.json`,{items,stations,crops,dishes,processes});
-const vanillaTools={rice_paddy:'wheat',stone_knife:'stone_sword',iron_knife:'iron_sword',refined_knife:'netherite_sword',wooden_spatula:'wooden_shovel',iron_spatula:'iron_hoe',ladle:'iron_shovel',tongs:'shears',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',sieve:'cobweb',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle',pan_fried_fish:'cooked_cod',roast_potatoes:'baked_potato'};
+const vanillaTools={rice_paddy:'wheat',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle',pan_fried_fish:'cooked_cod',roast_potatoes:'baked_potato'};
 write(`assets/${ns}/models/item/pot_water.json`,{parent:'minecraft:block/block',textures:{water:'minecraft:block/water_still'},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#water',tintindex:0,uv:[0,0,16,16]}}}]});
 write(`assets/${ns}/items/pot_water.json`,{model:{type:'minecraft:model',model:`${ns}:item/pot_water`,tints:[{type:'minecraft:constant',value:-12618012}]}});
 for(const[id,texture]of Object.entries({pot_oil:'honey_block_top',pot_caramel:'brown_concrete',pot_burnt_sugar:'black_concrete'})){
@@ -225,7 +231,7 @@ for(const id of ['dough_sheet','raw_noodles']){
 for(const it of items){
  write(`assets/${ns}/items/${it.id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${it.id}`}});
  const vanilla=(it.variant_of||it.id)==='thermometer'?'clock_00':vanillaTools[it.variant_of||it.id];
- let model=vanilla?{parent:`minecraft:item/${vanilla}`} : it.id==='fried_rice'?{parent:'minecraft:item/generated',textures:{layer0:`${ns}:item/fried_rice`}}:inventoryModel(it,items.indexOf(it));
+ let model=toolModel(it.id)|| (vanilla?{parent:`minecraft:item/${vanilla}`} : it.id==='fried_rice'?{parent:'minecraft:item/generated',textures:{layer0:`${ns}:item/fried_rice`}}:inventoryModel(it,items.indexOf(it)));
  if(it.id==='wooden_lid')model={parent:'minecraft:block/oak_trapdoor_bottom'};
  if(it.variant_of) {
   model={parent:`${ns}:item/${it.variant_of}`};
@@ -236,6 +242,10 @@ for(const it of items){
  if(it.id.includes('gas_canister'))model={parent:'minecraft:block/block',textures:{base:'minecraft:block/'+(it.id==='empty_gas_canister'?'gray':it.id==='partial_gas_canister'?'yellow':'green')+'_concrete',metal:'minecraft:block/iron_block',dark:'minecraft:block/black_concrete',valve:'minecraft:block/copper_block'},elements:[box([4,1,4],[12,3,12],'#dark'),box([3,3,3],[13,11,13]),box([5,11,5],[11,13,11]),box([7,13,7],[9,15,9],'#valve'),box([5,14,7],[11,15,9],'#dark'),box([5,6,2.9],[11,9,3],'#metal')]};
  if(it.id==='lard')model={parent:'minecraft:block/block',textures:{base:'minecraft:block/white_concrete',rim:'minecraft:block/light_gray_concrete',lid:'minecraft:block/oak_planks'},elements:[box([3,2,3],[13,11,13]),box([2,2,2],[14,3,14],'#rim'),box([2,11,2],[14,13,14],'#lid'),box([5,5,2.9],[11,8,3],'#rim')]};
  if(it.id==='rendered_fat')model={parent:'minecraft:block/block',textures:{base:'minecraft:block/white_concrete',skin:'minecraft:block/pink_concrete'},elements:[box([2,3,3],[14,6,13],'#skin'),box([2,6,3],[14,10,13]),box([4,10,4],[12,12,12])]};
+ if(it.id==='soy_mash'||it.id==='vinegar_mash'){
+  const soy=it.id==='soy_mash';
+  model={parent:'minecraft:block/block',textures:{base:'minecraft:block/terracotta',rim:'minecraft:block/oak_planks',liquid:'minecraft:block/'+(soy?'brown_terracotta':'orange_terracotta'),grain:'minecraft:block/'+(soy?'yellow_terracotta':'white_terracotta')},elements:[box([3,2,3],[13,10,13]),box([2,10,2],[14,12,14],'#rim'),box([3,12,3],[13,12.1,13],'#liquid'),...(soy?[box([4,12.1,4],[7,13.5,7],'#grain'),box([9,12.1,7],[12,13.2,10],'#grain')]:[4,7,10].map(x=>box([x,12.1,5],[x+1,12.7,11],'#grain')))]};
+ }
  if(it.id==='fat_cracklings')model={parent:'minecraft:block/block',textures:{base:'minecraft:block/terracotta',gold:'minecraft:block/yellow_terracotta'},elements:[box([1,2,3],[7,5,9]),box([2,5,4],[6,6,8],'#gold'),box([9,3,6],[15,7,12]),box([10,7,7],[14,8,11],'#gold'),box([4,7,9],[10,10,15]),box([5,10,10],[9,11,14],'#gold')]};
  write(`assets/${ns}/models/item/${it.id}.json`,model);
  if(it.id==='pot_lid')write(`assets/${ns}/models/item/${it.id}.json`,{parent:`${ns}:block/lid`});
@@ -260,7 +270,7 @@ const models={
  plate:[box([2,0,2],[14,1,14],'#clay')],stand:[box([2,0,2],[14,2,14]),box([7,2,7],[9,12,9]),box([1,12,3],[15,14,13])],
  hood:[box([0,0,0],[16,4,16],'#metal'),box([4,4,4],[12,16,12],'#metal')],chimney:[box([4,0,4],[12,16,12],'#stone')]
 };
-const textures={base:'minecraft:block/oak_planks',metal:'minecraft:block/iron_block',dark:'minecraft:block/black_concrete',stone:'minecraft:block/smooth_stone',clay:'minecraft:block/terracotta',particle:'minecraft:block/oak_planks',copper:'minecraft:block/copper_block',blue:'minecraft:block/blue_concrete',ice:'minecraft:block/light_blue_concrete',grain:'minecraft:block/yellow_concrete',leaf:'minecraft:block/green_concrete',salt:'minecraft:block/white_concrete',dirt:'minecraft:block/dirt',firebox:'minecraft:block/furnace_front'};
+const textures={rim:'minecraft:block/gray_concrete',base:'minecraft:block/oak_planks',metal:'minecraft:block/iron_block',dark:'minecraft:block/black_concrete',stone:'minecraft:block/smooth_stone',clay:'minecraft:block/terracotta',particle:'minecraft:block/oak_planks',copper:'minecraft:block/copper_block',blue:'minecraft:block/blue_concrete',ice:'minecraft:block/light_blue_concrete',grain:'minecraft:block/yellow_concrete',leaf:'minecraft:block/green_concrete',salt:'minecraft:block/white_concrete',dirt:'minecraft:block/dirt',firebox:'minecraft:block/furnace_front'};
 for(const s of stations){
  const ownTextures={...textures,base:s.kind==='stove'?'minecraft:block/bricks':textures.base};
  if(s.kind==='stove'||s.id==='gas_stove')ownTextures.metal='minecraft:block/polished_andesite';
@@ -268,7 +278,9 @@ for(const s of stations){
  if(s.id==='pickling_crock')ownTextures.clay='minecraft:block/green_terracotta';
  if(s.id==='steamer')ownTextures.base='minecraft:block/bamboo_planks';
  if(s.id==='cabinet')ownTextures.base='minecraft:block/spruce_planks';
- write(`assets/${ns}/models/block/${s.id}.json`,{parent:'minecraft:block/block',textures:ownTextures,elements:stationGeometry(s,models)});
+ const geometry=vessel(s.id)||stationGeometry(s,models);
+ if(['clay_pot','soup_pot','wok','frying_pan'].includes(s.id)){const y={clay_pot:7,soup_pot:7,wok:4,frying_pan:3}[s.id];if(s.id==='clay_pot')ownTextures.rim='minecraft:block/orange_terracotta';for(const e of geometry)if(e.to[1]===y)e.faces.up={texture:'#rim'};}
+ write(`assets/${ns}/models/block/${s.id}.json`,{parent:'minecraft:block/block',textures:ownTextures,elements:geometry});
  const parts=[];for(const [f,y]of[['north',0],['east',90],['south',180],['west',270]]){
   parts.push({when:{facing:f,...(s.kind==='stove'||s.id==='oven'?{heat:'0'}:{})},apply:{model:`${ns}:block/${s.id}`,y}});
   if(s.kind==='stove'||s.id==='oven')parts.push({when:{facing:f,heat:'1|2|3'},apply:{model:`${ns}:block/${s.id}_lit`,y}});
@@ -276,7 +288,11 @@ for(const s of stations){
  if(s.kind==='stove')write(`assets/${ns}/models/block/${s.id}_lit.json`,{parent:`${ns}:block/${s.id}`,textures:{firebox:'minecraft:block/furnace_front_on',flame:'minecraft:block/campfire_fire'},elements:[...stationGeometry(s,models),{from:[4,3,-.04],to:[12,8,-.04],faces:{north:{texture:'#flame',uv:[0,0,16,16]}}}]});
  if(s.id==='gas_stove')parts.push({when:{heat:'1|2|3'},apply:{model:`${ns}:block/gas_flame`}});
  if(s.id==='oven')write(`assets/${ns}/models/block/oven_lit.json`,{parent:`${ns}:block/oven`,textures:{firebox:'minecraft:block/furnace_front_on'}});
- if(s.kind!=='stove'&&s.id!=='gas_stove')parts.push({when:{lid:'true'},apply:{model:`${ns}:block/lid`}});
+ if(s.kind!=='stove'&&s.id!=='gas_stove'){
+  const lidModel=s.model==='crock'?'crock_lid':s.kind==='cook'?`lid_${s.id}`:'lid';
+  if(s.kind==='cook'){const y={frying_pan:3,wok:4,baking_tray:2,mixing_bowl:4}[s.id]||7;write(`assets/${ns}/models/block/${lidModel}.json`,{parent:'minecraft:block/block',textures,elements:vesselLid(false,y)});}
+  parts.push({when:{lid:'true'},apply:{model:`${ns}:block/${lidModel}`}});
+ }
  write(`assets/${ns}/blockstates/${s.id}.json`,{multipart:parts});
  write(`assets/${ns}/models/item/${s.id}.json`,{parent:`${ns}:block/${s.id}`});write(`assets/${ns}/items/${s.id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${s.id}`}});
  if(s.id==='double_stove')write(`assets/${ns}/models/item/${s.id}.json`,{parent:'minecraft:block/block',textures:ownTextures,elements:[0,8].flatMap(offset=>stationGeometry(s,models).map(e=>({...e,from:e.from.map((v,i)=>i===0?v*.5+offset:v),to:e.to.map((v,i)=>i===0?v*.5+offset:v)})))});
@@ -288,7 +304,13 @@ write(`assets/${ns}/models/block/fuel_bed.json`,{textures:{coal:'minecraft:block
 write(`assets/${ns}/models/block/firebox_lit.json`,{textures:{fire:'minecraft:block/orange_concrete',ember:'minecraft:block/yellow_concrete'},elements:[box([5,4,4],[7,8,5],'#fire'),box([9,4,3],[11,7,4],'#ember'),box([7,4,7],[9,9,8],'#fire')]});
 write(`assets/${ns}/models/block/gas_flame.json`,{textures:{fire:'minecraft:block/soul_fire_0'},elements:[-45,45].map(angle=>({from:[4,13,8],to:[12,14,8],rotation:{origin:[8,13,8],axis:'y',angle},faces:{north:{texture:'#fire',uv:[0,0,16,16]},south:{texture:'#fire',uv:[0,0,16,16]}}}))});
 for(const [c,t]of[['raw','minecraft:block/pink_concrete'],['cooked','minecraft:block/yellow_terracotta'],['burnt','minecraft:block/black_concrete']])write(`assets/${ns}/models/block/contents_${c}.json`,{textures:{base:t},elements:[box([4,1.05,4],[7,2.1,7]),box([9,1.05,4],[12,2.1,7]),box([5,1.05,9],[9,2.1,12])]});
-write(`assets/${ns}/models/block/lid.json`,{parent:'minecraft:block/block',textures,elements:[box([1,7,1],[15,8,15],'#metal'),box([7,8,7],[9,9,9])]});
+write(`assets/${ns}/models/block/lid.json`,{parent:'minecraft:block/block',textures,elements:vesselLid(false,7)});
+write(`assets/${ns}/models/block/crock_lid.json`,{parent:'minecraft:block/block',textures,elements:vesselLid(true,14)});
+for(const family of foodFamilies)for(const cut of ['whole','slice','dice','shred','mince'])for(const stage of foodStages){
+ const id=`food/${family}_${cut}_${stage}`;
+ write(`assets/${ns}/models/item/${id}.json`,foodModel(family,cut,stage));
+ write(`assets/${ns}/items/${id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${id}`}});
+}
 for(const c of crops){
  const variants={};for(let age=0;age<8;age++){variants[`age=${age}`]={model:`${ns}:block/${c.id}_${age}`};write(`assets/${ns}/models/block/${c.id}_${age}.json`,cropModel(c,age,crops.indexOf(c)));}
  write(`assets/${ns}/blockstates/${c.id}_crop.json`,{variants});write(`assets/${ns}/models/item/${c.id}_seeds.json`,inventoryModel({id:c.id+'_seeds'},crops.indexOf(c)+115));write(`assets/${ns}/items/${c.id}_seeds.json`,{model:{type:'minecraft:model',model:`${ns}:item/${c.id}_seeds`}});
@@ -352,11 +374,17 @@ shaped('gas_tank',['III','I I','III'],{I:'minecraft:iron_ingot'});
 shaped('gas_extractor',['IPI','IFI','CCC'],{I:'minecraft:iron_ingot',P:'minecraft:iron_pickaxe',F:'minecraft:furnace',C:'minecraft:copper_ingot'});
 shaped('empty_gas_canister',[' I ','I I',' I '],{I:'minecraft:iron_ingot'});
 for(const original of items.filter(x=>x.uses&&!x.variant_of&&!x.seasoning&&x.id!=='water_jug')){
- const material=original.id.startsWith('stone_')?'minecraft:cobblestone':/iron|refined|ladle|tongs/.test(original.id)?'minecraft:iron_ingot':original.id==='heat_cloth'?'minecraft:leather':'minecraft:oak_planks';
+ const material=original.id.startsWith('stone_')?'minecraft:cobblestone':/iron|refined|ladle|tongs/.test(original.id)?'minecraft:iron_ingot':original.id==='sieve'?'minecraft:string':original.id==='heat_cloth'?'minecraft:leather':'minecraft:oak_planks';
  for(const state of ['used','broken'])write(`data/${ns}/recipe/repair_${state}_${original.id}.json`,{type:'minecraft:crafting_shapeless',category:'misc',ingredients:[q(state+'_'+original.id),material],result:{id:q(original.id),count:1}});
 }
 for(const [raw,cooked]of Object.entries({duck_meat:'cooked_duck',goose_meat:'cooked_goose',boar_meat:'cooked_boar',raw_shrimp:'cooked_shrimp',raw_crab:'cooked_crab'}))for(const type of ['smelting','smoking'])write(`data/${ns}/recipe/${cooked}_${type}.json`,{type:'minecraft:'+type,category:'food',ingredient:q(raw),result:{id:q(cooked)},experience:.35,cookingtime:type==='smoking'?100:200});
 const messages={full:'容器已满或不能再加入。',fuel:'请加入煤、木炭、煤块、木棍或谷壳。',ingredient:'这里需要可处理的食材。',cut:'切配方式：%s',cut_done:'切配完成，食材已取回。',serving_started:'已开始分餐，请先盛完这一锅。',not_ready:'食材还没完全熟，请观察火候。',empty:'已经空了。',cook_status:'锅温 %s°C｜食材 %s份｜水 %s｜盐 %s｜油 %s｜%s',stove_status:'火力 %s｜燃料剩余 %s秒',station_status:'物品 %s件｜加工进度 %s｜密封 %s'};
+messages.filter_help='放入待过滤酱醪或醋醪与玻璃瓶，持筛子右键过滤；空罐返还。';
+messages.ferment_raw_soy='生大豆须先加水煮熟或蒸熟，再与面粉、盐、引子和空罐入缸。';
+messages.ferment_ready='已成待过滤醪液，空手开盖后潜行取出；调理台放玻璃瓶，持筛子过滤。';
+messages.ferment_missing='材料未齐，请按食谱检查水、熟原料、盐、引子和空罐；时间不会代替缺料。';
+messages.ferment_check='若产物已就绪，先空手开盖再潜行取出；未完成则按食谱检查缺料。';
+messages.ferment_progress='密封发酵 %s%%｜经过 %s / %s 游戏秒；未密封暂停。';
 messages.board_status='切配：%s｜进度 %s/4';
 messages.stove_help='火力 %s｜燃料 %s。锅具右键嵌入灶面，也可直接烤食物；空手点侧面调火。';
 messages.burner_status='%s｜%s°C｜熟度 %s%%｜燃料 %s%s';messages.water_status='｜水%s（%s）';

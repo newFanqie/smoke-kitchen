@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "smoke_kitchen:broken_sieve",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "smoke_kitchen:sieve",
+    "count": 1
+  }
+}

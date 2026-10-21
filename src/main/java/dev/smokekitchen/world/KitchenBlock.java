@@ -57,12 +57,13 @@ public class KitchenBlock extends Block implements EntityBlock {
     }
     @Override protected VoxelShape getShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos, CollisionContext context) {
         if(id.equals("oven"))return Shapes.block();
-        if(kind.equals("stove")||kind.equals("gas_stove"))return Block.box(0,0,0,16,level.getBlockEntity(pos) instanceof KitchenBlockEntity station && !station.mountedCookware.isEmpty()?18:14,16);
+        if(kind.equals("stove")||kind.equals("gas_stove"))return Block.box(0,0,0,16,16*KitchenGeometry.burnerTop(level.getBlockEntity(pos) instanceof KitchenBlockEntity station?station.mountedCookware:"",state.getValue(LID)),16);
         return switch (kind) {
             case "stove","gas_stove" -> Block.box(0,0,0,16,14,16);
             case "gas_pipe" -> Block.box(6,0,6,10,16,10);
             case "board" -> Block.box(0,0,0,16,2,16);
-            case "cook" -> Block.box(1,0,1,15,7,15);
+            case "cook" -> Block.box(0,0,0,16,16*KitchenGeometry.vesselHeight(id)+(state.getValue(LID)?2:0),16);
+            case "ferment","pickle" -> Block.box(1,0,1,15,state.getValue(LID)?16:14,15);
             case "plate" -> Block.box(1,0,1,15,2,15);
             case "rack" -> Block.box(0,0,2,16,15,14);
             default -> Shapes.block();

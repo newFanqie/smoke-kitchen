@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "body": "minecraft:block/black_terracotta",
+    "fat": "minecraft:block/black_concrete",
+    "skin": "minecraft:block/black_concrete",
+    "leaf": "minecraft:block/green_terracotta",
+    "eye": "minecraft:block/black_concrete",
+    "particle": "minecraft:block/black_terracotta"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        4
+      ],
+      "to": [
+        8,
+        1,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#body"
+        },
+        "south": {
+          "texture": "#body"
+        },
+        "east": {
+          "texture": "#body"
+        },
+        "west": {
+          "texture": "#body"
+        },
+        "up": {
+          "texture": "#body"
+        },
+        "down": {
+          "texture": "#body"
+        }
+      }
+    }
+  ]
+}

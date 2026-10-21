@@ -13,6 +13,46 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void mountedVesselBoundsAndStirClockSurviveSave(GameTestHelper test){
+        var pos=new BlockPos(1,1,1);test.setBlock(pos,KitchenContent.BLOCKS.get("brick_stove"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+        use(test,pos,player,new ItemStack(KitchenContent.item("wok")),net.minecraft.core.Direction.UP);
+        var stove=test.getBlockEntity(pos,KitchenBlockEntity.class);var state=stove.getBlockState();
+        double top=state.getShape(test.getLevel(),test.absolutePos(pos)).max(net.minecraft.core.Direction.Axis.Y);
+        test.assertTrue(stove.mountedCookware.equals("wok")&&Math.abs(top-15/16d)<.0001,"The real mounted wok outline must match its low rim rather than the old 18/16 box");
+        use(test,pos,player,new ItemStack(Items.PORKCHOP),net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(KitchenContent.item("iron_spatula")),net.minecraft.core.Direction.UP);
+        test.assertTrue(stove.batch.stirs==1&&stove.lastStirTime==test.getLevel().getGameTime(),"A real stirring operation must record its world tick for animation");
+        var restored=(KitchenBlockEntity)BlockEntity.loadStatic(test.absolutePos(pos),state,stove.saveWithFullMetadata(test.getLevel().registryAccess()),test.getLevel().registryAccess());
+        test.assertTrue(restored.lastStirTime==stove.lastStirTime&&restored.batch.stirs==1&&restored.mountedCookware.equals("wok"),"Reopening must preserve the action clock, stir count and mounted cookware");test.succeed();
+    }
+    private static int stored(KitchenBlockEntity station,String id){return station.items.stream().filter(x->x.is(KitchenContent.item(id))).mapToInt(ItemStack::getCount).sum();}
+    private static void fillBrew(GameTestHelper test,BlockPos pos,net.minecraft.world.entity.player.Player player,boolean soy,boolean raw){
+        use(test,pos,player,new ItemStack(Items.WATER_BUCKET),net.minecraft.core.Direction.UP);
+        for(int i=0;i<4;i++)use(test,pos,player,new ItemStack(KitchenContent.item(soy?(raw?"soybean":"cooked_soybean"):"cooked_rice")),net.minecraft.core.Direction.UP);
+        if(soy){for(int i=0;i<2;i++)use(test,pos,player,new ItemStack(KitchenContent.item("flour")),net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(KitchenContent.item("salt")),net.minecraft.core.Direction.UP);}
+        use(test,pos,player,new ItemStack(KitchenContent.item(soy?"starter":"vinegar_starter")),net.minecraft.core.Direction.UP);use(test,pos,player,new ItemStack(KitchenContent.item("empty_jar")),net.minecraft.core.Direction.UP);use(test,pos,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);
+    }
+    @GameTest public void drySoyCannotBecomeCookedAndRawSoyCannotFerment(GameTestHelper test){
+        var dry=new CookingBatch();dry.method=CookingBatch.Method.BOIL;dry.add("soybean",CookingBatch.Cut.WHOLE,1.4,true,false);for(int i=0;i<180;i++)dry.tick(2,true);test.assertTrue(dry.ingredients.getFirst().cooked==0,"Dry beans need water before any cooking progress");
+        var wet=new CookingBatch();wet.method=CookingBatch.Method.BOIL;wet.addWater(6);wet.add("soybean",CookingBatch.Cut.WHOLE,1.4,true,false);for(int i=0;i<130;i++)wet.tick(2,true);test.assertTrue(wet.ready()&&ResourceStates.cookedStack(new ItemStack(KitchenContent.item("soybean")),true,false).is(KitchenContent.item("cooked_soybean")),"Wet heating must produce a distinct cooked soybean item");
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("fermentation_crock"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);fillBrew(test,p,player,true,true);var crock=test.getBlockEntity(p,KitchenBlockEntity.class);crock.work=2400;for(int i=0;i<20;i++)crock.serverTick();test.assertTrue(stored(crock,"soybean")==4&&stored(crock,"soy_mash")==0&&stored(crock,"soy_sauce")==0,"Even elapsed fermentation cannot bypass cooking raw beans");test.succeed();
+    }
+    @GameTest(maxTicks=48300) public void fullSoyAndVinegarFermentationNeedsFilteringAndReturnsContainers(GameTestHelper test){
+        var soy=new BlockPos(1,1,1);var vinegar=new BlockPos(2,1,1);var mix=new BlockPos(3,1,1);for(var p:java.util.List.of(soy,vinegar))test.setBlock(p,KitchenContent.BLOCKS.get("fermentation_crock"));test.setBlock(mix,KitchenContent.BLOCKS.get("mixing_table"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);fillBrew(test,soy,player,true,false);fillBrew(test,vinegar,player,false,false);
+        test.runAfterDelay(47900,()->{test.assertTrue(stored(test.getBlockEntity(soy,KitchenBlockEntity.class),"soy_mash")==0&&stored(test.getBlockEntity(vinegar,KitchenBlockEntity.class),"vinegar_mash")==0,"Neither actual sealed brew may finish before 2400 game seconds");});
+        test.runAfterDelay(48100,()->{
+            var sc=test.getBlockEntity(soy,KitchenBlockEntity.class);var vc=test.getBlockEntity(vinegar,KitchenBlockEntity.class);test.assertTrue(stored(sc,"soy_mash")==1&&stored(sc,"soy_sauce")==0&&stored(vc,"vinegar_mash")==1&&stored(vc,"rice_vinegar")==0,"Full elapsed fermentation must yield unfiltered mashes, never bottled sauces");test.assertTrue(stored(sc,"starter")==1&&stored(vc,"vinegar_starter")==1&&vc.items.stream().filter(x->x.is(Items.BOWL)).mapToInt(ItemStack::getCount).sum()==4,"Both cultures and exactly four real rice bowls must remain");
+            player.setShiftKeyDown(true);use(test,soy,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);player.setShiftKeyDown(false);test.assertTrue(stored(sc,"soy_mash")==1,"Sealed crocks must reject retrieval");
+            var restored=(KitchenBlockEntity)BlockEntity.loadStatic(soy,sc.getBlockState(),sc.saveWithFullMetadata(test.getLevel().registryAccess()),test.getLevel().registryAccess());test.assertTrue(stored(restored,"soy_mash")==1&&restored.work==sc.work,"Finished mash and process state must serialize");
+            for(String[] row:new String[][]{{"soy_mash","soy_sauce"},{"vinegar_mash","rice_vinegar"}}){use(test,mix,player,new ItemStack(KitchenContent.item(row[0])),net.minecraft.core.Direction.UP);use(test,mix,player,new ItemStack(Items.GLASS_BOTTLE),net.minecraft.core.Direction.UP);use(test,mix,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);var table=test.getBlockEntity(mix,KitchenBlockEntity.class);test.assertTrue(stored(table,row[1])==0,"Hand mixing must not bypass the sieve");use(test,mix,player,new ItemStack(KitchenContent.item("sieve")),net.minecraft.core.Direction.UP);test.assertTrue(stored(table,row[1])==1&&stored(table,"empty_jar")==1&&stored(table,row[0])==0&&player.getMainHandItem().is(KitchenContent.item("used_sieve"))&&player.getMainHandItem().getDamageValue()==1,"Actual filtering must retain the bottle, return the carrier jar and wear the reusable sieve once");for(int i=0;i<table.items.size();i++)table.items.set(i,ItemStack.EMPTY);}
+            test.succeed();
+        });
+    }
+    @GameTest public void filterNeedsBottleAndToolAfterLoadingAndRollsBackWhenFull(GameTestHelper test){
+        var p=new BlockPos(1,1,1);test.setBlock(p,KitchenContent.BLOCKS.get("mixing_table"));var player=test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);var table=test.getBlockEntity(p,KitchenBlockEntity.class);
+        use(test,p,player,new ItemStack(KitchenContent.item("sieve")),net.minecraft.core.Direction.UP);use(test,p,player,new ItemStack(KitchenContent.item("soy_mash")),net.minecraft.core.Direction.UP);use(test,p,player,new ItemStack(Items.GLASS_BOTTLE),net.minecraft.core.Direction.UP);use(test,p,player,ItemStack.EMPTY,net.minecraft.core.Direction.UP);test.assertTrue(stored(table,"soy_mash")==1&&stored(table,"soy_sauce")==0,"A sieve waved over the empty table must not authorize later hand filtering");
+        for(int i=0;i<table.items.size();i++)table.items.set(i,new ItemStack(Items.COBBLESTONE,64));table.items.set(0,new ItemStack(KitchenContent.item("soy_mash")));table.items.set(1,new ItemStack(Items.GLASS_BOTTLE,2));use(test,p,player,new ItemStack(KitchenContent.item("sieve")),net.minecraft.core.Direction.UP);test.assertTrue(stored(table,"soy_mash")==1&&table.items.get(1).getCount()==2&&stored(table,"soy_sauce")==0,"Insufficient room for both bottle and returned jar must roll back every input");
+        table.items.set(2,ItemStack.EMPTY);use(test,p,player,new ItemStack(KitchenContent.item("sieve")),net.minecraft.core.Direction.UP);test.assertTrue(stored(table,"soy_sauce")==1&&stored(table,"empty_jar")==1&&table.items.get(1).getCount()==1,"Making space must allow exactly one filtered bottle and one returned jar");test.succeed();
+    }
     @GameTest public void vanillaWoodenPickaxeAndKitchenBoardAreDistinctRecipes(GameTestHelper test) {
         var slots=new java.util.ArrayList<ItemStack>();for(int i=0;i<9;i++)slots.add(ItemStack.EMPTY);
         for(int i=0;i<3;i++)slots.set(i,new ItemStack(Items.OAK_PLANKS));slots.set(4,new ItemStack(Items.STICK));slots.set(7,new ItemStack(Items.STICK));

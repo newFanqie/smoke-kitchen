@@ -85,7 +85,7 @@
         "lid": "true"
       },
       "apply": {
-        "model": "smoke_kitchen:block/lid"
+        "model": "smoke_kitchen:block/lid_oven"
       }
     }
   ]

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "smoke_kitchen:item/food/grain_slice_browning"
+  }
+}

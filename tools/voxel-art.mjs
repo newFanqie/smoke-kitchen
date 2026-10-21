@@ -98,10 +98,12 @@ export function stationGeometry(s,models) {
  const front=()=>{const pane=b([3,3,-.02],[13,10,0],'#firebox');pane.faces={north:{texture:'#firebox',uv:[3,7,13,14]}};return pane;};
  const burner=(x,z,size=8)=>[b([x,14,z],[x+size,15,z+size],'#dark'),b([x,15,z+size/2-1],[x+size,16,z+size/2+1],'#metal'),b([x+size/2-1,15,z],[x+size/2+1,16,z+size],'#metal')];
  if(s.id==='oven')return [b([0,0,0],[16,4,16],'#stone'),b([0,4,0],[2,14,16],'#stone'),b([14,4,0],[16,14,16],'#stone'),b([2,4,14],[14,14,16],'#dark'),b([0,14,0],[16,16,16],'#stone'),b([2,4,1],[14,5,14],'#metal'),b([2,13,1],[14,14,14],'#dark'),{...b([3,1,-.02],[13,3,0],'#firebox'),faces:{north:{texture:'#firebox',uv:[3,7,13,14]}}}];
- if(s.id==='clay_stove')return [b([0,0,0],[16,12,16],'#clay'),front(),b([0,12,0],[16,13,16],'#stone'),b([4,13,4],[12,13.5,12],'#dark')];
- if(s.id==='brick_stove')return [b([0,0,0],[16,12,16]),front(),b([0,12,0],[16,13,16],'#stone'),b([3,13,3],[13,13.5,13],'#dark'),b([3,13.5,7],[13,14,9],'#metal'),b([7,13.5,3],[9,14,13],'#metal')];
- if(s.id==='double_stove')return [b([0,0,0],[16,12,16],'#stone'),front(),b([0,12,0],[16,13,16],'#metal'),b([3,13,3],[13,13.5,13],'#dark'),b([3,13.5,7],[13,14,9],'#metal'),b([7,13.5,3],[9,14,13],'#metal'),b([2,10,-.5],[4,12,0],'#dark')];
- if(s.id==='gas_stove')return [b([0,0,0],[16,12,16],'#blue'),b([0,12,0],[16,13,16],'#metal'),b([3,13,3],[13,13.5,13],'#dark'),b([3,13.5,7],[13,14,9],'#metal'),b([7,13.5,3],[9,14,13],'#metal'),b([2,9,-1],[5,11,0],'#dark'),b([11,9,-1],[14,11,0],'#dark'),b([6,0,14],[10,3,17],'#copper')];
+ // Closed body below a recessed socket: cookware rests at y=11; counter rim at y=13.
+ const stoveShell=(body,top)=>{const core=b([0,0,0],[16,11,16],body);core.faces.up={texture:'#dark'};return [core,b([0,11,0],[1,13,16],top),b([15,11,0],[16,13,16],top),b([1,11,0],[15,13,1],top),b([1,11,15],[15,13,16],top)];};
+ if(s.id==='clay_stove')return [...stoveShell('#clay','#stone'),front()];
+ if(s.id==='brick_stove')return [...stoveShell('#base','#stone'),front()];
+ if(s.id==='double_stove')return [...stoveShell('#stone','#metal'),front(),b([2,9,-.5],[4,11,0],'#dark')];
+ if(s.id==='gas_stove')return [...stoveShell('#blue','#metal'),b([2,8,-1],[5,10,0],'#dark'),b([11,8,-1],[14,10,0],'#dark'),b([6,0,14],[10,3,17],'#copper')];
  if(s.id==='gas_pipe')return [b([6,0,6],[10,16,10],'#copper'),b([0,6,6],[16,10,10],'#copper'),b([6,6,0],[10,10,16],'#copper'),b([5,5,5],[11,11,11],'#metal')];
  if(s.id==='gas_tank')return [b([3,0,3],[13,2,13],'#dark'),b([2,2,2],[14,12,14],'#blue'),b([4,12,4],[12,14,12],'#blue'),b([7,14,7],[9,16,9],'#copper'),b([5,15,7],[11,16,9],'#dark'),b([5,6,1.9],[11,10,2],'#metal')];
  if(s.id==='gas_extractor')return [b([0,0,0],[16,3,16],'#metal'),b([5,3,5],[11,12,11],'#dark'),b([2,11,2],[14,15,14],'#metal'),b([7,0,7],[9,16,9],'#copper'),b([1,4,1],[3,11,3],'#copper'),b([13,4,13],[15,11,15],'#copper')];

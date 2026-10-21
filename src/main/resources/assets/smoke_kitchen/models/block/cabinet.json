@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
+    "rim": "minecraft:block/gray_concrete",
     "base": "minecraft:block/spruce_planks",
     "metal": "minecraft:block/iron_block",
     "dark": "minecraft:block/black_concrete",

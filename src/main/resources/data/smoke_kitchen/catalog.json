@@ -25,7 +25,9 @@
       "name": "大豆",
       "texture": "wheat_seeds",
       "nutrition": 0,
-      "ingredient": "soybean"
+      "ingredient": "soybean",
+      "needs_water": true,
+      "resistance": 1.4
     },
     {
       "id": "rapeseed",
@@ -539,7 +541,8 @@
       "id": "sieve",
       "name": "筛子",
       "texture": "string",
-      "unstackable": false
+      "unstackable": false,
+      "uses": 128
     },
     {
       "id": "cooked_rice",
@@ -808,6 +811,26 @@
       "texture": "glass_bottle",
       "seasoning": "oil",
       "uses": 8
+    },
+    {
+      "id": "cooked_soybean",
+      "name": "熟大豆",
+      "texture": "cocoa_beans",
+      "ingredient": "soybean_cooked",
+      "ready": true,
+      "nutrition": 3
+    },
+    {
+      "id": "soy_mash",
+      "name": "酱醪（待过滤）",
+      "texture": "honey_bottle",
+      "unstackable": true
+    },
+    {
+      "id": "vinegar_mash",
+      "name": "醋醪（待过滤）",
+      "texture": "honey_bottle",
+      "unstackable": true
     },
     {
       "id": "stale_tomato",
@@ -1349,6 +1372,23 @@
       "name": "隔热布（损坏）",
       "texture": "paper",
       "variant_of": "heat_cloth",
+      "state": "broken",
+      "unstackable": true
+    },
+    {
+      "id": "used_sieve",
+      "name": "筛子（已使用）",
+      "texture": "string",
+      "unstackable": false,
+      "uses": 128,
+      "variant_of": "sieve",
+      "state": "used"
+    },
+    {
+      "id": "broken_sieve",
+      "name": "筛子（损坏）",
+      "texture": "string",
+      "variant_of": "sieve",
       "state": "broken",
       "unstackable": true
     },
@@ -1996,6 +2036,26 @@
       "uses": 8,
       "variant_of": "lard",
       "state": "used"
+    },
+    {
+      "id": "stale_cooked_soybean",
+      "name": "不新鲜的熟大豆",
+      "texture": "cocoa_beans",
+      "ingredient": "soybean_cooked",
+      "ready": true,
+      "nutrition": 1,
+      "variant_of": "cooked_soybean",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cooked_soybean",
+      "name": "变质的熟大豆",
+      "texture": "cocoa_beans",
+      "ingredient": "soybean_cooked",
+      "ready": true,
+      "nutrition": 0,
+      "variant_of": "cooked_soybean",
+      "state": "spoiled"
     }
   ],
   "stations": [
@@ -3420,32 +3480,60 @@
     {
       "station": "ferment",
       "inputs": {
-        "smoke_kitchen:soybean": 4,
+        "smoke_kitchen:cooked_soybean": 4,
         "smoke_kitchen:flour": 2,
         "smoke_kitchen:salt": 2,
         "smoke_kitchen:starter": 1,
-        "minecraft:glass_bottle": 1
+        "smoke_kitchen:empty_jar": 1
       },
       "outputs": {
-        "smoke_kitchen:soy_sauce": 1,
+        "smoke_kitchen:soy_mash": 1,
         "smoke_kitchen:starter": 1
       },
       "seconds": 2400,
       "water": 1
     },
     {
+      "station": "mix",
+      "inputs": {
+        "smoke_kitchen:soy_mash": 1,
+        "minecraft:glass_bottle": 1
+      },
+      "outputs": {
+        "smoke_kitchen:soy_sauce": 1,
+        "smoke_kitchen:empty_jar": 1
+      },
+      "seconds": 5,
+      "water": 0,
+      "tool": "sieve"
+    },
+    {
       "station": "ferment",
       "inputs": {
         "smoke_kitchen:cooked_rice": 4,
         "smoke_kitchen:vinegar_starter": 1,
-        "minecraft:glass_bottle": 1
+        "smoke_kitchen:empty_jar": 1
       },
       "outputs": {
-        "smoke_kitchen:rice_vinegar": 1,
+        "smoke_kitchen:vinegar_mash": 1,
         "smoke_kitchen:vinegar_starter": 1
       },
       "seconds": 2400,
       "water": 1
+    },
+    {
+      "station": "mix",
+      "inputs": {
+        "smoke_kitchen:vinegar_mash": 1,
+        "minecraft:glass_bottle": 1
+      },
+      "outputs": {
+        "smoke_kitchen:rice_vinegar": 1,
+        "smoke_kitchen:empty_jar": 1
+      },
+      "seconds": 5,
+      "water": 0,
+      "tool": "sieve"
     },
     {
       "station": "mix",

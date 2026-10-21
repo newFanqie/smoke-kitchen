@@ -86,11 +86,11 @@ public final class KitchenVisualTest implements FabricClientGameTest {
             context.takeScreenshot("kitchen-working-gas-pipe-0.1.8");
         }
     }
-    private static final class ToolSheet extends Screen {
+    static final class ToolSheet extends Screen {
         private final List<String> ids=List.of("stone_knife","iron_knife","refined_knife","wooden_spatula","iron_spatula","ladle","tongs","chopsticks","rolling_pin","heat_cloth","sieve","thermometer","gas_canister","partial_gas_canister","empty_gas_canister","used_iron_knife","broken_iron_knife","used_salt");
-        ToolSheet(){super(Component.literal("Smoke Kitchen 0.1.8"));}
+        ToolSheet(){super(Component.literal("Smoke Kitchen 0.1.12"));}
         @Override public void extractRenderState(GuiGraphicsExtractor g,int x,int y,float delta){
-            g.fill(0,0,width,height,0xff262e35);g.centeredText(font,"SMOKE KITCHEN 0.1.8 | vanilla tools and container states",width/2,8,0xffffffff);
+            g.fill(0,0,width,height,0xff262e35);g.centeredText(font,"烟火厨房 0.1.12 | 独立工具与容器状态",width/2,8,0xffffffff);
             int columns=6,pitch=(width-12)/columns;
             for(int i=0;i<ids.size();i++){
                 int px=6+(i%columns)*pitch,py=27+(i/columns)*70;var stack=new ItemStack(KitchenContent.item(ids.get(i)));

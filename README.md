@@ -2,7 +2,7 @@
 
 Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配、锅具投料、调火和翻炒，把食材做成可以装盘分享的饭菜。
 
-**当前版本：0.1.11 开发版。** 新增4盐晶的小批盐罐，实际只有4次用量；16盐晶满罐路线保留。原版与实际启用Iris完成基础原料起步的合成、杀鸭取肉、小火炼油、切配炖汤、装碗食用和保存重开。按用户确认，测试可以提供基础材料及生成动物，制作与烹饪须实际操作；自然跑图未完成且不再作为发布门槛。完整设计仍有独立生物美术、建筑、经营及设备功能等明确待办。本版已发布，自动续做已按用户要求暂停，等用户说继续再恢复。见 [实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md) 和 [玩法设计](docs/DESIGN.md)。
+**当前版本：0.1.12 开发版。** 修复锅具与灶面的接触、锅盖高度和密封缸盖外材料；加入阶梯圆锅、锅内切块与真实翻动、炒煎烤的分阶段外观，以及第一批独立刀铲、豆粒和调料瓶图标。酱油改为熟豆酿成醪液后过滤，米醋同样需过滤并回收容器。原版与实际启用Iris完成工艺和画面检查；已读取用户提供的八个厨房模组JAR作为设计参考，未把参考素材打包。完整设计仍有豆腐工艺、独立生物美术、建筑、经营及设备功能等有限待办，自动续做保持启用。见[本版更新](docs/UPDATE-0.1.12.md)、[实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md)、[参考研究](docs/REFERENCE-KITCHEN-MODS.md)和[玩法设计](docs/DESIGN.md)。
 
 ## 当前玩法
 
@@ -17,17 +17,18 @@ Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配
 
 ## 安装
 
-[下载 0.1.11 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.11) · [本次更新与实测记录](docs/UPDATE-0.1.11.md)
+[下载 0.1.12 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.12) · [本次更新与实测记录](docs/UPDATE-0.1.12.md)
 
 1. 使用 Minecraft Java **26.1.2**、Fabric Loader **0.19.2** 或更高的兼容版本。
 2. 安装对应版本的 Fabric API；本工程验证使用 **0.149.1+26.1.2**。
-3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.11.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
+3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.12.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
 4. 联机时服务器与客户端均安装本模组及 Fabric API。
 
 实际客户端检查截图：
 
 ![自然河岸的野生稻谷](docs/images/ecology-rice-vanilla-0.1.9.png)
-![原版工具和独立状态物品](docs/images/tools-0.1.2.png)
+![最终锅具接触和盖子](docs/images/fit-pan-lid-side-iris-0.1.12.png)
+![独立像素工具与状态](docs/images/tools-final-iris-0.1.12.png)
 
 GitHub Actions 成功后，可从运行的 `smoke-kitchen-26.1.2` 附件下载构建。开发版先用于测试存档，尚未宣称通过最终画面、平衡与跨模组验收。
 
@@ -77,6 +78,7 @@ Linux/macOS 使用：
 ```sh
 node tools/generate-content.mjs
 node tools/validate-content.mjs
+node tools/check-cookware-fit.mjs
 ```
 
 配置位于游戏实例的 `config/smoke-kitchen.json`。`spoilage` 控制变质，`freshDays` 和 `spoiledDays` 控制品质下降与不可食用的游戏日数。存档关闭不按现实时间补算，持续运行的服务器按游戏时间推进。`burns`默认false，开启后徒手接触热锅受伤；`detailedHints`默认true，关闭后不再自动显示准星详情和投料建议，温度计、食谱、品质物品提示和直接操作反馈仍可使用。配置修改后重启游戏或服务器。

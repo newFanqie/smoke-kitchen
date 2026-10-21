@@ -91,5 +91,19 @@
   "jarBytes": 726163,
   "jarContainsTestCode": false,
   "sha256": "5f577d0d4d0527f092eb0a185c65da9dab91659b0109d7dc04957d88629cbc46",
-  "downloadVerified": false
+  "downloadVerified": true,
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.11",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.11/smoke-kitchen-0.1.11.jar",
+  "sourceCommit": "de7ade8999b1b66ced247ec6fd6105cd7b904a93",
+  "githubActions": {
+    "sourceBuildPassed": true,
+    "url": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39529182481"
+  },
+  "finalBuildLog": ".tools/build-0.1.11-final.log",
+  "automation": {
+    "id": "automation",
+    "status": "PAUSED",
+    "otherSettingsPreserved": true,
+    "resumeOnlyWhenUserRequests": true
+  }
 }

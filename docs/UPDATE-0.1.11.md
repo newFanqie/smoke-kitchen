@@ -42,3 +42,13 @@ Minecraft Java 26.1.2 / Fabric Loader 0.19.2 / Fabric API 0.149.1+26.1.2。
 ## 本版结束后暂停
 
 按用户要求，只完成并发布0.1.11，再暂停本聊天自动续做。保留进度和待办，等用户说“继续”时再恢复，不启动下一版。
+
+## 发布与暂停核对
+
+[0.1.11开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.11)已发布，源码提交de7ade8999b1b66ced247ec6fd6105cd7b904a93。[GitHub源码自动构建与游戏测试](https://github.com/newFanqie/smoke-kitchen/actions/runs/39529182481)通过。
+
+实际从GitHub资产接口重新下载smoke-kitchen-0.1.11.jar（726163字节），本地、服务器摘要与下载文件SHA256一致。安装时移出旧版JAR，使用0.1.11并保留对应Fabric API。
+
+SHA256：5f577d0d4d0527f092eb0a185c65da9dab91659b0109d7dc04957d88629cbc46
+
+既有自动续做automation已设为PAUSED，并重新读取配置确认，原名称、提示、时间设置和聊天目标保持不变。未开始下一版，等用户明确说继续时再恢复。

@@ -180,7 +180,7 @@ function process(station,inputs,outputs,seconds=5,water=0){processes.push({stati
 process('mill',{rice_paddy:1},{rice:1,rice_husk:1});process('mill',{'minecraft:wheat':1},{flour:1});process('mill',{salt_ore_chunk:1},{salt_crystals:4});
 process('mill',{salt_crystals:16,empty_jar:1},{salt:1});
 process('mill',{salt_crystals:4,empty_jar:1},{salt:1});processes[processes.length-1].output_uses={[q('salt')]:4};
-process('mill',{dried_chili:1},{chili_powder:1});process('mill',{black_pepper:1},{pepper_powder:1});process('mill',{cumin:1},{cumin_powder:1});process('mill',{dried_shiitake:1},{mushroom_powder:1});
+for(const [raw,out] of [['dried_chili','chili_powder'],['dried_black_pepper','pepper_powder'],['dried_cumin','cumin_powder'],['dried_shiitake','mushroom_powder']]){process('mill',{[raw]:4,empty_jar:1},{[out]:1});process('mill',{[raw]:1,empty_jar:1},{[out]:1});processes[processes.length-1].output_uses={[q(out)]:4};}
 process('press',{rapeseed:8,'minecraft:glass_bottle':1},{rapeseed_oil:1,oil_cake:2});process('press',{sesame:16,'minecraft:glass_bottle':1},{sesame_oil:1,oil_cake:2});
 process('mix',{flour:2},{dough:2},5,1);process('mix',{'minecraft:book':1},{recipe_book:1});
 process('mix',{dough:2,'minecraft:porkchop':1,cabbage:1},{raw_dumplings:2},10);
@@ -190,7 +190,7 @@ Object.assign(processes[processes.length-1],{tool:'chopsticks',cuts:{'minecraft:
 process('mix',{dough:2,'minecraft:apple':2,'minecraft:sugar':1},{raw_apple_pie:1},10);
 Object.assign(processes[processes.length-1],{tool:'rolling_pin',rolled:[q('dough')],cuts:{'minecraft:apple':['SLICE']}});
 process('ferment',{dough:2,starter:1},{fermented_dough:2,starter:1},120);
-process('dry',{chili:1},{dried_chili:1},120);process('dry',{shiitake:1},{dried_shiitake:1},120);
+for(const raw of ['chili','shiitake','black_pepper','sichuan_pepper','cumin'])process('dry',{[raw]:1},{['dried_'+raw]:1},120);
 process('ferment',{cooked_rice:1,shiitake:1,'minecraft:sugar':1},{starter:2},1200);
 process('ferment',{cooked_rice:1,'minecraft:apple':1},{vinegar_starter:2},1200,1);
 process('ferment',{cooked_soybean:4,flour:2,salt:2,starter:1,empty_jar:1},{soy_mash:1,starter:1},2400,1);
@@ -227,7 +227,9 @@ for(const original of [...items]) {
   item('spoiled_'+original.id,'变质的'+original.name,original.texture,{...original,id:'spoiled_'+original.id,name:'变质的'+original.name,variant_of:original.id,state:'spoiled',nutrition:0});
  }
 }
-for(const id of ['chili','shiitake']){const original=items.find(x=>x.id===id);item('partially_dried_'+id,'半干'+original.name,original.texture,{...original,id:'partially_dried_'+id,name:'半干'+original.name,variant_of:id,state:'drying'});}
+for(const id of ['chili','shiitake','black_pepper','sichuan_pepper','cumin']){const original=items.find(x=>x.id===id);item('partially_dried_'+id,'半干'+original.name,original.texture,{...original,id:'partially_dried_'+id,name:'半干'+original.name,variant_of:id,state:'drying'});}
+// Append additions so existing generated art keeps its established palette/index.
+for(const [id,name,texture] of [['dried_black_pepper','干胡椒','melon_seeds'],['dried_cumin','干孜然','wheat_seeds'],['dried_sichuan_pepper','干花椒','sweet_berries']])item(id,name,texture,id==='dried_sichuan_pepper'?{ingredient:'sichuan_pepper'}:{});
 write(`data/${ns}/catalog.json`,{items,stations,crops,dishes,processes});
 const vanillaTools={rice_paddy:'wheat',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle',pan_fried_fish:'cooked_cod',roast_potatoes:'baked_potato'};
 write(`assets/${ns}/models/item/pot_water.json`,{parent:'minecraft:block/block',textures:{water:'minecraft:block/water_still'},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#water',tintindex:0,uv:[0,0,16,16]}}}]});

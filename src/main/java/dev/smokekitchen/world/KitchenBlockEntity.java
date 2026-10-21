@@ -187,7 +187,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
             if(items.get(slot).isEmpty()){player.sendOverlayMessage(DryingRack.status(this));return InteractionResult.SUCCESS;}
             give(player,items.get(slot));items.set(slot,ItemStack.EMPTY);changed();sound();return InteractionResult.SUCCESS;
         }
-        if(!DryingRack.accepts(held)){player.sendOverlayMessage(Component.literal("晾晒架目前可挂辣椒或香菇；肉类需要单独的腌制工艺，不能直接晾成熟食。"));return InteractionResult.SUCCESS;}
+        if(!DryingRack.accepts(held)){player.sendOverlayMessage(Component.literal("晾晒架可挂辣椒、香菇、胡椒、花椒或孜然；肉类另需腌制工艺，不能直接晾成熟食。"));return InteractionResult.SUCCESS;}
         if(!items.get(slot).isEmpty()){player.sendOverlayMessage(Component.literal("此格已有食材，请先空手取回。"));return InteractionResult.SUCCESS;}
         items.set(slot,held.copyWithCount(1));take(player,held);changed();sound();return InteractionResult.SUCCESS;
     }
@@ -552,6 +552,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         say(p,"empty");
     }
     public void showStatus(Player p) {
+        if(kind().equals("mill")){var status=SpiceMilling.status(this);if(status!=null){p.sendOverlayMessage(status);return;}}
         if(station().id.equals("drying_rack")){p.sendOverlayMessage(DryingRack.status(this));return;}
         if((kind().equals("cook")||isBurner())&&batchFreshness()>0){say(p,batchFreshness()>=2?"meal_spoiled":"meal_stale");return;}
         if(kind().equals("ferment")&&items.stream().anyMatch(x->ResourceStates.baseId(x).equals("soybean"))&&items.stream().filter(x->!x.isEmpty()).allMatch(x->ResourceStates.baseId(x).equals("soybean"))){say(p,"soy_soak",Math.min(100,100*work/120),work);return;}
@@ -712,6 +713,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
 
     private void tryProcess() {
         if(Set.of("ferment","pickle").contains(kind())&&!getBlockState().getValue(KitchenBlock.LID))return;
+        if(kind().equals("mill")&&SpiceMilling.process(this))return;
         for (var element : ContentCatalog.DATA.getAsJsonArray("processes")) {
             var recipe=element.getAsJsonObject();
             if(!ContentCatalog.str(recipe,"station").equals(kind())) continue;

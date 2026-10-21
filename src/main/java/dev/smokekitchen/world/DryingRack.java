@@ -14,7 +14,8 @@ import net.minecraft.server.level.ServerLevel;
 public final class DryingRack {
     public static final int DURATION=2400;
     private DryingRack(){}
-    public static String output(ItemStack stack){return switch(ResourceStates.baseId(stack)){case "chili"->"dried_chili";case "shiitake"->"dried_shiitake";default->"";};}
+    public static String output(ItemStack stack){String id=ResourceStates.baseId(stack);return java.util.Set.of("chili","shiitake","black_pepper","sichuan_pepper","cumin").contains(id)?"dried_"+id:"";}
+    public static String appearanceType(ItemStack stack){String id=ResourceStates.baseId(stack);if(id.startsWith("dried_"))id=id.substring(6);return java.util.Set.of("chili","shiitake","black_pepper","sichuan_pepper","cumin").contains(id)?id:"";}
     public static boolean accepts(ItemStack stack){return !output(stack).isEmpty();}
     public static int progress(ItemStack stack){return Math.clamp(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("kitchen_dry_ticks",KitchenContent.name(stack.getItem()).startsWith("partially_dried_")?DURATION/2:0),0,DURATION);}
     private static void progress(ItemStack stack,int value){var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();tag.putInt("kitchen_dry_ticks",value);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));}

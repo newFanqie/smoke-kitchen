@@ -14,6 +14,22 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void spiceMillingNeedsJarAndRefillsExactNamedAmountWithoutOverflow(GameTestHelper t){
+        var p=new BlockPos(1,1,1);t.setBlock(p,KitchenContent.BLOCKS.get("hand_mill"));var e=t.getBlockEntity(p,KitchenBlockEntity.class);e.items.set(0,new ItemStack(KitchenContent.item("dried_black_pepper"),3));e.work=5;
+        dev.smokekitchen.world.SpiceMilling.process(e);t.assertTrue(e.items.get(0).getCount()==3,"No jar means no dried material is consumed");
+        var jar=new ItemStack(KitchenContent.item("used_pepper_powder"));jar.setDamageValue(8);jar.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,net.minecraft.network.chat.Component.literal("留用胡椒罐"));e.items.set(1,jar);
+        dev.smokekitchen.world.SpiceMilling.process(e);t.assertTrue(e.items.get(0).getCount()==1&&e.items.get(1).is(KitchenContent.item("pepper_powder"))&&e.items.get(1).getDamageValue()==0&&e.items.get(1).getHoverName().getString().equals("留用胡椒罐"),"Only8 missing doses consume2 dry pepper; original named jar is retained");
+        e.work=5;dev.smokekitchen.world.SpiceMilling.process(e);t.assertTrue(e.items.get(0).getCount()==1,"Full jar cannot destroy extra dry material");
+        e.items.get(1).setDamageValue(1);dev.smokekitchen.world.SpiceMilling.process(e);t.assertTrue(e.items.get(0).getCount()==1&&e.items.get(1).getDamageValue()==1,"Less than4 free doses does not round up or discard material");t.succeed();
+    }
+    @GameTest public void spiceMillingRollbackAndMixedDryMaterialPreserveAllComponents(GameTestHelper t){
+        var p=new BlockPos(1,1,1);t.setBlock(p,KitchenContent.BLOCKS.get("hand_mill"));var e=t.getBlockEntity(p,KitchenBlockEntity.class);for(int i=0;i<27;i++)e.items.set(i,new ItemStack(Items.COBBLESTONE,64));e.items.set(0,new ItemStack(KitchenContent.item("dried_cumin"),64));e.items.set(1,new ItemStack(KitchenContent.item("empty_jar"),64));e.work=5;dev.smokekitchen.world.SpiceMilling.process(e);
+        t.assertTrue(e.items.get(0).getCount()==64&&e.items.get(1).getCount()==64&&e.work==5,"Full output inventory rolls back both material and stacked jars");e.items.set(2,ItemStack.EMPTY);dev.smokekitchen.world.SpiceMilling.process(e);t.assertTrue(e.items.get(0).getCount()==60&&e.items.get(1).getCount()==63&&e.items.get(2).is(KitchenContent.item("cumin_powder")),"One freed output slot permits exactly4 raw into16 doses and1 jar");
+        e.items.set(3,new ItemStack(KitchenContent.item("dried_chili"),2));e.work=5;dev.smokekitchen.world.SpiceMilling.process(e);t.assertTrue(e.items.get(0).getCount()==60&&e.items.get(3).getCount()==2,"Different dry materials never silently mix into a labelled single spice");t.succeed();
+    }
+    @GameTest public void allThreeNewSpicesKeepPartialIdentityAndDryIntoIndependentIngredients(GameTestHelper t){
+        var p=new BlockPos(1,1,1);t.setBlock(p,KitchenContent.BLOCKS.get("drying_rack"));var e=t.getBlockEntity(p,KitchenBlockEntity.class);dev.smokekitchen.world.DryingRack.settle(e);String[] types={"black_pepper","sichuan_pepper","cumin"};for(int i=0;i<3;i++)e.items.set(i,new ItemStack(KitchenContent.item(types[i])));e.lastDryTick=t.getLevel().getGameTime()-1200;e.dryWeatherSensitive=false;dev.smokekitchen.world.DryingRack.settle(e);for(int i=0;i<3;i++)t.assertTrue(e.items.get(i).is(KitchenContent.item("partially_dried_"+types[i]))&&dev.smokekitchen.world.DryingRack.progress(e.items.get(i))==1200,"Each has its own registered half-dry state");e.lastDryTick=t.getLevel().getGameTime()-1200;e.dryWeatherSensitive=false;dev.smokekitchen.world.DryingRack.settle(e);for(int i=0;i<3;i++)t.assertTrue(e.items.get(i).is(KitchenContent.item("dried_"+types[i])),"Each actual drying conversion retains the spice identity");t.succeed();
+    }
     @GameTest public void dryingWeatherHistoryCountsOnlyRecordedClearIntervalsAndSurvivesCodec(GameTestHelper t){
         var h=new dev.smokekitchen.world.DryWeatherHistory();h.observe(100,false);h.observe(200,true);h.observe(400,false);h.observe(500,false);
         t.assertTrue(h.dryTicks(0,600)==200&&h.dryTicks(150,450)==100,"Unknown prefix/future and200 rainy ticks cannot become offline dry credit");

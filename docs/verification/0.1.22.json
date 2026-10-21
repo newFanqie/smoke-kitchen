@@ -1,0 +1,49 @@
+{
+  "version": "0.1.22",
+  "scope": "Black/Sichuan pepper and cumin drying, original native fruit/pod models, real finite jar filling and same-spice refilling for four powders.",
+  "sha256": "e2c9e5671dec07ae5b5310003b4fa98c5e6f18fb669664e44bd3c1275483bd61",
+  "jarBytes": 1045592,
+  "downloadVerified": false,
+  "sourceCIPassed": false,
+  "unitTests": 84,
+  "totalGameTests": 93,
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "onlyEntrypointRun": "SpiceChainFlowTest",
+    "actualRawMaterialCrafting": true,
+    "actualThreeNewCropDrying": true,
+    "actualHalfIngredientRejectedAndRehung": true,
+    "actualFreshPepperRejectedByMill": true,
+    "actualMissingJarPreservesDryIngredient": true,
+    "actualOneDryIngredientGivesFourUses": true,
+    "actualOriginalJarRefilledToSixteen": true,
+    "actualThirteenUsesRejectsFourDoseOverfill": true,
+    "actualFourUsesMakeRoomThenRefill": true,
+    "actualMixedSpiceInputsRejectedIntact": true,
+    "actualFourPowderTypesFilled": true,
+    "actualTwelveSeasoningActionsReturnThreeJars": true,
+    "actualWorldReopens": 3,
+    "activeIrisAsserted": true,
+    "guideSinglePageViewed": true,
+    "fullManifestRestored": 31,
+    "irisDisabledAfterRun": true,
+    "clockNote": "Actual drying clock200ticks/s, finally20; no direct progress/date/maturity edits or processed ingredient grants.",
+    "evidenceBoundary": "Actual powders are tested through their real seasoning/durability/container-return entry on a crafted unheated clay pot. No cooked meal, heat, food consumption, meat harvest or natural spoilage claim. Custom-named jar retention and full-inventory rollback are separately labelled server contract fixtures.",
+    "oldFlowMaintenance": "DryingFlowTest updated to actually craft/add jars and expect4-use states; not rerun whole historical0.1.21 unloaded-weather chain this release."
+  },
+  "earlierFailures": [
+    "First inline PowerShell/Python quote command failed before editing; applied structured patch instead.",
+    "Generator used unsupported Array.at on local Node14; corrected and reran generation; stale325 validator output after failed generator was not candidate evidence.",
+    "First actual native failure was an assertion checking all27 legacy slots rather than6 hanging slots, fixed and rerun.",
+    "New generated items moved to appended positions to preserve old palette indices. Final cumin branches connected to bundle; final vanilla and Iris rerun on final geometry."
+  ],
+  "knownLimits": [
+    "Meat salt curing/drying is next finite0.1.23, not implemented or counted complete here.",
+    "Fresh Sichuan pepper remains usable as fresh flavour; dry form is an additional real preparation, not a silent replacement of old stored pepper.",
+    "Need at least4 free doses to refill a whole dry unit; no partial-unit discard or overfill.",
+    "Existing old full powder jars remain valid16-use jars; new recipes do not issue free new containers.",
+    "0.1.21 real unload/weather-history regression remains covered by backend suite; not falsely claimed as new full long client rerun.",
+    "Only stated Iris/Sodium/MakeUp combination tested; all confirmed design still has finite device/ecology/independent-building/management/multiplayer/performance work."
+  ]
+}

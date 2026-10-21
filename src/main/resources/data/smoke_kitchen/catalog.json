@@ -2123,6 +2123,47 @@
       "ingredient": "mushroom",
       "variant_of": "shiitake",
       "state": "drying"
+    },
+    {
+      "id": "partially_dried_black_pepper",
+      "name": "半干胡椒",
+      "texture": "melon_seeds",
+      "nutrition": 0,
+      "variant_of": "black_pepper",
+      "state": "drying"
+    },
+    {
+      "id": "partially_dried_sichuan_pepper",
+      "name": "半干花椒",
+      "texture": "sweet_berries",
+      "nutrition": 0,
+      "ingredient": "sichuan_pepper",
+      "variant_of": "sichuan_pepper",
+      "state": "drying"
+    },
+    {
+      "id": "partially_dried_cumin",
+      "name": "半干孜然",
+      "texture": "wheat_seeds",
+      "nutrition": 0,
+      "variant_of": "cumin",
+      "state": "drying"
+    },
+    {
+      "id": "dried_black_pepper",
+      "name": "干胡椒",
+      "texture": "melon_seeds"
+    },
+    {
+      "id": "dried_cumin",
+      "name": "干孜然",
+      "texture": "wheat_seeds"
+    },
+    {
+      "id": "dried_sichuan_pepper",
+      "name": "干花椒",
+      "texture": "sweet_berries",
+      "ingredient": "sichuan_pepper"
     }
   ],
   "stations": [
@@ -3326,7 +3367,8 @@
     {
       "station": "mill",
       "inputs": {
-        "smoke_kitchen:dried_chili": 1
+        "smoke_kitchen:dried_chili": 4,
+        "smoke_kitchen:empty_jar": 1
       },
       "outputs": {
         "smoke_kitchen:chili_powder": 1
@@ -3337,7 +3379,23 @@
     {
       "station": "mill",
       "inputs": {
-        "smoke_kitchen:black_pepper": 1
+        "smoke_kitchen:dried_chili": 1,
+        "smoke_kitchen:empty_jar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:chili_powder": 1
+      },
+      "seconds": 5,
+      "water": 0,
+      "output_uses": {
+        "smoke_kitchen:chili_powder": 4
+      }
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:dried_black_pepper": 4,
+        "smoke_kitchen:empty_jar": 1
       },
       "outputs": {
         "smoke_kitchen:pepper_powder": 1
@@ -3348,7 +3406,23 @@
     {
       "station": "mill",
       "inputs": {
-        "smoke_kitchen:cumin": 1
+        "smoke_kitchen:dried_black_pepper": 1,
+        "smoke_kitchen:empty_jar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:pepper_powder": 1
+      },
+      "seconds": 5,
+      "water": 0,
+      "output_uses": {
+        "smoke_kitchen:pepper_powder": 4
+      }
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:dried_cumin": 4,
+        "smoke_kitchen:empty_jar": 1
       },
       "outputs": {
         "smoke_kitchen:cumin_powder": 1
@@ -3359,13 +3433,44 @@
     {
       "station": "mill",
       "inputs": {
-        "smoke_kitchen:dried_shiitake": 1
+        "smoke_kitchen:dried_cumin": 1,
+        "smoke_kitchen:empty_jar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:cumin_powder": 1
+      },
+      "seconds": 5,
+      "water": 0,
+      "output_uses": {
+        "smoke_kitchen:cumin_powder": 4
+      }
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:dried_shiitake": 4,
+        "smoke_kitchen:empty_jar": 1
       },
       "outputs": {
         "smoke_kitchen:mushroom_powder": 1
       },
       "seconds": 5,
       "water": 0
+    },
+    {
+      "station": "mill",
+      "inputs": {
+        "smoke_kitchen:dried_shiitake": 1,
+        "smoke_kitchen:empty_jar": 1
+      },
+      "outputs": {
+        "smoke_kitchen:mushroom_powder": 1
+      },
+      "seconds": 5,
+      "water": 0,
+      "output_uses": {
+        "smoke_kitchen:mushroom_powder": 4
+      }
     },
     {
       "station": "press",
@@ -3517,6 +3622,39 @@
       },
       "outputs": {
         "smoke_kitchen:dried_shiitake": 1
+      },
+      "seconds": 120,
+      "water": 0
+    },
+    {
+      "station": "dry",
+      "inputs": {
+        "smoke_kitchen:black_pepper": 1
+      },
+      "outputs": {
+        "smoke_kitchen:dried_black_pepper": 1
+      },
+      "seconds": 120,
+      "water": 0
+    },
+    {
+      "station": "dry",
+      "inputs": {
+        "smoke_kitchen:sichuan_pepper": 1
+      },
+      "outputs": {
+        "smoke_kitchen:dried_sichuan_pepper": 1
+      },
+      "seconds": 120,
+      "water": 0
+    },
+    {
+      "station": "dry",
+      "inputs": {
+        "smoke_kitchen:cumin": 1
+      },
+      "outputs": {
+        "smoke_kitchen:dried_cumin": 1
       },
       "seconds": 120,
       "water": 0

@@ -1,0 +1,250 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rope": "minecraft:block/white_wool",
+    "stem": "minecraft:block/brown_terracotta",
+    "skin": "minecraft:block/black_terracotta",
+    "edge": "minecraft:block/black_terracotta",
+    "particle": "minecraft:block/black_terracotta"
+  },
+  "elements": [
+    {
+      "from": [
+        7.4,
+        3.2,
+        7.4
+      ],
+      "to": [
+        8.600000000000001,
+        13,
+        8.600000000000001
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stem"
+        },
+        "south": {
+          "texture": "#stem"
+        },
+        "east": {
+          "texture": "#stem"
+        },
+        "west": {
+          "texture": "#stem"
+        },
+        "up": {
+          "texture": "#stem"
+        },
+        "down": {
+          "texture": "#stem"
+        }
+      }
+    },
+    {
+      "from": [
+        4.899999999999999,
+        3.4,
+        6.6
+      ],
+      "to": [
+        7.5,
+        5.4,
+        9.399999999999999
+      ],
+      "faces": {
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "down": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        3.4,
+        6.6
+      ],
+      "to": [
+        11.100000000000001,
+        5.4,
+        9.399999999999999
+      ],
+      "faces": {
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "down": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "from": [
+        4.899999999999999,
+        6,
+        6.6
+      ],
+      "to": [
+        7.5,
+        8,
+        9.399999999999999
+      ],
+      "faces": {
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "down": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        6,
+        6.6
+      ],
+      "to": [
+        11.100000000000001,
+        8,
+        9.399999999999999
+      ],
+      "faces": {
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "down": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "from": [
+        4.899999999999999,
+        8.6,
+        6.6
+      ],
+      "to": [
+        7.5,
+        10.6,
+        9.399999999999999
+      ],
+      "faces": {
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "down": {
+          "texture": "#skin"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        8.6,
+        6.6
+      ],
+      "to": [
+        11.100000000000001,
+        10.6,
+        9.399999999999999
+      ],
+      "faces": {
+        "north": {
+          "texture": "#skin"
+        },
+        "south": {
+          "texture": "#skin"
+        },
+        "east": {
+          "texture": "#skin"
+        },
+        "west": {
+          "texture": "#skin"
+        },
+        "up": {
+          "texture": "#skin"
+        },
+        "down": {
+          "texture": "#skin"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        20,
+        205,
+        0
+      ],
+      "scale": [
+        1.1,
+        1.1,
+        1.1
+      ]
+    }
+  }
+}

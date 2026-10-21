@@ -101,9 +101,9 @@ public final class KitchenStationRenderer implements BlockEntityRenderer<Kitchen
         if(entity.station().id.equals("drying_rack")){
             state.labels=false;var face=entity.getBlockState().getValue(KitchenBlock.FACING);
             for(int slot=0;slot<6;slot++)if(!entity.items.get(slot).isEmpty()){
-                var stack=entity.items.get(slot);String id=dev.smokekitchen.content.ResourceStates.baseId(stack),type=id.contains("shiitake")?"shiitake":"chili";
+                var stack=entity.items.get(slot);String id=dev.smokekitchen.content.ResourceStates.baseId(stack),type=dev.smokekitchen.world.DryingRack.appearanceType(stack);
                 var p=dev.smokekitchen.world.DryingRack.position(slot,face);float top=(slot<3?7.5f:15.5f)/16;
-                if(dev.smokekitchen.world.DryingRack.accepts(stack)||id.equals("dried_chili")||id.equals("dried_shiitake")){
+                if(!type.isEmpty()){
                     String stage=id.startsWith("dried_")?"dried":dev.smokekitchen.world.DryingRack.progress(stack)>0?"partial":"fresh",appearance="drying/"+type+"_"+stage;
                     pieces.add(new FoodPiece(model(appearance,entity),p[0],top-6/16f,p[1],1,face.toYRot(),0,6/16f,false,appearance));
                 }else{

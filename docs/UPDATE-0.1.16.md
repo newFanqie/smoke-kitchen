@@ -24,3 +24,5 @@
 ![实际启用光影的保鲜说明](screenshots/0.1.16/iris/freshness-guide-1-0.1.16.png)
 
 [机器可读验证](verification/0.1.16.json)记录测试范围、摘要与最终发布核对。其余原创素材、设备、农牧、独立建筑、经营及多人验收继续按有限待办推进。
+
+发布核对：实际重新下载962084字节JAR，SHA256 `c531a4ba833dc0ec6f0736839833e4657211563c83ba3bd245caac1a37f6c4f7`，本地、服务器和下载摘要一致。[发布页](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.16)；[精确源码CI](https://github.com/newFanqie/smoke-kitchen/actions/runs/39631684530)通过，源码 `9313611cd7c8b8e9afe5b8d8d316bfd8b0b2c929`。

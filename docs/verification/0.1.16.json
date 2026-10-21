@@ -96,6 +96,10 @@
   "preservationRules": "World gameTime only; finite cooling offsets age before classifying; adding ice or food cannot earn retroactive cooling; already stale/spoiled states never revive. Unloaded fuel and cooking are not fast-forwarded.",
   "sha256": "c531a4ba833dc0ec6f0736839833e4657211563c83ba3bd245caac1a37f6c4f7",
   "jarBytes": 962084,
-  "downloadVerified": false,
-  "sourceCIPassed": false
+  "downloadVerified": true,
+  "sourceCIPassed": true,
+  "sourceCommit": "9313611cd7c8b8e9afe5b8d8d316bfd8b0b2c929",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39631684530",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.16",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.16/smoke-kitchen-0.1.16.jar"
 }

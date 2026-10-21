@@ -1,0 +1,115 @@
+{
+  "version": "0.1.10",
+  "date": "2026-10-21",
+  "minecraft": "26.1.2",
+  "loader": "0.19.2",
+  "fabricApi": "0.149.1+26.1.2",
+  "itemDefinitions": 309,
+  "unitTests": {
+    "passed": 74,
+    "failed": 0
+  },
+  "gameTests": {
+    "customPassed": 63,
+    "builtinPassed": 1,
+    "failed": 0
+  },
+  "crafting": {
+    "fixedCollisions": [
+      "cutting_board/wooden_pickaxe",
+      "wooden_lid/wooden_sword",
+      "ladle/iron_sword",
+      "tongs/iron_chain",
+      "dining_table/wooden_hoe",
+      "dish_rack/oak_fence_gate"
+    ],
+    "materialCostsChanged": false,
+    "discoveryAdvancements": 82,
+    "actualWorkbenchRecipesPerRenderer": 12,
+    "actualDiscoveredRecipesAssertedPerRenderer": 6,
+    "recipeAudit": "Actual loaded vanilla and kitchen recipe examples, checked in both directions; special native recipes without ordinary ingredient layouts are skipped."
+  },
+  "nativeAssetReferences": {
+    "textures": 48,
+    "modelParents": 30,
+    "missing": []
+  },
+  "clientChecks": {
+    "vanillaPassed": true,
+    "vanillaScope": [
+      "CraftingCompatibilityTest",
+      "AcquisitionFlowTest",
+      "KitchenVisualTest"
+    ],
+    "irisPassed": true,
+    "iris": "1.11.4+mc26.1.2",
+    "sodium": "0.9.2+mc26.1.2",
+    "shader": "MakeUp-UltraFast-9.6",
+    "irisScope": [
+      "CraftingCompatibilityTest",
+      "AcquisitionFlowTest",
+      "KitchenVisualTest"
+    ],
+    "normalTicks": true,
+    "fixtureMaterialsProvided": true,
+    "saveReload": true,
+    "completeUnassistedSurvivalMealVerified": false,
+    "logs": [
+      ".tools/client-0.1.10-vanilla.log",
+      ".tools/client-0.1.10-iris.log"
+    ],
+    "shaderActuallyActive": true,
+    "screenshotsVisuallyReviewed": true,
+    "scopeNote": "The three listed workflows were rerun in each renderer; other existing client workflows were not repeated this version. Fixture materials in regression scenarios are separate from the natural survival milestone world."
+  },
+  "naturalSurvival": {
+    "completeMealPassed": false,
+    "seed": 1,
+    "difficulty": "easy",
+    "allowCommands": false,
+    "emptyStartingInventory": true,
+    "structures": true,
+    "normalTimeAndWeather": true,
+    "commandsUsed": 0,
+    "verifiedMilestones": [
+      "Hand harvested oak",
+      "Crafted planks and sticks",
+      "Crafted and placed workbench",
+      "Crafted actual vanilla wooden pickaxe after conflict fix",
+      "Actually mined and picked up first cobblestone"
+    ],
+    "lastVerifiedPosition": [
+      178,
+      73,
+      151
+    ],
+    "workbench": [
+      178,
+      74,
+      168
+    ],
+    "lastNavigationAttemptPosition": [
+      179,
+      74,
+      147
+    ],
+    "notes": [
+      "Exploratory milestones, not a completed first-meal test.",
+      "No item grants, block edits, teleportation, food progress edits or accelerated ticks.",
+      "Driver uses normal player movement and container packets; an unspawned native navigation probe plans paths.",
+      "Further mining encountered a drop pickup path height issue and saved normally."
+    ]
+  },
+  "knownRemaining": [
+    "Unassisted natural survival first meal",
+    "Soy pre-cooking and filtering; vinegar filtering",
+    "Other device functions, art and animal husbandry",
+    "Independent building blueprints, professions and restaurant play",
+    "Multiplayer, long-term storage and chunk-unloaded aging"
+  ],
+  "jarBytes": 725964,
+  "jarContainsTestCode": false,
+  "sha256": "ca2a514232595aab3fe0cb9aa83fe313afea9906e946c933fc736f683876fd8b",
+  "finalHeadlessLog": ".tools/headless-0.1.10-final.log",
+  "downloadVerified": false
+}

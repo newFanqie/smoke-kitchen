@@ -48,6 +48,10 @@ for(const file of files(root)){
  }
  if(json.type==='minecraft:crafting_shaped'||json.type==='minecraft:crafting_shapeless'){
   const ingredients=json.ingredients||Object.values(json.key);ingredients.forEach(id=>checkItem(id,file));checkItem(json.result.id,file);
+  const id=path.basename(file,'.json'),advancement=`data/${ns}/advancement/recipes/${id}.json`;
+  if(!fs.existsSync(path.join(root,advancement)))errors.push(`Missing recipe-book discovery: ${id}`);
+  else {const a=read(advancement);if(!a.rewards?.recipes?.includes(`${ns}:${id}`)||a.criteria?.has_the_recipe?.conditions?.recipe!==`${ns}:${id}`||a.criteria?.has_material?.trigger!=='minecraft:inventory_changed')errors.push(`Invalid recipe-book discovery: ${id}`);}
+
  }
  if(file.includes(path.join('assets',ns,'models'))){
   for(const texture of Object.values(json.textures||{}))if(texture.startsWith(ns+':')&&!fs.existsSync(path.join(root,'assets',ns,'textures',texture.slice(ns.length+1)+'.png')))errors.push(`Missing texture ${texture}`);

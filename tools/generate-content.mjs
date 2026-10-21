@@ -299,7 +299,7 @@ for(const c of crops){
 const craft=(id,ingredients,count=1)=>write(`data/${ns}/recipe/${id}.json`,{type:'minecraft:crafting_shapeless',category:'misc',ingredients:ingredients.map(q),result:{id:q(id),count}});
 const shaped=(id,pattern,key,count=1)=>write(`data/${ns}/recipe/${id}.json`,{type:'minecraft:crafting_shaped',category:'misc',pattern,key:Object.fromEntries(Object.entries(key).map(([k,v])=>[k,q(v)])),result:{id:q(id),count}});
 shaped('clay_stove',['CMC','CLC','SSS'],{C:'minecraft:clay_ball',M:'minecraft:stick',L:'minecraft:cobblestone',S:'minecraft:cobblestone'});
-shaped('cutting_board',['PPP',' S ',' S '],{P:'minecraft:oak_planks',S:'minecraft:stick'});
+shaped('cutting_board',['PPP',' S ','S  '],{P:'minecraft:oak_planks',S:'minecraft:stick'});
 shaped('stone_knife',[' C','C ','S '],{C:'minecraft:cobblestone',S:'minecraft:stick'});
 shaped('iron_knife',[' I','I ','S '],{I:'minecraft:iron_ingot',S:'minecraft:stick'});
 shaped('wooden_spatula',[' P',' S','S '],{P:'minecraft:oak_planks',S:'minecraft:stick'});
@@ -317,10 +317,10 @@ shaped('steamer',['BBB','S S','BBB'],{B:'minecraft:bamboo',S:'minecraft:stick'})
 craft('ceramic_plate',['minecraft:clay_ball','minecraft:clay_ball','minecraft:clay_ball'],2);
 craft('ceramic_bowl',['minecraft:clay_ball','minecraft:clay_ball'],2);
 craft('empty_jar',['minecraft:glass','minecraft:glass','minecraft:glass','minecraft:oak_planks'],4);
-craft('wooden_lid',['minecraft:oak_planks','minecraft:oak_planks','minecraft:stick']);
+shaped('wooden_lid',['PP',' S'],{P:'minecraft:oak_planks',S:'minecraft:stick'});
 craft('pot_lid',['minecraft:iron_ingot','minecraft:iron_ingot','minecraft:iron_nugget']);
-craft('ladle',['minecraft:iron_ingot','minecraft:iron_ingot','minecraft:stick']);
-craft('tongs',['minecraft:iron_ingot','minecraft:iron_nugget','minecraft:iron_nugget']);
+shaped('ladle',['II',' S'],{I:'minecraft:iron_ingot',S:'minecraft:stick'});
+shaped('tongs',['N N',' I '],{N:'minecraft:iron_nugget',I:'minecraft:iron_ingot'});
 craft('chopsticks',['minecraft:stick','minecraft:stick']);
 craft('rolling_pin',['minecraft:oak_planks','minecraft:oak_planks','minecraft:stick','minecraft:stick','minecraft:stick']);
 craft('heat_cloth',['minecraft:white_wool','minecraft:string','minecraft:string']);
@@ -343,6 +343,8 @@ for(const [id,ingredients]of Object.entries({
  sealed_jar:['empty_jar','wooden_lid'],food_basket:['minecraft:bamboo','minecraft:bamboo','minecraft:string'],sieve:['minecraft:stick','minecraft:string'],refined_knife:['iron_knife','minecraft:copper_ingot','minecraft:flint']
 }))craft(id,ingredients);
 shaped('baking_tray',['III'],{I:'minecraft:iron_ingot'});
+shaped('dining_table',['PP','SS'],{P:'minecraft:oak_planks',S:'minecraft:stick'});
+shaped('dish_rack',['SSS','P P',' S '],{P:'minecraft:oak_planks',S:'minecraft:stick'});
 shaped('gas_stove',['III','CFC','ICI'],{I:'minecraft:iron_ingot',C:'minecraft:copper_ingot',F:'minecraft:furnace'});
 shaped('gas_pipe',['CCC'],{C:'minecraft:copper_ingot'},6);
 shaped('gas_tank',['III','I I','III'],{I:'minecraft:iron_ingot'});
@@ -397,7 +399,17 @@ write(`data/minecraft/tags/block/mineable/pickaxe.json`,{replace:false,values:[.
 lang[`block.${ns}.salt_ore`]='盐矿石';
 write(`assets/${ns}/lang/zh_cn.json`,lang);write(`assets/${ns}/lang/en_us.json`,{...lang,...en});
 write(`assets/${ns}/blockstates/salt_ore.json`,{variants:{'':{model:`${ns}:block/salt_ore`}}});
-write(`assets/${ns}/models/block/salt_ore.json`,{parent:'minecraft:block/cube_all',textures:{all:'minecraft:block/diorite'}});
+// A stone host with white crystalline seams is recognizable while exploring;
+// the previous plain-diorite model made the survival salt source indistinguishable.
+const saltSeams=[[2,3,4,8],[6,7,9,10],[9,9,11,14],[11,11,14,13]];
+const oreFaces=Object.fromEntries(['down','up','north','south','west','east'].map(face=>[face,{texture:'#stone',cullface:face}]));
+const oreSeams=[];
+for(const [a,b,c,d]of saltSeams){
+ oreSeams.push({from:[a,b,-.01],to:[c,d,0],faces:{north:{texture:'#salt'}}},{from:[a,b,16],to:[c,d,16.01],faces:{south:{texture:'#salt'}}},
+ {from:[-.01,b,a],to:[0,d,c],faces:{west:{texture:'#salt'}}},{from:[16,b,a],to:[16.01,d,c],faces:{east:{texture:'#salt'}}},
+ {from:[a,-.01,b],to:[c,0,d],faces:{down:{texture:'#salt'}}},{from:[a,16,b],to:[c,16.01,d],faces:{up:{texture:'#salt'}}});
+}
+write(`assets/${ns}/models/block/salt_ore.json`,{parent:'minecraft:block/block',textures:{stone:'minecraft:block/stone',salt:'minecraft:block/calcite',particle:'minecraft:block/stone'},elements:[{from:[0,0,0],to:[16,16,16],faces:oreFaces},...oreSeams]});
 write(`assets/${ns}/models/item/salt_ore.json`,{parent:`${ns}:block/salt_ore`});write(`assets/${ns}/items/salt_ore.json`,{model:{type:'minecraft:model',model:`${ns}:item/salt_ore`}});
 write(`data/${ns}/loot_table/blocks/salt_ore.json`,{type:'minecraft:block',pools:[{rolls:1,entries:[{type:'minecraft:item',name:`${ns}:salt_ore_chunk`,functions:[{function:'minecraft:set_count',count:2}]}]}]});
 write(`data/${ns}/worldgen/configured_feature/salt_ore.json`,{type:'minecraft:ore',config:{size:7,discard_chance_on_air_exposure:0,targets:[{target:{predicate_type:'minecraft:tag_match',tag:'minecraft:stone_ore_replaceables'},state:{Name:`${ns}:salt_ore`}}]}});
@@ -417,4 +429,11 @@ for(const[id,drop]of Object.entries({duck:'duck_meat',goose:'goose_meat',boar:'b
 }
 for(const[id,name]of Object.entries({shrimp_bucket:'河虾桶',crab_bucket:'河蟹桶'})) {lang[`item.${ns}.${id}`]=name;write(`assets/${ns}/models/item/${id}.json`,inventoryModel({id},id==='shrimp_bucket'?150:151));write(`assets/${ns}/items/${id}.json`,{model:{type:'minecraft:model',model:`${ns}:item/${id}`}});}
 write(`assets/${ns}/lang/zh_cn.json`,lang);write(`assets/${ns}/lang/en_us.json`,{...lang,...en});
+// Use vanilla recipe discovery so ingredients reveal the custom recipes in the normal book.
+for(const file of fs.readdirSync(path.join(root,`data/${ns}/recipe`)).filter(file=>file.endsWith('.json'))){
+ const recipe=JSON.parse(fs.readFileSync(path.join(root,`data/${ns}/recipe`,file),'utf8'));
+ if(!['minecraft:crafting_shaped','minecraft:crafting_shapeless'].includes(recipe.type))continue;
+ const id=file.slice(0,-5),ingredient=(recipe.ingredients||Object.values(recipe.key))[0];
+ write(`data/${ns}/advancement/recipes/${id}.json`,{parent:'minecraft:recipes/root',criteria:{has_material:{trigger:'minecraft:inventory_changed',conditions:{items:[{items:ingredient}]}},has_the_recipe:{trigger:'minecraft:recipe_unlocked',conditions:{recipe:`${ns}:${id}`}}},requirements:[['has_material','has_the_recipe']],rewards:{recipes:[`${ns}:${id}`]}});
+}
 console.log(`Generated ${items.length} items, ${stations.length} stations, ${crops.length} crops, ${dishes.length} dishes, ${processes.length} processing recipes.`);

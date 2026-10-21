@@ -2,7 +2,7 @@
 
 Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配、锅具投料、调火和翻炒，把食材做成可以装盘分享的饭菜。
 
-**当前版本：0.1.9 开发版。** 新增17种作物的地区野生来源、可扩种留种与种植条件：河岸稻谷、平原菜园作物、热带香料和林下菌菇。水稻缺水停长，香菇需要遮阴和湿润基质；种子提示写明来源。保留低灶面内嵌锅、真实煤气供热、29道菜的独特工序、小火猪油、独立状态物品和创造分类。完整设计仍在分阶段制作，独立生物与建筑、经营、设备逐项功能及完整无作弊生存验收尚未完成。见 [实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md) 和 [玩法设计](docs/DESIGN.md)。
+**当前版本：0.1.10 开发版。** 修复厨房配方抢占原版木镐、木剑、铁剑、铁锁链、木锄和栅栏门的问题；82条厨房合成随材料自动加入原版配方书，盐矿改为可辨识的白色晶脉。保留地区野生作物、低灶面内嵌锅、真实煤气供热、29道菜的独特工序、小火猪油、独立状态物品和创造分类。完整设计仍在分阶段制作，独立生物与建筑、经营、设备逐项功能及完整无作弊生存验收尚未完成。见 [实现状态](docs/IMPLEMENTATION-STATUS.md)、[有限待办](docs/WORK-QUEUE.md) 和 [玩法设计](docs/DESIGN.md)。
 
 ## 当前玩法
 
@@ -17,11 +17,11 @@ Minecraft Java **26.1.2 / Fabric** 的世界内做饭模组。通过砧板切配
 
 ## 安装
 
-[下载 0.1.9 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.9) · [本次更新与实测记录](docs/UPDATE-0.1.9.md)
+[下载 0.1.10 开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.10) · [本次更新与实测记录](docs/UPDATE-0.1.10.md)
 
 1. 使用 Minecraft Java **26.1.2**、Fabric Loader **0.19.2** 或更高的兼容版本。
 2. 安装对应版本的 Fabric API；本工程验证使用 **0.149.1+26.1.2**。
-3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.9.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
+3. 移出所有旧版 `smoke-kitchen-*.jar`，把 `smoke-kitchen-0.1.10.jar` 放入该游戏实例的 `mods` 文件夹，勿使用 `-sources.jar`。保留 Fabric API。
 4. 联机时服务器与客户端均安装本模组及 Fabric API。
 
 实际客户端检查截图：

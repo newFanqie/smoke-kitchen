@@ -1,14 +1,15 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "minecraft:oak_planks",
-    "minecraft:oak_planks",
-    "minecraft:stick",
-    "minecraft:stick",
-    "minecraft:stick",
-    "minecraft:stick"
+  "pattern": [
+    "SSS",
+    "P P",
+    " S "
   ],
+  "key": {
+    "P": "minecraft:oak_planks",
+    "S": "minecraft:stick"
+  },
   "result": {
     "id": "smoke_kitchen:dish_rack",
     "count": 1

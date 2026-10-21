@@ -4,7 +4,7 @@
   "pattern": [
     "PPP",
     " S ",
-    " S "
+    "S  "
   ],
   "key": {
     "P": "minecraft:oak_planks",

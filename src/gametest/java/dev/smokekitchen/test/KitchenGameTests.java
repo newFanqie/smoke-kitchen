@@ -13,6 +13,35 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public final class KitchenGameTests {
+    @GameTest public void vanillaWoodenPickaxeAndKitchenBoardAreDistinctRecipes(GameTestHelper test) {
+        var slots=new java.util.ArrayList<ItemStack>();for(int i=0;i<9;i++)slots.add(ItemStack.EMPTY);
+        for(int i=0;i<3;i++)slots.set(i,new ItemStack(Items.OAK_PLANKS));slots.set(4,new ItemStack(Items.STICK));slots.set(7,new ItemStack(Items.STICK));
+        var input=net.minecraft.world.item.crafting.CraftingInput.of(3,3,slots);var manager=test.getLevel().getServer().getRecipeManager();
+        var pick=manager.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,input,test.getLevel()).orElseThrow().value().assemble(input);
+        test.assertTrue(pick.is(Items.WOODEN_PICKAXE),"The starting vanilla wooden pickaxe must remain craftable with the kitchen mod installed");
+        slots.set(7,ItemStack.EMPTY);slots.set(6,new ItemStack(Items.STICK));var boardInput=net.minecraft.world.item.crafting.CraftingInput.of(3,3,slots);
+        var board=manager.getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING,boardInput,test.getLevel()).orElseThrow().value().assemble(boardInput);
+        test.assertTrue(board.is(KitchenContent.item("cutting_board")),"Offsetting the lower handle must craft the board with the same material cost");test.succeed();
+    }
+    private static net.minecraft.world.item.crafting.CraftingInput craftingExample(net.minecraft.world.item.crafting.CraftingRecipe recipe) {
+        java.util.List<ItemStack> slots;int width,height;
+        if(recipe instanceof net.minecraft.world.item.crafting.ShapedRecipe shaped){width=shaped.getWidth();height=shaped.getHeight();slots=shaped.getIngredients().stream().map(optional->optional.map(ingredient->new ItemStack(ingredient.items().findFirst().orElseThrow().value())).orElse(ItemStack.EMPTY)).toList();}
+        else if(recipe instanceof net.minecraft.world.item.crafting.ShapelessRecipe){var ingredients=recipe.placementInfo().ingredients();width=Math.min(3,ingredients.size());height=(ingredients.size()+2)/3;slots=new java.util.ArrayList<>();for(var ingredient:ingredients)slots.add(new ItemStack(ingredient.items().findFirst().orElseThrow().value()));while(slots.size()<width*height)slots.add(ItemStack.EMPTY);}
+        else return null;
+        return net.minecraft.world.item.crafting.CraftingInput.of(width,height,slots);
+    }
+    @GameTest public void kitchenCraftingInputsDoNotShadowAnyVanillaRecipe(GameTestHelper test) {
+        var recipes=test.getLevel().getServer().getRecipeManager().getRecipes();int checked=0;var clashes=new java.util.ArrayList<String>();
+        for(var holder:recipes)if(holder.id().identifier().getNamespace().equals("smoke_kitchen")&&holder.value() instanceof net.minecraft.world.item.crafting.CraftingRecipe recipe) {
+            var input=craftingExample(recipe);test.assertTrue(input!=null,"Every kitchen crafting recipe needs an auditable ingredient layout");checked++;
+            for(var other:recipes)if(other.id().identifier().getNamespace().equals("minecraft")&&other.value() instanceof net.minecraft.world.item.crafting.CraftingRecipe vanilla){
+                if(vanilla.matches(input,test.getLevel()))clashes.add(holder.id().identifier()+" overlaps "+other.id().identifier());
+                var nativeInput=craftingExample(vanilla);
+                if(nativeInput!=null&&recipe.matches(nativeInput,test.getLevel()))clashes.add(other.id().identifier()+" is accepted by "+holder.id().identifier());
+            }
+        }
+        test.assertTrue(clashes.isEmpty(),"Crafting collisions: "+String.join("; ",clashes));test.assertTrue(checked>50,"The audit must examine the actual loaded kitchen crafting recipes");test.succeed();
+    }
     @GameTest public void riceNeedsRootWaterForNaturalGrowthAndBonemeal(GameTestHelper test) {
         var p=new BlockPos(1,1,1);var crop=KitchenContent.CROPS.get("rice_paddy");var world=test.getLevel();var abs=test.absolutePos(p);
         test.setBlock(p.below(),net.minecraft.world.level.block.Blocks.FARMLAND);test.setBlock(p,crop);

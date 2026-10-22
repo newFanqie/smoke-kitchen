@@ -36,6 +36,7 @@ public final class KitchenFoodItem extends Item {
             int nutrition=quality<=1?Math.max(1,(int)Math.floor(base*.6)):base;
             stack.set(DataComponents.FOOD,new FoodProperties.Builder().nutrition(nutrition).saturationModifier(quality>=3?.5f:quality==2?.4f:.2f).build());
         }
+        if(definition!=null&&ContentCatalog.flag(definition,"uncooked")){stack.remove(DataComponents.FOOD);stack.remove(DataComponents.CONSUMABLE);}
     }
     @Override public void inventoryTick(ItemStack stack,ServerLevel level,Entity owner,EquipmentSlot slot) {
         super.inventoryTick(stack,level,owner,slot);
@@ -49,14 +50,18 @@ public final class KitchenFoodItem extends Item {
     public static int freshnessStage(ItemStack stack,long now,long prepared) {
         var definition=KitchenContent.DEFINITIONS.get(KitchenContent.name(stack.getItem()));
         String state=definition==null?"":ContentCatalog.str(definition,"state");
-        int floor=state.equals("spoiled")?2:state.equals("stale")?1:0;
+        int floor=Math.max(state.equals("spoiled")?2:state.equals("stale")?1:0,stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("kitchen_freshness_floor",0));
         if(!(stack.getItem() instanceof KitchenFoodItem)||!KitchenConfig.INSTANCE.spoilage)return floor;
-        return Math.max(floor,elapsedStage(now,prepared));
+        var base=KitchenContent.DEFINITIONS.get(ResourceStates.baseId(stack));int multiplier=base==null?1:ContentCatalog.num(base,"freshness_multiplier",1);
+        return Math.max(floor,elapsedStage(now,prepared,Math.max(1,multiplier)));
     }
     public static int elapsedStage(long now,long prepared){
+        return elapsedStage(now,prepared,1);
+    }
+    private static int elapsedStage(long now,long prepared,int multiplier){
         if(!KitchenConfig.INSTANCE.spoilage)return 0;
         long age=Math.max(0,now-prepared);
-        return age>KitchenConfig.INSTANCE.spoiledDays*24000L?2:age>KitchenConfig.INSTANCE.freshDays*24000L?1:0;
+        return age>KitchenConfig.INSTANCE.spoiledDays*24000L*multiplier?2:age>KitchenConfig.INSTANCE.freshDays*24000L*multiplier?1:0;
     }
     public static ItemStack agedStack(ItemStack stack,long now) {return agedStack(stack,now,0);}
     public static ItemStack agedStack(ItemStack stack,long now,int minimumStage) {
@@ -66,6 +71,7 @@ public final class KitchenFoodItem extends Item {
         tag.putLong("kitchen_prepared",prepared);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
         int stage=Math.max(minimumStage,freshnessStage(stack,now,prepared));
         if(stage==0)return stack;
+        tag.putInt("kitchen_freshness_floor",stage);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));
         var item=KitchenContent.item((stage>=2?"spoiled_":"stale_")+ResourceStates.baseId(stack));
         if(item==Items.AIR)return stack;
         var result=item==stack.getItem()?stack:stack.transmuteCopy(item);

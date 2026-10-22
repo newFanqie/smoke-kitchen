@@ -36,7 +36,7 @@ public final class KitchenContent {
             int uses = ContentCatalog.num(d,"uses",0);
             if (uses > 0) props.durability(uses);
             else if (ContentCatalog.flag(d,"unstackable")) props.stacksTo(1);
-            ITEMS.put(name, Registry.register(BuiltInRegistries.ITEM, SmokeKitchen.id(name), nutrition>0?new KitchenFoodItem(props,nutrition):new KitchenStateItem(props)));
+            ITEMS.put(name, Registry.register(BuiltInRegistries.ITEM, SmokeKitchen.id(name), nutrition>0||ContentCatalog.flag(d,"tracked_food")?new KitchenFoodItem(props,nutrition):new KitchenStateItem(props)));
             DEFINITIONS.put(name,d);
         }
         for (var e : ContentCatalog.DATA.getAsJsonArray("stations")) {

@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "body": "minecraft:block/pink_terracotta",
+    "fat": "minecraft:block/white_terracotta",
+    "rope": "minecraft:block/white_wool",
+    "particle": "minecraft:block/pink_terracotta"
+  },
+  "elements": [
+    {
+      "from": [
+        6.85,
+        0.5,
+        7.5
+      ],
+      "to": [
+        9.15,
+        4.9,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#body"
+        },
+        "south": {
+          "texture": "#body"
+        },
+        "east": {
+          "texture": "#body"
+        },
+        "west": {
+          "texture": "#body"
+        },
+        "up": {
+          "texture": "#body"
+        },
+        "down": {
+          "texture": "#body"
+        }
+      }
+    },
+    {
+      "from": [
+        6.85,
+        0.7,
+        7.45
+      ],
+      "to": [
+        7.199999999999999,
+        4.7,
+        7.55
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fat"
+        },
+        "south": {
+          "texture": "#fat"
+        },
+        "east": {
+          "texture": "#fat"
+        },
+        "west": {
+          "texture": "#fat"
+        },
+        "up": {
+          "texture": "#fat"
+        },
+        "down": {
+          "texture": "#fat"
+        }
+      }
+    },
+    {
+      "from": [
+        7.8,
+        4.9,
+        7.8
+      ],
+      "to": [
+        8.2,
+        6,
+        8.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rope"
+        },
+        "south": {
+          "texture": "#rope"
+        },
+        "east": {
+          "texture": "#rope"
+        },
+        "west": {
+          "texture": "#rope"
+        },
+        "up": {
+          "texture": "#rope"
+        },
+        "down": {
+          "texture": "#rope"
+        }
+      }
+    }
+  ]
+}

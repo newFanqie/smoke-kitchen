@@ -2164,6 +2164,152 @@
       "name": "干花椒",
       "texture": "sweet_berries",
       "ingredient": "sichuan_pepper"
+    },
+    {
+      "id": "salting_pork",
+      "name": "盐腌肉（腌制中）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true
+    },
+    {
+      "id": "stale_salting_pork",
+      "name": "不新鲜的盐腌肉（腌制中）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true,
+      "variant_of": "salting_pork",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_salting_pork",
+      "name": "变质的盐腌肉（腌制中）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true,
+      "variant_of": "salting_pork",
+      "state": "spoiled"
+    },
+    {
+      "id": "salted_pork",
+      "name": "腌透生猪肉（待风干）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true
+    },
+    {
+      "id": "stale_salted_pork",
+      "name": "不新鲜的腌透生猪肉（待风干）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true,
+      "variant_of": "salted_pork",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_salted_pork",
+      "name": "变质的腌透生猪肉（待风干）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true,
+      "variant_of": "salted_pork",
+      "state": "spoiled"
+    },
+    {
+      "id": "partially_dried_salted_pork",
+      "name": "半干腌肉（需加热）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true
+    },
+    {
+      "id": "stale_partially_dried_salted_pork",
+      "name": "不新鲜的半干腌肉（需加热）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true,
+      "variant_of": "partially_dried_salted_pork",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_partially_dried_salted_pork",
+      "name": "变质的半干腌肉（需加热）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true,
+      "variant_of": "partially_dried_salted_pork",
+      "state": "spoiled"
+    },
+    {
+      "id": "dried_salted_pork",
+      "name": "风干腌肉（需加热）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true,
+      "freshness_multiplier": 2
+    },
+    {
+      "id": "stale_dried_salted_pork",
+      "name": "不新鲜的风干腌肉（需加热）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true,
+      "freshness_multiplier": 2,
+      "variant_of": "dried_salted_pork",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_dried_salted_pork",
+      "name": "变质的风干腌肉（需加热）",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": true,
+      "freshness_multiplier": 2,
+      "variant_of": "dried_salted_pork",
+      "state": "spoiled"
+    },
+    {
+      "id": "cooked_salted_pork",
+      "name": "熟风干腌肉",
+      "texture": "pink_terracotta",
+      "nutrition": 6,
+      "tracked_food": true,
+      "uncooked": false,
+      "freshness_multiplier": 2
+    },
+    {
+      "id": "stale_cooked_salted_pork",
+      "name": "不新鲜的熟风干腌肉",
+      "texture": "pink_terracotta",
+      "nutrition": 3,
+      "tracked_food": true,
+      "uncooked": false,
+      "freshness_multiplier": 2,
+      "variant_of": "cooked_salted_pork",
+      "state": "stale"
+    },
+    {
+      "id": "spoiled_cooked_salted_pork",
+      "name": "变质的熟风干腌肉",
+      "texture": "pink_terracotta",
+      "nutrition": 0,
+      "tracked_food": true,
+      "uncooked": false,
+      "freshness_multiplier": 2,
+      "variant_of": "cooked_salted_pork",
+      "state": "spoiled"
     }
   ],
   "stations": [

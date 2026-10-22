@@ -15,6 +15,7 @@ public final class SmokeKitchen implements ModInitializer {
         KitchenConfig.load();
         ContentCatalog.load();
         KitchenContent.register();
+        dev.smokekitchen.content.CuredCooking.register();
         dev.smokekitchen.entity.KitchenEntities.register();
         dev.smokekitchen.world.KitchenWorld.register();
         KitchenContent.registerCreativeTab();

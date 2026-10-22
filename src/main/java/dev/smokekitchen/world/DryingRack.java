@@ -14,10 +14,12 @@ import net.minecraft.server.level.ServerLevel;
 public final class DryingRack {
     public static final int DURATION=2400;
     private DryingRack(){}
-    public static String output(ItemStack stack){String id=ResourceStates.baseId(stack);return java.util.Set.of("chili","shiitake","black_pepper","sichuan_pepper","cumin").contains(id)?"dried_"+id:"";}
-    public static String appearanceType(ItemStack stack){String id=ResourceStates.baseId(stack);if(id.startsWith("dried_"))id=id.substring(6);return java.util.Set.of("chili","shiitake","black_pepper","sichuan_pepper","cumin").contains(id)?id:"";}
+    private static String input(ItemStack stack){String id=ResourceStates.baseId(stack);return id.equals("partially_dried_salted_pork")?"salted_pork":id;}
+    public static String output(ItemStack stack){if(ResourceStates.spent(stack))return "";String id=input(stack);return java.util.Set.of("chili","shiitake","black_pepper","sichuan_pepper","cumin","salted_pork").contains(id)?"dried_"+id:"";}
+    public static String appearanceType(ItemStack stack){String id=input(stack);if(id.startsWith("dried_"))id=id.substring(6);return java.util.Set.of("chili","shiitake","black_pepper","sichuan_pepper","cumin","salted_pork").contains(id)?id:"";}
+    public static int duration(ItemStack stack){return input(stack).equals("salted_pork")?4800:DURATION;}
     public static boolean accepts(ItemStack stack){return !output(stack).isEmpty();}
-    public static int progress(ItemStack stack){return Math.clamp(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("kitchen_dry_ticks",KitchenContent.name(stack.getItem()).startsWith("partially_dried_")?DURATION/2:0),0,DURATION);}
+    public static int progress(ItemStack stack){return Math.clamp(stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getIntOr("kitchen_dry_ticks",KitchenContent.name(stack.getItem()).startsWith("partially_dried_")||ResourceStates.baseId(stack).startsWith("partially_dried_")?duration(stack)/2:0),0,duration(stack));}
     private static void progress(ItemStack stack,int value){var tag=stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();tag.putInt("kitchen_dry_ticks",value);stack.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));}
     public static boolean weatherSensitive(ServerLevel level,BlockPos pos){var at=pos.above();return level.canSeeSky(at)&&level.getHeightmapPos(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING,at).getY()<=at.getY()&&level.getBiome(at).value().getPrecipitationAt(at,level.getSeaLevel())==Biome.Precipitation.RAIN;}
     public static void settle(KitchenBlockEntity rack){
@@ -31,8 +33,9 @@ public final class DryingRack {
         long elapsed=rack.dryWeatherSensitive?history.dryTicks(rack.lastDryTick,now):Math.max(0,now-rack.lastDryTick);boolean changed=false;
         for(int i=0;i<6;i++){
             var stack=rack.items.get(i);String out=output(stack);if(stack.getCount()!=1||out.isEmpty())continue;
-            int old=progress(stack),next=(int)Math.min(DURATION,old+Math.min(DURATION,elapsed));if(next==old)continue;
-            if(next>=DURATION){var result=stack.transmuteCopy(KitchenContent.item(out),1);var tag=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();tag.remove("kitchen_dry_ticks");result.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));rack.items.set(i,result);}else{var result=stack.transmuteCopy(KitchenContent.item("partially_dried_"+ResourceStates.baseId(stack)),1);progress(result,next);rack.items.set(i,result);}changed=true;
+            int limit=duration(stack),old=progress(stack),next=(int)Math.min(limit,old+Math.min(limit,elapsed));if(next==old)continue;
+            int floor=KitchenFoodItem.freshnessStage(stack,now,stack.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag().getLongOr("kitchen_prepared",now));
+            if(next>=limit){var result=stack.transmuteCopy(KitchenContent.item(out),1);var tag=result.getOrDefault(DataComponents.CUSTOM_DATA,CustomData.EMPTY).copyTag();tag.remove("kitchen_dry_ticks");result.set(DataComponents.CUSTOM_DATA,CustomData.of(tag));rack.items.set(i,KitchenFoodItem.agedStack(result,now,floor));}else{var result=stack.transmuteCopy(KitchenContent.item("partially_dried_"+input(stack)),1);progress(result,next);rack.items.set(i,KitchenFoodItem.agedStack(result,now,floor));}changed=true;
         }
         rack.lastDryTick=now;rack.dryWeatherSensitive=weatherSensitive(level,rack.getBlockPos());rack.setChanged();
         if(changed)level.sendBlockUpdated(rack.getBlockPos(),rack.getBlockState(),rack.getBlockState(),Block.UPDATE_CLIENTS);
@@ -40,7 +43,7 @@ public final class DryingRack {
     public static int slot(BlockPos pos,net.minecraft.world.level.block.state.BlockState state,BlockHitResult hit){int slot=SpiceRack.slot(pos,state,hit);return slot%3+(hit.getLocation().y-pos.getY()>=.5?3:0);}
     public static float[] position(int slot,Direction face){var p=SpiceRack.position(slot,face);if(face.getAxis()==Direction.Axis.X)p[0]=.5f;else p[1]=.5f;return p;}
     public static Component status(KitchenBlockEntity rack){
-        int raw=0,ready=0,min=100;for(int i=0;i<6;i++){var s=rack.items.get(i);if(s.getCount()==1&&accepts(s)){raw++;min=Math.min(min,100*progress(s)/DURATION);}else if(!s.isEmpty())ready++;}
+        int raw=0,ready=0,min=100;for(int i=0;i<6;i++){var s=rack.items.get(i);if(s.getCount()==1&&accepts(s)){raw++;min=Math.min(min,100*progress(s)/duration(s));}else if(!s.isEmpty())ready++;}
         boolean wet=rack.getLevel().isRainingAt(rack.getBlockPos().above());return Component.literal("晾晒："+raw+"件处理中 "+(raw==0?0:min)+"%｜"+ready+"格可取｜"+(wet?"露天雨水，暂停":"通风晾制")+"；对准格子放/取，潜行取旧余物");
     }
 }

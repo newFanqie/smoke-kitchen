@@ -70,6 +70,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if (now-lastAction < 4) return InteractionResult.SUCCESS;
         lastAction = now;
         settleFreshness();
+        if(MeatCuring.handles(this,stack))return MeatCuring.interact(this,p,stack);
         if(station().id.equals("drying_rack"))return drying(p,stack,hit);
         if(station().id.equals("spice_rack"))return rack(p,stack,hit);
         if(station().id.equals("spice_trellis")&&stack.isEmpty()){
@@ -112,7 +113,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         }
         if(kind().equals("compost") && !stack.isEmpty()) {
             var definition=KitchenContent.DEFINITIONS.get(held);
-            if(stack.has(DataComponents.FOOD) || held.equals("rice_husk") || held.equals("oil_cake") || definition!=null && (definition.has("ingredient") || ContentCatalog.flag(definition,"meal"))) {
+            if(stack.has(DataComponents.FOOD) || held.equals("rice_husk") || held.equals("oil_cake") || definition!=null && (definition.has("ingredient") || ContentCatalog.flag(definition,"meal")||ContentCatalog.flag(definition,"tracked_food"))) {
                 var remainder=stack.get(DataComponents.USE_REMAINDER);
                 take(p,stack);if(!p.isCreative() && remainder!=null)give(p,remainder.convertInto().create());
                 if(++work>=7){work=0;give(p,new ItemStack(Items.BONE_MEAL));}
@@ -552,6 +553,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         say(p,"empty");
     }
     public void showStatus(Player p) {
+        if(MeatCuring.handles(this,ItemStack.EMPTY)){p.sendOverlayMessage(MeatCuring.status(this));return;}
         if(kind().equals("mill")){var status=SpiceMilling.status(this);if(status!=null){p.sendOverlayMessage(status);return;}}
         if(station().id.equals("drying_rack")){p.sendOverlayMessage(DryingRack.status(this));return;}
         if((kind().equals("cook")||isBurner())&&batchFreshness()>0){say(p,batchFreshness()>=2?"meal_spoiled":"meal_stale");return;}
@@ -593,6 +595,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
         if (++tickCounter % 20 != 0) return;
         settleFreshness();
         if(isBurner())migrateLegacyCookware();
+        if(MeatCuring.handles(this,ItemStack.EMPTY)){MeatCuring.settle(this);showTargetedStatus();return;}
         if(kind().startsWith("gas_")) { tickGas();if(isBurner())tickCooking(getFuelUnits()>0?heat:0);showTargetedStatus();return; }
         if (kind().equals("stove")) {
             boolean powered=level.hasNeighborSignal(worldPosition);
@@ -787,6 +790,7 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     }
     public void dropContents() {
         if(level==null || level.isClientSide()) return;
+        MeatCuring.settle(this);
         if(station().id.equals("drying_rack"))DryingRack.settle(this);
         settleFreshness();
         if((isBurner()||isOven())&&!mountedCookware.isEmpty()){Block.popResource(level,worldPosition,new ItemStack(KitchenContent.item(mountedCookware)));mountedCookware="";}
@@ -848,10 +852,10 @@ public final class KitchenBlockEntity extends BlockEntity implements Container {
     @Override public int getContainerSize() { return Set.of("spice_rack","drying_rack").contains(station().id)?6:items.size(); }
     @Override public int getMaxStackSize(){return Set.of("spice_rack","drying_rack").contains(station().id)?1:Container.super.getMaxStackSize();}
     @Override public boolean isEmpty() { return items.stream().allMatch(ItemStack::isEmpty); }
-    @Override public ItemStack getItem(int slot) { DryingRack.settle(this);settleFreshness();return items.get(slot); }
+    @Override public ItemStack getItem(int slot) { MeatCuring.settle(this);DryingRack.settle(this);settleFreshness();return items.get(slot); }
     @Override public ItemStack removeItem(int slot,int count) {
         if(!kind().equals("storage") && !kind().equals("rack")&&!kind().equals("dry")) return ItemStack.EMPTY;
-        DryingRack.settle(this);settleFreshness();var result=ContainerHelper.removeItem(items,slot,count); if(!result.isEmpty()) changed(); return result;
+        MeatCuring.settle(this);DryingRack.settle(this);settleFreshness();var result=ContainerHelper.removeItem(items,slot,count); if(!result.isEmpty()) changed(); return result;
     }
     @Override public ItemStack removeItemNoUpdate(int slot) { return removeItem(slot,items.get(slot).getCount()); }
     @Override public void setItem(int slot,ItemStack stack) { DryingRack.settle(this);settleFreshness();items.set(slot,level==null?stack:KitchenFoodItem.agedStack(stack,level.getGameTime())); changed(); }

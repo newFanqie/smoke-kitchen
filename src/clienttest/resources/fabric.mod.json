@@ -35,7 +35,8 @@
       "dev.smokekitchen.test.WetRecipeFlowTest",
       "dev.smokekitchen.test.StapleFlowTest",
       "dev.smokekitchen.test.StapleAssetVisualTest",
-      "dev.smokekitchen.test.SpiceChainFlowTest"
+      "dev.smokekitchen.test.SpiceChainFlowTest",
+      "dev.smokekitchen.test.CuredPorkFlowTest"
     ]
   },
   "depends": {

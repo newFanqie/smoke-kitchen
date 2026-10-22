@@ -17,7 +17,11 @@ public final class SmokeKitchenClient implements ClientModInitializer {
             String id=KitchenContent.name(stack.getItem());
             if(id.equals("drying_rack"))lines.add(net.minecraft.network.chat.Component.literal("六格独立挂辣椒/香菇/胡椒/花椒/孜然，120游戏秒；雨停遮雨继续，半干换架保留进度。"));
             if(dev.smokekitchen.world.SpiceMilling.POWDERS.containsKey(id))lines.add(net.minecraft.network.chat.Component.literal("手磨配空罐或同种使用中罐；每份干料补4次用量，满罐16次。"));
-            if(data.contains("kitchen_dry_ticks")||id.startsWith("partially_dried_"))lines.add(net.minecraft.network.chat.Component.literal("晾制进度："+(100*dev.smokekitchen.world.DryingRack.progress(stack)/dev.smokekitchen.world.DryingRack.DURATION)+"%（取回、换架保留）"));
+            if(dev.smokekitchen.content.ResourceStates.baseId(stack).contains("salted_pork")||dev.smokekitchen.content.ResourceStates.baseId(stack).equals("salting_pork")){
+                lines.add(net.minecraft.network.chat.Component.literal("切片→每份1次盐→密封120秒→风干240秒"));
+                lines.add(net.minecraft.network.chat.Component.literal("生风干肉须熔炉/烟熏炉加热；过盐、变质不恢复。"));
+            }
+            if(data.contains("kitchen_dry_ticks")||id.startsWith("partially_dried_"))lines.add(net.minecraft.network.chat.Component.literal("晾制进度："+(100*dev.smokekitchen.world.DryingRack.progress(stack)/dev.smokekitchen.world.DryingRack.duration(stack))+"%（取回、换架保留）"));
             if(id.equals("spice_trellis"))lines.add(net.minecraft.network.chat.Component.literal("6木棍+2线制作2架；朝向的一侧需真实耕地，持胡椒/花椒种子右键播种。"));
             if(id.equals("black_pepper_seeds"))lines.add(net.minecraft.network.chat.Component.literal("胡椒藤需要朝向正确的种植架与湿润耕地；干土或撤架暂停生长，不吞骨粉。"));
             if(id.equals("sichuan_pepper_seeds"))lines.add(net.minecraft.network.chat.Component.literal("花椒是灌木，可独立种在耕地；也可持种子对准架子前方播种。"));

@@ -1,0 +1,10 @@
+{
+  "type": "smoke_kitchen:cured_smoking",
+  "category": "food",
+  "ingredient": "smoke_kitchen:dried_salted_pork",
+  "result": {
+    "id": "smoke_kitchen:cooked_salted_pork"
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}

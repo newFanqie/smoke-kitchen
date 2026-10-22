@@ -1,0 +1,281 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "body": "minecraft:block/pink_terracotta",
+    "fat": "minecraft:block/white_terracotta",
+    "salt": "minecraft:block/white_concrete",
+    "particle": "minecraft:block/pink_terracotta"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        2,
+        6
+      ],
+      "to": [
+        6.8,
+        11,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#body"
+        },
+        "south": {
+          "texture": "#body"
+        },
+        "east": {
+          "texture": "#body"
+        },
+        "west": {
+          "texture": "#body"
+        },
+        "up": {
+          "texture": "#body"
+        },
+        "down": {
+          "texture": "#body"
+        }
+      }
+    },
+    {
+      "from": [
+        4.25,
+        2,
+        5.95
+      ],
+      "to": [
+        4.7,
+        10,
+        6.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fat"
+        },
+        "south": {
+          "texture": "#fat"
+        },
+        "east": {
+          "texture": "#fat"
+        },
+        "west": {
+          "texture": "#fat"
+        },
+        "up": {
+          "texture": "#fat"
+        },
+        "down": {
+          "texture": "#fat"
+        }
+      }
+    },
+    {
+      "from": [
+        6.3,
+        3,
+        5.9
+      ],
+      "to": [
+        6.7,
+        4.2,
+        6.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#salt"
+        },
+        "south": {
+          "texture": "#salt"
+        },
+        "east": {
+          "texture": "#salt"
+        },
+        "west": {
+          "texture": "#salt"
+        },
+        "up": {
+          "texture": "#salt"
+        },
+        "down": {
+          "texture": "#salt"
+        }
+      }
+    },
+    {
+      "from": [
+        8.4,
+        2,
+        6
+      ],
+      "to": [
+        11.2,
+        11,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#body"
+        },
+        "south": {
+          "texture": "#body"
+        },
+        "east": {
+          "texture": "#body"
+        },
+        "west": {
+          "texture": "#body"
+        },
+        "up": {
+          "texture": "#body"
+        },
+        "down": {
+          "texture": "#body"
+        }
+      }
+    },
+    {
+      "from": [
+        8.65,
+        2,
+        5.95
+      ],
+      "to": [
+        9.1,
+        10,
+        6.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fat"
+        },
+        "south": {
+          "texture": "#fat"
+        },
+        "east": {
+          "texture": "#fat"
+        },
+        "west": {
+          "texture": "#fat"
+        },
+        "up": {
+          "texture": "#fat"
+        },
+        "down": {
+          "texture": "#fat"
+        }
+      }
+    },
+    {
+      "from": [
+        10.7,
+        3,
+        5.9
+      ],
+      "to": [
+        11.1,
+        4.2,
+        6.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#salt"
+        },
+        "south": {
+          "texture": "#salt"
+        },
+        "east": {
+          "texture": "#salt"
+        },
+        "west": {
+          "texture": "#salt"
+        },
+        "up": {
+          "texture": "#salt"
+        },
+        "down": {
+          "texture": "#salt"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        8.4
+      ],
+      "to": [
+        6.2,
+        3.8,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#salt"
+        },
+        "south": {
+          "texture": "#salt"
+        },
+        "east": {
+          "texture": "#salt"
+        },
+        "west": {
+          "texture": "#salt"
+        },
+        "up": {
+          "texture": "#salt"
+        },
+        "down": {
+          "texture": "#salt"
+        }
+      }
+    },
+    {
+      "from": [
+        9.5,
+        8,
+        8.4
+      ],
+      "to": [
+        10.2,
+        8.7,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#salt"
+        },
+        "south": {
+          "texture": "#salt"
+        },
+        "east": {
+          "texture": "#salt"
+        },
+        "west": {
+          "texture": "#salt"
+        },
+        "up": {
+          "texture": "#salt"
+        },
+        "down": {
+          "texture": "#salt"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        20,
+        205,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "version": "0.1.23",
+  "scope": "Sliced pork dry-salting, sealed per-portion cure clock, four-minute weather-aware drying and inherited vanilla furnace/smoker cooking with retained date/quality.",
+  "sha256": "4cf92ff3932a111633f65b7c60abf7b67c51900012d95729658d49b4a81da72e",
+  "jarBytes": 1081817,
+  "downloadVerified": false,
+  "sourceCIPassed": false,
+  "unitTests": 84,
+  "totalGameTests": 97,
+  "clientChecks": {
+    "vanillaPassed": true,
+    "irisPassed": true,
+    "onlyEntrypointRun": "CuredPorkFlowTest",
+    "actualRawCrafting": true,
+    "actualPigAxeKillsAndLoot": true,
+    "actualSaltOreMiningAndMilling": true,
+    "actualCuttingAndWholeMeatRejection": true,
+    "actualSaltDosesAndEmptyJarReturn": true,
+    "actualSealedCuringAndCarryPause": true,
+    "actualHalfDryRemovalAndRehang": true,
+    "actualOversaltedFurnaceRejection": true,
+    "actualVanillaFurnaceCookedOutput": true,
+    "actualOriginalPreparationDatesRetained": true,
+    "actualEatingAndHungerRestoration": true,
+    "actualWorldReopens": 3,
+    "activeIrisAsserted": true,
+    "guideSinglePageViewed": true,
+    "fullManifestRestored": 32,
+    "irisDisabledAfterRun": true,
+    "fixtureBoundary": "Only construction materials/live pigs/salt-ore source/platform granted. No meat, salt, processed output or progress/date injection. FoodLevel8 is an explicit eating-environment fixture; food is consumed by real held use while looking away from furnace.",
+    "clockNote": "Actual world ticks accelerated200/s for curing/drying/heating waits, finally20. Long8day/28day preservation threshold and old/spoiled inputs are separately labelled server-contract fixtures; no new natural8day wait claimed.",
+    "serverContractFixtures": [
+      "Named/raw oversalted/unconverted ancient food matching and inherited recipe output date.",
+      "Synthetic previous timestamps for per-portion counter, meat duration and no carry-time credit.",
+      "Preservation2x threshold and irreversible freshness floor; uncooked quality stamping remains inedible."
+    ],
+    "finalNativeDuration": "3m32s",
+    "finalIrisDuration": "3m34s",
+    "finalTooltipShortLinesViewed": true
+  },
+  "earlierFailures": [
+    "Initial resource placeholder models collided, replaced by original meat-strip geometry; stale cooked colouring also made independent.",
+    "One contract fixture incorrectly used forbidden pickle-container hopper removeItem and received EMPTY; replaced with explicitly labelled contract copy/remove, actual player retrieval tested separately.",
+    "First actual native reached cooking but aimed held-use at furnace and used imprecise hunger setup; final test looks at sky and sets environmental FoodLevel8. Failed run not counted as whole pass.",
+    "Comparator neighbour notification added to custom station sync; final native and activeIris rerun.",
+    "Actual final screenshot found the new long tooltip beyond the window; split into two short lines and reran final vanilla/Iris full flows plus packaging."
+  ],
+  "knownLimits": [
+    "This bounded preservation route is pork only; other meats are not silently converted to pork. Entire confirmed design remains incomplete.",
+    "Raw/cure/half-dry/dried stages are not edible and must use the inherited furnace/smoker recipe; no ordinary cooked-pork shortcut.",
+    "Over-salted or spoiled input does not produce a cleared-quality meal. This route has no desalting/rescue step; tracked failed material is compostable.",
+    "Dried and cooked cured pork use2x ordinary freshness thresholds, retain original preparation date and attained stale floor. No real-time offline penalty.",
+    "No new full natural8day shelf-life wait or old unloaded-weather long client chain claimed; targeted backend contracts cover the unchanged clock formula and new multiplier.",
+    "Vanilla/actual Iris1.11.4,Sodium0.9.2,MakeUpUltraFast9.6 verified, not every shader.",
+    "Washing/hood/furniture/mill contact and depleted-container components, farming/animal art,9independent buildings,management,multiplayer/migration/performance remain queued."
+  ]
+}

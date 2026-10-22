@@ -6,6 +6,7 @@ import {vessel,vesselLid,toolModel,tofuModel,dishModel,disk,foodFamilies,foodSta
 import {sampleFoodModel,writeFoodSampleTextures,sampleBases} from './food-samples.mjs';
 import {farmRackResources} from './farm-rack.mjs';
 import {dryingResources} from './drying-art.mjs';
+import {curedMeatResources} from './cured-meat-art.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../src/main/resources');
 const ns='smoke_kitchen';
 const write=(p,data)=>{if(p.includes('/models/')&&data.textures&&!data.textures.particle)data.textures.particle=Object.values(data.textures).find(t=>!t.startsWith('#'));const out=path.join(root,p);fs.mkdirSync(path.dirname(out),{recursive:true});fs.writeFileSync(out,JSON.stringify(data,null,2)+'\n');};
@@ -230,6 +231,10 @@ for(const original of [...items]) {
 for(const id of ['chili','shiitake','black_pepper','sichuan_pepper','cumin']){const original=items.find(x=>x.id===id);item('partially_dried_'+id,'半干'+original.name,original.texture,{...original,id:'partially_dried_'+id,name:'半干'+original.name,variant_of:id,state:'drying'});}
 // Append additions so existing generated art keeps its established palette/index.
 for(const [id,name,texture] of [['dried_black_pepper','干胡椒','melon_seeds'],['dried_cumin','干孜然','wheat_seeds'],['dried_sichuan_pepper','干花椒','sweet_berries']])item(id,name,texture,id==='dried_sichuan_pepper'?{ingredient:'sichuan_pepper'}:{});
+for(const [id,name] of [['salting_pork','盐腌肉（腌制中）'],['salted_pork','腌透生猪肉（待风干）'],['partially_dried_salted_pork','半干腌肉（需加热）'],['dried_salted_pork','风干腌肉（需加热）'],['cooked_salted_pork','熟风干腌肉']]){
+ const cooked=id==='cooked_salted_pork',extra={nutrition:cooked?6:0,tracked_food:true,uncooked:!cooked,...(id==='dried_salted_pork'||cooked?{freshness_multiplier:2}:{})};item(id,name,'pink_terracotta',extra);
+ for(const [state,prefix] of [['stale','不新鲜的'],['spoiled','变质的']])item(state+'_'+id,prefix+name,'pink_terracotta',{...extra,variant_of:id,state,nutrition:cooked&&state==='stale'?3:0});
+}
 write(`data/${ns}/catalog.json`,{items,stations,crops,dishes,processes});
 const vanillaTools={rice_paddy:'wheat',chopsticks:'stick',rolling_pin:'bamboo',water_jug:'water_bucket',heat_cloth:'leather',thermometer:'clock',ceramic_bowl:'bowl',wooden_lid:'oak_trapdoor',empty_water_jug:'bucket',empty_jar:'glass_bottle',pan_fried_fish:'cooked_cod',roast_potatoes:'baked_potato'};
 write(`assets/${ns}/models/item/pot_water.json`,{parent:'minecraft:block/block',textures:{water:'minecraft:block/water_still'},elements:[{from:[3,0,3],to:[13,.01,13],faces:{up:{texture:'#water',tintindex:0,uv:[0,0,16,16]}}}]});
@@ -383,7 +388,7 @@ craft('thermometer',['minecraft:copper_ingot','minecraft:copper_ingot','minecraf
 craft('recipe_book',['minecraft:book','minecraft:wheat_seeds']);
 for(const [id,ingredients]of Object.entries({
  fermentation_crock:['minecraft:terracotta','minecraft:terracotta','minecraft:terracotta','wooden_lid','minecraft:string'],
- pickling_crock:['minecraft:terracotta','minecraft:terracotta','wooden_lid'],
+ pickling_crock:['minecraft:terracotta','minecraft:terracotta','minecraft:terracotta','minecraft:terracotta','minecraft:terracotta','wooden_lid'],
  drying_rack:['minecraft:stick','minecraft:stick','minecraft:stick','minecraft:string','minecraft:string','minecraft:oak_planks'],
  counter:['minecraft:oak_planks','minecraft:oak_planks','minecraft:smooth_stone'],
  mixing_table:['counter','minecraft:bowl','rolling_pin'],sink:['counter','minecraft:iron_ingot','minecraft:bucket'],
@@ -411,6 +416,7 @@ for(const original of items.filter(x=>x.uses&&!x.variant_of&&!x.seasoning&&x.id!
  for(const state of ['used','broken'])write(`data/${ns}/recipe/repair_${state}_${original.id}.json`,{type:'minecraft:crafting_shapeless',category:'misc',ingredients:[q(state+'_'+original.id),material],result:{id:q(original.id),count:1}});
 }
 for(const [raw,cooked]of Object.entries({duck_meat:'cooked_duck',goose_meat:'cooked_goose',boar_meat:'cooked_boar',raw_shrimp:'cooked_shrimp',raw_crab:'cooked_crab'}))for(const type of ['smelting','smoking'])write(`data/${ns}/recipe/${cooked}_${type}.json`,{type:'minecraft:'+type,category:'food',ingredient:q(raw),result:{id:q(cooked)},experience:.35,cookingtime:type==='smoking'?100:200});
+for(const type of ['smelting','smoking'])write(`data/${ns}/recipe/cooked_salted_pork_${type}.json`,{type:`${ns}:cured_${type}`,category:'food',ingredient:q('dried_salted_pork'),result:{id:q('cooked_salted_pork')},experience:.35,cookingtime:type==='smoking'?100:200});
 const messages={full:'容器已满或不能再加入。',fuel:'请加入煤、木炭、煤块、木棍或谷壳。',ingredient:'这里需要可处理的食材。',cut:'切配方式：%s',cut_done:'切配完成，食材已取回。',serving_started:'已开始分餐，请先盛完这一锅。',not_ready:'食材还没完全熟，请观察火候。',empty:'已经空了。',cook_status:'锅温 %s°C｜食材 %s份｜水 %s｜盐 %s｜油 %s｜%s',stove_status:'火力 %s｜燃料剩余 %s秒',station_status:'物品 %s件｜加工进度 %s｜密封 %s'};
 messages.filter_help='放入待过滤酱醪或醋醪与玻璃瓶，持筛子右键过滤；空罐返还。';
 messages.ferment_raw_soy='生大豆须先加水煮熟或蒸熟，再与面粉、盐、引子和空罐入缸。';
@@ -519,3 +525,4 @@ console.log(`Generated ${items.length} items, ${stations.length} stations, ${cro
 writeFoodSampleTextures(root);
 farmRackResources(root);
 dryingResources(root);
+curedMeatResources(root);

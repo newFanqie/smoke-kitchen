@@ -28,6 +28,6 @@
 
 ## 安装与后续
 
-Minecraft26.1.2 / Fabric Loader0.19.2 / Fabric API0.149.1+26.1.2。移出旧JAR，安装smoke-kitchen-0.1.23.jar并保留Fabric API。JAR1081817字节，SHA256 `4cf92ff3932a111633f65b7c60abf7b67c51900012d95729658d49b4a81da72e`。精确源码CI与发布后实际重新下载结果待补录。
+Minecraft26.1.2 / Fabric Loader0.19.2 / Fabric API0.149.1+26.1.2。移出旧JAR，安装smoke-kitchen-0.1.23.jar并保留Fabric API。JAR1081817字节，SHA256 `4cf92ff3932a111633f65b7c60abf7b67c51900012d95729658d49b4a81da72e`。精确源码`74748479eea002fbff599ddf455374f32f89d854`的[CI](https://github.com/newFanqie/smoke-kitchen/actions/runs/39703890756)已通过；[发布开发版](https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.23)后实际重新下载，SHA256与本地/服务端摘要一致。验证见verification/0.1.23.json。
 
 下一轮按既定设备待办核对洗涤槽的实际储水、洗菜和重复容器清洗边界，先读设计和已有实现，不把普通储物和静态水面算完成。手磨展示支撑接触、空罐组件一致性、排烟家具、农牧、九种独立建筑、经营/多人/迁移及性能仍保留。成菜美术样例待反馈，独立功能继续。

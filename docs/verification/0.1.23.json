@@ -3,8 +3,8 @@
   "scope": "Sliced pork dry-salting, sealed per-portion cure clock, four-minute weather-aware drying and inherited vanilla furnace/smoker cooking with retained date/quality.",
   "sha256": "4cf92ff3932a111633f65b7c60abf7b67c51900012d95729658d49b4a81da72e",
   "jarBytes": 1081817,
-  "downloadVerified": false,
-  "sourceCIPassed": false,
+  "downloadVerified": true,
+  "sourceCIPassed": true,
   "unitTests": 84,
   "totalGameTests": 97,
   "clientChecks": {
@@ -53,5 +53,9 @@
     "No new full natural8day shelf-life wait or old unloaded-weather long client chain claimed; targeted backend contracts cover the unchanged clock formula and new multiplier.",
     "Vanilla/actual Iris1.11.4,Sodium0.9.2,MakeUpUltraFast9.6 verified, not every shader.",
     "Washing/hood/furniture/mill contact and depleted-container components, farming/animal art,9independent buildings,management,multiplayer/migration/performance remain queued."
-  ]
+  ],
+  "sourceCommit": "74748479eea002fbff599ddf455374f32f89d854",
+  "sourceCI": "https://github.com/newFanqie/smoke-kitchen/actions/runs/39703890756",
+  "release": "https://github.com/newFanqie/smoke-kitchen/releases/tag/v0.1.23",
+  "download": "https://github.com/newFanqie/smoke-kitchen/releases/download/v0.1.23/smoke-kitchen-0.1.23.jar"
 }
